@@ -1,6 +1,8 @@
 package io.jadefx.scene.control;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
 import org.lwjgl.nanovg.NanoVG;
 
@@ -18,7 +20,7 @@ import io.jadefx.style.Stylesheet;
 public abstract class Labeled extends Control implements StyleBackground {
 	private String text;
 	
-	private byte[] textInternal;
+	private ByteBuffer textInternal;
 	
 	private float[] textBounds;
 	
@@ -113,15 +115,16 @@ public abstract class Labeled extends Control implements StyleBackground {
 		if ( textBounds[2] - textBounds[1] > this.getWidth() ) {
 			bindFont(this.getScene().getContext().getNVG());
 			
-			byte[] newText = new byte[0];
+			ByteBuffer newText = null;
 			for (int i = 0; i < this.text.length(); i++) {
 				String tempString = this.text.substring(0, i) + elipsis;
-				byte[] tempBytes = toUtf8(tempString);
-				float tempWid = NanoVG.nvgTextBoundsJni(this.getScene().getContext().getNVG(), 0, 0, tempBytes, 0, tempString.length(), null);
-				if ( tempWid <= this.getWidth() )
+				ByteBuffer tempBytes = toUtf8(tempString);
+				float tempWid = NanoVG.nvgTextBounds(this.getScene().getContext().getNVG(), 0, 0, tempBytes, new float[4]);
+				if ( tempWid <= this.getWidth() ) {
 					newText = tempBytes;
-				else
+				} else {
 					break;
+				}
 			}
 			
 			this.textInternal = newText;
@@ -148,13 +151,13 @@ public abstract class Labeled extends Control implements StyleBackground {
 		
 		if ( wrapText ) {
 			float breakRowWidth = (float) Math.min(this.getAvailableSize().x, this.getMaxWidth());
-			NanoVG.nvgTextBoxBoundsJni(this.getScene().getContext().getNVG(), 0, 0, breakRowWidth, textInternal, 0, textInternal.length, this.getTextBounds());
+			NanoVG.nvgTextBoxBounds(this.getScene().getContext().getNVG(), 0, 0, breakRowWidth, textInternal, this.getTextBounds());
 		} else {
-			NanoVG.nvgTextBoundsJni(this.getScene().getContext().getNVG(), 0, 0, textInternal, 0, textInternal.length, this.getTextBounds());
+			NanoVG.nvgTextBounds(this.getScene().getContext().getNVG(), 0, 0, textInternal, this.getTextBounds());
 		}
 	}
 
-	private byte[] toUtf8(String s) {
+	private ByteBuffer toUtf8(String s) {
 		if (s == null) {
 			return null;
 		}
@@ -171,7 +174,9 @@ public abstract class Labeled extends Control implements StyleBackground {
 		} catch (UnsupportedEncodingException ex) {
 			//
 		}
-		return barr;
+		
+		ByteBuffer buff = ByteBuffer.wrap(barr);
+		return buff;
 	}
 
 	@Override
@@ -274,7 +279,7 @@ public abstract class Labeled extends Control implements StyleBackground {
 			NanoVG.nvgFontBlur(vg, shadow.getBlurRadius());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgFillColor(vg, shadow.getFromColor().getNVG());
-			NanoVG.nvgTextJni(vg, absX+shadow.getXOffset(), absY+shadow.getYOffset(), textInternal, 0, textInternal.length);
+			NanoVG.nvgText(vg, absX+shadow.getXOffset(), absY+shadow.getYOffset(), textInternal);
 			NanoVG.nvgClosePath(vg);
 		}
 
@@ -282,7 +287,7 @@ public abstract class Labeled extends Control implements StyleBackground {
 		NanoVG.nvgFontBlur(vg, 0);
 		NanoVG.nvgBeginPath(vg);
 		NanoVG.nvgFillColor(vg, this.getTextFill().getNVG());
-		NanoVG.nvgTextJni(vg, absX, absY, textInternal, 0, textInternal.length);
+		NanoVG.nvgText(vg, absX, absY, textInternal);
 		NanoVG.nvgClosePath(vg);
 	}
 }

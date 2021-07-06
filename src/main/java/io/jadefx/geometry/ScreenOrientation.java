@@ -1,11 +1,9 @@
 package io.jadefx.geometry;
 
-import org.mini.glfm.Glfm;
-
 public enum ScreenOrientation {
-	LANDSCAPE(Glfm.GLFMUserInterfaceOrientationLandscape),
-	PORTRAIT(Glfm.GLFMUserInterfaceOrientationPortrait),
-	ANY(Glfm.GLFMUserInterfaceOrientationAny);
+	LANDSCAPE(2),
+	PORTRAIT(1),
+	ANY(0);
 
 	private int val;
 

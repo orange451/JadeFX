@@ -30,15 +30,13 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowMaximizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
-import static org.mini.glfw.Glfw.GLFW_FALSE;
-import static org.mini.glfw.Glfw.GLFW_RESIZABLE;
-import static org.mini.glfw.Glfw.GLFW_TRUE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 
 import io.jadefx.collections.ObservableList;
@@ -298,7 +296,7 @@ public class Window {
 	}
 
 	public void setResizible(boolean resizable) {
-		glfwSetWindowAttrib(handle, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+		glfwSetWindowAttrib(handle, GLFW.GLFW_RESIZABLE, resizable ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
 	}
 
 	public WindowSizeCallback getWindowSizeCallback() {
