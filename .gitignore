@@ -1,0 +1,13 @@
+target
+.DS_Store
+.project
+.classpath
+.settings/
+.buildpath
+.cproject
+*.launch
+.externalToolBuilders/
+.loadpath
+bin/
+tmp/
+Thumbs.db
