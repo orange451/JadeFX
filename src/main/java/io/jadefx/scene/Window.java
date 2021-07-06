@@ -31,6 +31,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,7 @@ import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.system.MemoryStack;
 
 import io.jadefx.collections.ObservableList;
 import io.jadefx.event.EventHelper;
@@ -295,6 +297,33 @@ public class Window {
 		}
 	}
 
+	/**
+	 * Attempts to show this Window by setting visibility to true
+	 */
+	public void show() {
+		setVisible(true);
+		//focus();
+		// focusHack();
+	}
+
+	public void setVisible(boolean flag) {
+		GLFW.glfwShowWindow(this.getHandle());
+
+		try ( MemoryStack stack = MemoryStack.stackPush() ) {
+			IntBuffer pWidth = stack.mallocInt(1);
+			IntBuffer pHeight = stack.mallocInt(1);
+			GLFW.glfwGetWindowSize(getHandle(), pWidth, pHeight);
+			this.getWindowSizeCallback().invoke(this.getHandle(), pWidth.get(0), pHeight.get(0));
+		}
+		/*WindowManager.runLater(() -> {
+			if (flag)
+				glfwShowWindow(this.windowID);
+			else
+				glfwHideWindow(this.windowID);
+		});
+		visible = flag;*/
+	}
+
 	public void setResizible(boolean resizable) {
 		glfwSetWindowAttrib(handle, GLFW.GLFW_RESIZABLE, resizable ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
 	}
@@ -367,7 +396,7 @@ public class Window {
 		return windowRefreshCallback;
 	}
 
-	public long getID() {
+	public long getHandle() {
 		return this.handle;
 	}
 	
@@ -383,6 +412,7 @@ public class Window {
 	}
 
 	private void sizeCallback(long window, int width, int height) {
+		this.scene.dirty();
 
 		/*
 		 * Call window event listeners

@@ -15,7 +15,7 @@ public class GJadeFXForm extends GForm {
 		this.window = new Window(this.display, this.callback.getNvContext());
 		
 		// Give it focus
-		window.getWindowFocusCallback().invoke(window.getID(), true);
+		window.getWindowFocusCallback().invoke(window.getHandle(), true);
 
 		// Resize when parent changes
 		this.setSizeChangeListener((width, height) -> updateSize() );
@@ -29,8 +29,8 @@ public class GJadeFXForm extends GForm {
 	private void updateSize() {
 		GForm.flush();
 		
-		window.getWindowSizeCallback().invoke(window.getID(), this.callback.getDeviceWidth(), this.callback.getDeviceHeight());
-		window.getFramebufferSizeCallback().invoke(window.getID(), this.callback.getFrameBufferWidth(), this.callback.getFrameBufferHeight());
+		window.getWindowSizeCallback().invoke(window.getHandle(), this.callback.getDeviceWidth(), this.callback.getDeviceHeight());
+		window.getFramebufferSizeCallback().invoke(window.getHandle(), this.callback.getFrameBufferWidth(), this.callback.getFrameBufferHeight());
 		
 		if ( window.getScene() != null )
 			window.getScene().dirty();
