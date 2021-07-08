@@ -155,7 +155,7 @@ public class Context {
 		if (file.exists() && file.isFile()) {
 			stream = new FileInputStream(file);
 		} else {
-			stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+			stream = Context.class.getClassLoader().getResourceAsStream(path);
 		}
 		return stream;
 	}

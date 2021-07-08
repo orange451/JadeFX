@@ -310,6 +310,11 @@ public class Window {
 		GLFW.glfwShowWindow(this.getHandle());
 
 		try ( MemoryStack stack = MemoryStack.stackPush() ) {
+			IntBuffer fWidth = stack.mallocInt(1);
+			IntBuffer fHeight = stack.mallocInt(1);
+			GLFW.glfwGetFramebufferSize(getHandle(), fWidth, fHeight);
+			this.getFramebufferSizeCallback().invoke(this.getHandle(), fWidth.get(0), fHeight.get(0));
+			
 			IntBuffer pWidth = stack.mallocInt(1);
 			IntBuffer pHeight = stack.mallocInt(1);
 			GLFW.glfwGetWindowSize(getHandle(), pWidth, pHeight);
@@ -412,7 +417,9 @@ public class Window {
 	}
 
 	private void sizeCallback(long window, int width, int height) {
-		this.scene.dirty();
+		if ( this.scene != null ) {
+			this.scene.dirty();
+		}
 
 		/*
 		 * Call window event listeners

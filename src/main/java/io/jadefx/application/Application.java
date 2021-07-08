@@ -1,14 +1,8 @@
 package io.jadefx.application;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.nanovg.NanoVGGL3.NVG_ANTIALIAS;
-import static org.lwjgl.nanovg.NanoVGGL3.nvgCreate;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgDelete;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
@@ -18,11 +12,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
-import io.jadefx.paint.Color;
 import io.jadefx.scene.Scene;
 import io.jadefx.scene.Window;
 import io.jadefx.scene.layout.Pane;
-import io.jadefx.util.JadeFXUtil;
 
 public abstract class Application {
 	
@@ -66,7 +58,7 @@ public abstract class Application {
 		boolean modernOpenGL = (GL11.glGetInteger(GL30.GL_MAJOR_VERSION) > 3)
 				|| (GL11.glGetInteger(GL30.GL_MAJOR_VERSION) == 3 && GL11.glGetInteger(GL30.GL_MINOR_VERSION) >= 2);
 		if (modernOpenGL) {
-			int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS | NanoVGGL3.NVG_DEBUG;
+			int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
 			vg = NanoVGGL3.nvgCreate(flags);
 		} else {
 			int flags = NanoVGGL2.NVG_STENCIL_STROKES | NanoVGGL2.NVG_ANTIALIAS;
