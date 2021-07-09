@@ -10,7 +10,7 @@ public class ApplicationTest extends Application {
 	@Override
 	public void start(Scene scene) {
 		Pane pane = new Pane();
-		pane.setStylesheet(""
+		scene.setStylesheet(""
 				+ ".box {"
 				+ "		box-shadow: 4px 8px 32px 0px rgba(0, 0, 0, 0.4),"
 				+ "					2px 4px 8px  0px rgba(0, 0, 0, 0.2);"
