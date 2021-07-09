@@ -10,9 +10,16 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
     <dependencies>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.minijvm</groupId>
 			<artifactId>minijvm_rt</artifactId>
 			<version>1.0</version>
@@ -26,6 +33,18 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/../../../binary/libex/glfw_gui.jar</systemPath>
+		</dependency>-->
+		
+		<dependency>
+		    <groupId>com.github.orange451</groupId>
+		    <artifactId>minijvm_rt</artifactId>
+		    <version>1.1</version>
+		</dependency>
+	
+		<dependency>
+		    <groupId>com.github.orange451</groupId>
+		    <artifactId>glfw_gui</artifactId>
+		    <version>1.1</version>
 		</dependency>
         
 		<dependency>
@@ -34,52 +53,4 @@
 			<version>1.9.25</version>
 		</dependency>	
     </dependencies>
-
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <!--  copy to binary lib dir -->
-                                <mkdir dir="../../../binary/libex"/>
-                                <copy todir="../../../binary/libex/" overwrite="true" >
-                                    <fileset dir="${project.build.directory}" erroronmissingdir="false">
-                                        <include name="${project.artifactId}.jar"/>
-                                    </fileset>
-                                </copy>
-                                <!--  copy to mobile assets -->
-                                <mkdir dir="../../assets/resfiles"/>
-                                <copy todir="../../assets/resfiles/" overwrite="true" >
-                                    <fileset dir="${project.build.directory}" erroronmissingdir="false">
-                                        <include name="${project.artifactId}.jar"/>
-                                    </fileset>
-                                </copy>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resource</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-
-
-
-    </build>
 </project>

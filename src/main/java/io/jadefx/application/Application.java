@@ -4,6 +4,9 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgDelete;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.lwjgl.glfm.GLFM;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
@@ -20,6 +23,8 @@ import io.jadefx.scene.Window;
 import io.jadefx.scene.layout.Pane;
 
 public abstract class Application {
+	
+	private static Map<Long,Integer> flushMap = new HashMap<>();
 	
 	public static void launch(String[] args) {
 		
@@ -91,6 +96,8 @@ public abstract class Application {
 			vg = NanoVGGL2.nvgCreate(flags);
 		}
 		
+		flushMap.put(handle, 10);
+		
 		// Create scene
 		Window window = new Window(handle, vg);
 		Pane root = new Pane();
@@ -119,6 +126,14 @@ public abstract class Application {
 	}
 	
 	private static void render(Window window) {
+		if ( window.getContext().isFlushed() )
+			flushMap.put(window.getHandle(), 3);
+			
+		if (flushMap.get(window.getHandle()) < 0)
+			return;
+		
+		flushMap.put(window.getHandle(), flushMap.get(window.getHandle())-1);
+		
 		GL11.glClearColor(0.9741f, 0.9741f, 0.9741f, 1.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 		
