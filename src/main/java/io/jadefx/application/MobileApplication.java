@@ -28,7 +28,7 @@ public abstract class MobileApplication extends Application {
 			Application application = (Application)object;
 			launch(application);
 		} else {
-			System.out.println("Could not find calling class...");
+			System.out.println("Could not hook in to MiniJVM.");
 		}
 	}
 	
