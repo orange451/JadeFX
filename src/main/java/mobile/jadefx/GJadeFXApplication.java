@@ -3,6 +3,8 @@ package mobile.jadefx;
 import org.mini.gui.GApplication;
 import org.mini.gui.GForm;
 
+import io.jadefx.application.MobileApplication;
+
 public class GJadeFXApplication extends GApplication {
 	
 	private GForm form;
@@ -21,7 +23,7 @@ public class GJadeFXApplication extends GApplication {
 		if ( form != null )
 			return form;
 		
-		form = application.createForm();
+		//form = application.createForm();
 		return form;
 	}
 }

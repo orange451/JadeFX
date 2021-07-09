@@ -27,22 +27,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/../../../binary/libex/glfw_gui.jar</systemPath>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.minijvm</groupId>
-			<artifactId>minijvm_mobile_extras</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../../../binary/libex/minijvm_mobile_extras.jar</systemPath>
-		</dependency>
-		
-        <dependency>
-            <groupId>org.minijvm</groupId>  
-            <artifactId>minijvm_lwjgl</artifactId>   
-            <version>1.0</version>
-            <scope>system</scope> 
-            <systemPath>${basedir}/../../../binary/libex/minijvm_lwjgl.jar</systemPath> 
-        </dependency> 
+        
 		<dependency>
 			<groupId>org.joml</groupId>
 			<artifactId>joml</artifactId>

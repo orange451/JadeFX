@@ -3,6 +3,8 @@ package io.jadefx.application;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgDelete;
+
+import org.lwjgl.glfm.GLFM;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
@@ -11,6 +13,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
+import org.mini.gui.GCallBack;
 
 import io.jadefx.scene.Scene;
 import io.jadefx.scene.Window;
@@ -21,7 +24,7 @@ public abstract class Application {
 	public static void launch(String[] args) {
 		
 		// Get the class name that called launch method.
-		String callingClassName = getCallingClass("launch");
+		String callingClassName = getCallingClass(Application.class.getName(), "launch");
 		if (callingClassName == null) {
 			throw new RuntimeException("Error: unable to determine main class (2)");
 		}
@@ -37,21 +40,44 @@ public abstract class Application {
 		
 		// Initialize application
 		Application application = (Application)object;
+		launch(application);
+	}
+	
+	protected static void launch(Application application) {
+		GCallBack callback = GCallBack.getInstance();
+		boolean isGLFM = "org.mini.glfm.GlfmCallBackImpl".equals(System.getProperty("gui.driver"));
+		
+		long handle;
 		
 		// Initialize GLFW
-		if (!GLFW.glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
-		GLFW.glfwDefaultWindowHints();
-		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
-		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
-		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
-		long handle = GLFW.glfwCreateWindow(300, 300, "Hello World!", MemoryUtil.NULL, MemoryUtil.NULL);
-		if ( handle == MemoryUtil.NULL )
-			throw new RuntimeException("Failed to create the GLFW window");
-		GLFW.glfwMakeContextCurrent(handle);
-		GLFW.glfwSwapInterval(1);
-		GL.createCapabilities();
+		if ( isGLFM ) {
+			//callback.init(800, 600);
+			handle = callback.getDisplay();
+			if ( handle == MemoryUtil.NULL )
+				throw new RuntimeException("Failed to create the GLFW window");
+			
+	        GLFM.glfmSetDisplayConfig(handle,
+	        		GLFM.GLFMRenderingAPIOpenGLES3,
+	        		GLFM.GLFMColorFormatRGBA8888,
+	        		GLFM.GLFMDepthFormat16,
+	        		GLFM.GLFMStencilFormat8,
+	        		GLFM.GLFMMultisampleNone);
+		} else {
+			if (!GLFW.glfwInit())
+				throw new IllegalStateException("Unable to initialize GLFW");
+			GLFW.glfwDefaultWindowHints();
+			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
+			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
+			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+			handle = GLFW.glfwCreateWindow(300, 300, "Hello World!", MemoryUtil.NULL, MemoryUtil.NULL);
+			if ( handle == MemoryUtil.NULL )
+				throw new RuntimeException("Failed to create the GLFW window");
+			GLFW.glfwMakeContextCurrent(handle);
+			GLFW.glfwSwapInterval(1);
+			GL.createCapabilities();
+		}
 		
 		// NanoVG
 		long vg;
@@ -74,46 +100,56 @@ public abstract class Application {
 		
 		// Loop
 		window.setVisible(true);
-		loop(window);
-		
-		// Cleanup
-        nvgDelete(vg);
-        GL.setCapabilities(null);
-        glfwFreeCallbacks(handle);
-        glfwTerminate();
+		if ( isGLFM ) {
+	        GLFM.glfmSetRenderFuncCallback(handle, (display, frameTime) -> render(window));
+		} else {
+			loop(window);
+	        cleanup(window);
+		}
 	}
 	
 	private static void loop(Window window) {
-		
 		while ( !GLFW.glfwWindowShouldClose(window.getHandle()) ) {
-			GL11.glClearColor(0.9741f, 0.9741f, 0.9741f, 1.0f);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 			
-			NanoVG.nvgBeginFrame(window.getContext().getNVG(), window.getWidth(), window.getHeight(), window.getPixelRatio());
-			{
-				NanoVG.nvgReset(window.getContext().getNVG());
-				NanoVG.nvgResetScissor(window.getContext().getNVG());
-				window.render();
-			}
-			NanoVG.nvgEndFrame(window.getContext().getNVG());
+			render(window);
 			
 			GLFW.glfwSwapBuffers(window.getHandle());
 			GLFW.glfwPollEvents();
 		}
 	}
+	
+	private static void render(Window window) {
+		GL11.glClearColor(0.9741f, 0.9741f, 0.9741f, 1.0f);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
+		
+		NanoVG.nvgBeginFrame(window.getContext().getNVG(), window.getWidth(), window.getHeight(), window.getPixelRatio());
+		{
+			NanoVG.nvgReset(window.getContext().getNVG());
+			NanoVG.nvgResetScissor(window.getContext().getNVG());
+			window.render();
+		}
+		NanoVG.nvgEndFrame(window.getContext().getNVG());
+	}
+	
+	private static void cleanup(Window window) {
+		nvgDelete(window.getContext().getNVG());
+        GL.setCapabilities(null);
+        glfwFreeCallbacks(window.getHandle());
+        glfwTerminate();
+	}
 
-	private static String getCallingClass(String methodName) {
+	protected static String getCallingClass(String className, String methodName) {
 		// Figure out the right class to call
 		boolean foundThisMethod = false;
 		String callingClassName = null;
 		for (StackTraceElement se : Thread.currentThread().getStackTrace()) {
-			// Skip entries until we get to the entry for this class
-			String className = se.getClassName().replace("/", ".");
+			String clazzName = se.getClassName().replace("/", ".");
 			String cmethodName = se.getMethodName();
+			
 			if (foundThisMethod) {
-				callingClassName = className;
+				callingClassName = clazzName;
 				break;
-			} else if (Application.class.getName().equals(className) && methodName.equals(cmethodName)) {
+			} else if (className.equals(clazzName) && methodName.equals(cmethodName)) {
 				foundThisMethod = true;
 			}
 		}
