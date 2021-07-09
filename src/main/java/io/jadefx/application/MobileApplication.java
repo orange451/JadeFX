@@ -1,5 +1,6 @@
 package io.jadefx.application;
 
+import org.lwjgl.glfm.GLFM;
 import org.mini.gui.GApplicationDisplay;
 import org.mini.gui.GCallBack;
 import org.mini.gui.GLFWApplicationDisplay;
@@ -41,11 +42,11 @@ public abstract class MobileApplication extends Application {
 	}
     
     public static void showStatusBar() {
-    	appDisplay.setDisplayChrome(GCallBack.getInstance().getDisplay(), org.mini.glfm.Glfm.GLFMUserInterfaceChromeNavigationAndStatusBar);
+    	appDisplay.setDisplayChrome(GCallBack.getInstance().getDisplay(), GLFM.GLFMUserInterfaceChromeNavigationAndStatusBar);
     }
     
     public static void hideStatusBar() {
-    	appDisplay.setDisplayChrome(GCallBack.getInstance().getDisplay(), org.mini.glfm.Glfm.GLFMUserInterfaceChromeFullscreen);
+    	appDisplay.setDisplayChrome(GCallBack.getInstance().getDisplay(), GLFM.GLFMUserInterfaceChromeFullscreen);
     }
     
     public static void showKeyboard() {

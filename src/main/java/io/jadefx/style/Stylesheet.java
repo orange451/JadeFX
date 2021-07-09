@@ -15,8 +15,8 @@ import java.util.WeakHashMap;
 public class Stylesheet {
 	private String source;
 	private boolean compiled;
-	private HashMap<String, StyleSelector> idToStyleSelector = new HashMap<>();
-	private HashMap<StyleSelector, StyleData> styleData = new HashMap<>();
+	private Map<String, StyleSelector> idToStyleSelector = new HashMap<>();
+	private Map<StyleSelector, StyleData> styleData = new HashMap<>();
 
 	public Stylesheet(String css) {
 		this.source = css;
