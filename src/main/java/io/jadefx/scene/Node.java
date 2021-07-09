@@ -331,6 +331,10 @@ public abstract class Node {
 			}
 		}
 		
+		if ( parent instanceof Scene ) {
+			parent.scene = (Scene) parent;
+		}
+		
 		// Register our element ID
 		registerElementIDToParent(this, parent);
 		
