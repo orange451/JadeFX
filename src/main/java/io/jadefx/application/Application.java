@@ -128,6 +128,7 @@ public abstract class Application {
 	
 	private static void loop(Window window) {
 		while ( !GLFW.glfwWindowShouldClose(window.getHandle()) ) {
+			GLFW.glfwMakeContextCurrent(window.getHandle());
 			
 			render(window);
 			
