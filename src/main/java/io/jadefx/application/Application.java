@@ -49,8 +49,19 @@ public abstract class Application {
 	}
 	
 	protected static void launch(Application application) {
-		GCallBack callback = GCallBack.getInstance();
-		boolean isGLFM = "org.mini.glfm.GlfmCallBackImpl".equals(System.getProperty("gui.driver"));
+		// Check if we're running on MiniJVM implementation
+		GCallBack callback = null;
+		boolean isGLFM = false;
+		try {
+			Class<?> miniGlfw = Class.forName("org.mini.glfw.Glfw");
+			if ( miniGlfw == null )
+				return;
+			
+			callback = GCallBack.getInstance();
+			isGLFM = "org.mini.glfm.GlfmCallBackImpl".equals(System.getProperty("gui.driver"));
+		} catch (ClassNotFoundException e) {
+			//
+		}
 		
 		long handle;
 		
