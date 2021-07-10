@@ -11,6 +11,7 @@ Client Application Platform for Desktop and Mobile. Develop Desktop applications
 
 ## Libraries required:
 <details><summary>LWJGL3</summary>
+
 * [minijvm_desktop_glfm](https://github.com/orange451/minijvm_desktop_glfm)
 	
 * [LWJGL3](https://www.lwjgl.org/)
@@ -23,11 +24,12 @@ Client Application Platform for Desktop and Mobile. Develop Desktop applications
 </details>
 
 <details><summary>MiniJVM</summary>
+
 * [minijvm_rt](https://github.com/orange451/minijvm_rt)
 	
 * [glfw_gui](https://github.com/orange451/glfw_gui)
 	
-* [JOML](https://github.com/JOML-CI/JOML) (Can download with [LWJGL](https://www.lwjgl.org/customize))
+* [JOML](https://github.com/JOML-CI/JOML)
 </details>
 
 ## Include JadeFX in your project
