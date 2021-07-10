@@ -3,7 +3,9 @@ Client Application Platform for Desktop and Mobile
 
 This library is heavily under development.
 
-For mobile/desktop deployment: https://github.com/digitalgust/miniJVM
+For mobile use MiniJVM: https://github.com/digitalgust/miniJVM
+
+MiniJVM ios xcode project: https://github.com/orange451/jadefx_minijvm_ios
 
 For desktop deployment use LWJGL: https://www.lwjgl.org/
 
