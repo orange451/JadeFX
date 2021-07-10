@@ -1,13 +1,27 @@
 ## JadeFX
-Client Application Platform for Desktop and Mobile
+Client Application Platform for Desktop and Mobile. Develop Desktop applications utilising GLFW and Mobile applications utilising GLFM. JadeFX can be run with a standard JDK/JVM using LWJGL3 or with MiniJVM. JadeFX can be incorporated in to your already existing OpenGL project, and/or it can manage all your windowing and rendering code.
 
 (This library is heavily under development)
 
-- For mobile use MiniJVM: https://github.com/digitalgust/miniJVM
+- For mobile deployment use MiniJVM: https://github.com/digitalgust/miniJVM
+
+- For desktop deployment use LWJGL: https://www.lwjgl.org/
 
 - MiniJVM ios xcode project: https://github.com/orange451/jadefx_minijvm_ios
 
-- For desktop deployment use LWJGL: https://www.lwjgl.org/
+## Libraries required:
+<details><summary>LWJGL3</summary>
+- [minijvm_desktop_glfm](https://github.com/orange451/minijvm_desktop_glfm)
+- [LWJGL3](https://www.lwjgl.org/)
+- [JOML](https://github.com/JOML-CI/JOML) (Can download with [LWJGL](https://www.lwjgl.org/customize))
+- [NanoVG](https://github.com/memononen/nanovg) (Can download with [LWJGL](https://www.lwjgl.org/customize))
+- [TinyFD](https://github.com/native-toolkit/tinyfiledialogs) (Can download with [LWJGL](https://www.lwjgl.org/customize))
+</details>
+<details><summary>MiniJVM</summary>
+- [minijvm_rt](https://github.com/orange451/minijvm_rt)
+- [glfw_gui](https://github.com/orange451/glfw_gui)
+- [JOML](https://github.com/JOML-CI/JOML) (Can download with [LWJGL](https://www.lwjgl.org/customize))
+</details>
 
 ## Include JadeFX in your project
 <details><summary>Maven</summary>
