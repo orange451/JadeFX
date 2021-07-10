@@ -36,8 +36,8 @@ public class GenericShader {
 
 	public GenericShader() {
 		this(
-				Thread.currentThread().getContextClassLoader().getResource("lwjgui/gl/vertex.glsl"),
-				Thread.currentThread().getContextClassLoader().getResource("lwjgui/gl/fragment.glsl")
+				GenericShader.class.getClassLoader().getResource("lwjgui/gl/vertex.glsl"),
+				GenericShader.class.getClassLoader().getResource("lwjgui/gl/fragment.glsl")
 			);
 	}
 
