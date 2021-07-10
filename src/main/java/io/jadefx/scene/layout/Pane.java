@@ -34,7 +34,7 @@ public class Pane extends Region implements BlockPaneRenderer {
         boxShadows.setRemoveCallback((e)->this.setFlag(FLAG_CSS_DIRTY));
         
         this.setBorderRadii(0);
-        this.setBackgroundLegacy(Color.WHITE_SMOKE);
+        this.setBackgroundLegacy(Color.TRANSPARENT);
     }
 
     /**
