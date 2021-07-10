@@ -115,18 +115,21 @@ public abstract class Labeled extends Control implements StyleBackground {
 			bindFont(this.getScene().getContext().getNVG());
 			
 			ByteBuffer newText = null;
+			float newWidth = textBounds[2] - textBounds[1];
 			for (int i = 0; i < this.text.length(); i++) {
 				String tempString = this.text.substring(0, i) + elipsis;
 				ByteBuffer tempBytes = toUtf8(tempString);
 				float tempWid = NanoVG.nvgTextBounds(this.getScene().getContext().getNVG(), 0, 0, tempBytes, new float[4]);
 				if ( tempWid <= this.getWidth() ) {
 					newText = tempBytes;
+					newWidth = tempWid;
 				} else {
 					break;
 				}
 			}
 			
 			this.textInternal = newText;
+			textBounds[2] = textBounds[1] + newWidth;
 		}
 	}
 	

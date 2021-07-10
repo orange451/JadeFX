@@ -163,6 +163,7 @@ public abstract class Node {
 		
 		if (!this.size.equals(this.lastSize)) {
 			this.setFlag(FLAG_SIZE_DIRTY);
+			this.setFlag(FLAG_LAYOUT_DIRTY);
 			this.cachedAvailableSize = null;
 			
 			if ( this.parent != null ) {
