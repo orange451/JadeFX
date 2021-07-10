@@ -37,7 +37,7 @@ public class JadeFXUtil {
 		fillRoundRect(context, x, y, width, height, cornerRadii[0], cornerRadii[1], cornerRadii[2], cornerRadii[3], color);
 	}
 
-	public static void boxShadow(Context context, BoxShadow boxShadow, double x, double y, double width, double height, float[] cornerRadii, float borderWidth) {
+	public static void boxShadow(Context context, BoxShadow boxShadow, double x, double y, double width, double height, float[] cornerRadii, float borderWidth, float[] boxClip) {
 		if ( context == null )
 			return;
 		
@@ -70,12 +70,14 @@ public class JadeFXUtil {
 		if ( context.isCoreOpenGL() ) {
 			// Flip the y :shrug:
 			yy = context.getWindow().getHeight() - yy - hh;
+			if ( boxClip != null )
+				boxClip[1] = context.getWindow().getHeight() - boxClip[1] - boxClip[3];
 			
 			// Save NANOVG
 			NanoVG.nvgSave(context.getNVG());
 			NanoVG.nvgEndFrame(context.getNVG());
 
-			BoxShadowRenderer.boxShadow(context, xx, yy, ww, hh, f, r, boxShadow.getFromColor(), cornerRadii, boxShadow.isInset());
+			BoxShadowRenderer.boxShadow(context, xx, yy, ww, hh, f, r, boxShadow.getFromColor(), cornerRadii, boxShadow.isInset(), boxClip);
 			
 			// Restore NANOVG
 			NanoVG.nvgRestore(context.getNVG());

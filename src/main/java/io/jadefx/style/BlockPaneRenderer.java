@@ -1,5 +1,8 @@
 package io.jadefx.style;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.jadefx.collections.ObservableList;
 import io.jadefx.geometry.Insets;
 import io.jadefx.scene.Context;
@@ -12,14 +15,27 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 	public double getWidth();
 	public double getHeight();
 	
+	static Map<Context, float[]> boxClips = new HashMap<>();
+	
 	public static void render(Context context, BlockPaneRenderer node) {
+		
+		// Compute box clip
+		float[] boxClip = boxClips.get(context);
+		if ( boxClip == null ) {
+			boxClip = new float[4];
+			boxClips.put(context, boxClip);
+		}
+		boxClip[0] = (float) node.getX();
+		boxClip[1] = (float) node.getY();
+		boxClip[2] = (float) node.getWidth();
+		boxClip[3] = (float) node.getHeight();
 		
 		// Draw drop shadows
 		for (int i = 0; i < node.getBoxShadowList().size(); i++) {
 			BoxShadow shadow = node.getBoxShadowList().get(i);
 			if ( shadow.isInset() )
 				continue;
-			JadeFXUtil.boxShadow(context, shadow, node.getX(), node.getY(), node.getWidth(), node.getHeight(), node.getBorderRadii(), node.getBorderWidth());
+			JadeFXUtil.boxShadow(context, shadow, node.getX(), node.getY(), node.getWidth(), node.getHeight(), node.getBorderRadii(), node.getBorderWidth(), boxClip);
 		}
 		
 		// Draw border
@@ -39,7 +55,7 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 			BoxShadow shadow = node.getBoxShadowList().get(i);
 			if ( !shadow.isInset() )
 				continue;
-			JadeFXUtil.boxShadow(context, shadow, node.getX()+border.getLeft(), node.getY()+border.getTop(), node.getWidth()-border.getWidth(), node.getHeight()-border.getHeight(), node.getBorderRadii(), node.getBorderWidth());
+			JadeFXUtil.boxShadow(context, shadow, node.getX()+border.getLeft(), node.getY()+border.getTop(), node.getWidth()-border.getWidth(), node.getHeight()-border.getHeight(), node.getBorderRadii(), node.getBorderWidth(), boxClip);
 		}
 	}
 }

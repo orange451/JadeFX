@@ -2,6 +2,7 @@
 
 uniform vec4 box;
 uniform vec4 boxColor;
+uniform vec4 boxClip;
 uniform vec4 scissor;
 uniform vec3 sigmaCornerInset;
 uniform vec4 cornerRadii;
@@ -87,17 +88,19 @@ void main() {
 	float sigma = sigmaCornerInset.x;
 	float corner = sigmaCornerInset.y;
 	float inset = sigmaCornerInset.z;
-	float shadow = roundedBoxShadow(box.xy, box.zw, vertex, sigma, corner);
-	float box = roundedBox(box.xy, box.zw, vertex, cornerRadii);
+	float shadow = clamp(roundedBoxShadow(box.xy, box.zw, vertex, sigma, corner), 0.0, 1.0);
+	float boxClip = clamp(roundedBox(boxClip.xy, boxClip.zw, vertex, cornerRadii), 0.0, 1.0);
 	
-	float shadowFactorInset = (1.0 - shadow)*(box);
-	float shadowFactorNormal = shadow;
+	float shadowFactorInset = (1.0 - shadow)*(boxClip);
+	float shadowFactorNormal = (shadow)*(1.0-boxClip);
 	float shadowFactor = mix(shadowFactorNormal, shadowFactorInset, inset);
 	
-	//outColor = vec4(sigmaCornerInset/12.0,1.0);//boxColor;
 	outColor = boxColor;
 	outColor.a *= shadowFactor;
 	
 	if ( vertex.x < scissor.x || vertex.y < scissor.y || vertex.x > scissor.z || vertex.y > scissor.w )
-		outColor.a = 0.0;
+		discard;
+		
+	if ( outColor.a <= 0.001 )
+		discard;
 }
