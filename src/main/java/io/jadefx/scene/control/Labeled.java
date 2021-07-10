@@ -2,7 +2,6 @@ package io.jadefx.scene.control;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 import org.lwjgl.nanovg.NanoVG;
 
@@ -42,7 +41,7 @@ public abstract class Labeled extends Control implements StyleBackground {
 	
 	public Labeled(String text) {
 		this.setText(text);
-		this.setElipsisString("…");
+		this.setElipsisString("\u2026");
 		this.setFont(new Font("Roboto", 18));
 		
         backgrounds.setAddCallback((e)->this.setFlag(FLAG_CSS_DIRTY));
@@ -175,8 +174,11 @@ public abstract class Labeled extends Control implements StyleBackground {
 			//
 		}
 		
-		ByteBuffer buff = ByteBuffer.wrap(barr);
-		return buff;
+		ByteBuffer buffer = ByteBuffer.allocateDirect(barr.length);
+		for (int i = 0; i< barr.length; i++)
+			buffer.put(barr[i]);
+		buffer.flip();
+		return buffer;
 	}
 
 	@Override
@@ -279,7 +281,7 @@ public abstract class Labeled extends Control implements StyleBackground {
 			NanoVG.nvgFontBlur(vg, shadow.getBlurRadius());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgFillColor(vg, shadow.getFromColor().getNVG());
-			NanoVG.nvgText(vg, absX+shadow.getXOffset(), absY+shadow.getYOffset(), textInternal);
+			//NanoVG.nvgText(vg, absX+shadow.getXOffset(), absY+shadow.getYOffset(), textInternal);
 			NanoVG.nvgClosePath(vg);
 		}
 
