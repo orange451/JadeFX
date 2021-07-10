@@ -1,14 +1,16 @@
-# JadeFX
+## JadeFX
 Client Application Platform for Desktop and Mobile
 
-This library is heavily under development.
+(This library is heavily under development)
 
-For mobile use MiniJVM: https://github.com/digitalgust/miniJVM
+- For mobile use MiniJVM: https://github.com/digitalgust/miniJVM
 
-MiniJVM ios xcode project: https://github.com/orange451/jadefx_minijvm_ios
+- MiniJVM ios xcode project: https://github.com/orange451/jadefx_minijvm_ios
 
-For desktop deployment use LWJGL: https://www.lwjgl.org/
+- For desktop deployment use LWJGL: https://www.lwjgl.org/
 
+
+## Sample Maven POM XML
 <details><summary>LWJGL Sample Maven POM (Click)</summary>
 ```maven
 <?xml version="1.0" encoding="UTF-8"?>
