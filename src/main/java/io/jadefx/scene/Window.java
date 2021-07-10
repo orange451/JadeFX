@@ -203,6 +203,9 @@ public class Window {
 		if ( this.getScene() == null )
 			return;
 		
+		if ( !this.getContext().isLoaded() )
+			return;
+		
 		this.getContext().refresh();
 		this.getScene().forceSize(this.getWidth(), this.getHeight());
 		this.getScene().render(this.getContext());

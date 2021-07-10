@@ -37,6 +37,8 @@ public class Context {
 	
 	private DefaultFonts fonts;
 
+	private boolean loaded = false;
+	
 	public Context(Window window) {
 		this(window, -1);
 	}
@@ -50,6 +52,7 @@ public class Context {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		this.loaded = true;
 	}
 
 	public void init() {
@@ -106,6 +109,13 @@ public class Context {
 	 */
 	public boolean isFlushed() {
 		return flush;
+	}
+	
+	/**
+	 * Returns whether the context is loaded and ready to use.
+	 */
+	public boolean isLoaded() {
+		return loaded;
 	}
 	
 	/**
@@ -196,6 +206,8 @@ class DefaultFonts {
 	
 	private Map<String, FontData> loadedFonts = new HashMap<>();
 	
+	protected static List<ByteBuffer> fontData = new ArrayList<>();
+	
 	public DefaultFonts(long vg) throws IOException {
 		add(ROBOTO = new FontData(vg, "Roboto", "jadefx/font/Roboto-Regular.ttf"));
 
@@ -221,7 +233,10 @@ class FontData {
 	
 	public FontData(long vg, String name, String resourcePath) throws IOException {
 		this.name = name;
-		this.handle = NanoVG.nvgCreateFontMem(vg, name, Context.ioResourceToByteBuffer(resourcePath), 0);
+		
+		ByteBuffer data = Context.ioResourceToByteBuffer(resourcePath);
+		DefaultFonts.fontData.add(data);
+		this.handle = NanoVG.nvgCreateFontMem(vg, name, data, 0);
 	}
 	
 	public int getHandle() {
