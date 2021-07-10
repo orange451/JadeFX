@@ -9,6 +9,36 @@ Client Application Platform for Desktop and Mobile
 
 - For desktop deployment use LWJGL: https://www.lwjgl.org/
 
+## Include JadeFX in your project
+<details><summary>Maven</summary>
+
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+	
+	<dependency>
+	    <groupId>com.github.orange451</groupId>
+	    <artifactId>JadeFX</artifactId>
+	    <version>master-SNAPSHOT</version>
+	</dependency>
+</details>
+
+<details><summary>Gradle</summary>
+
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+	
+	dependencies {
+	        implementation 'com.github.orange451:JadeFX:master-SNAPSHOT'
+	}
+</details>
 
 ## Sample Maven POM XML
 <details><summary>MiniJVM (GLFW/GLFM) Sample Maven POM (Click)</summary>
