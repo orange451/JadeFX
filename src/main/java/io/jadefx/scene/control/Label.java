@@ -1,6 +1,4 @@
-package io.jadefx.scene.layout;
-
-import io.jadefx.scene.control.Labeled;
+package io.jadefx.scene.control;
 
 public class Label extends Labeled {
 	

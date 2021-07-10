@@ -23,6 +23,8 @@ public abstract class Labeled extends Control implements StyleBackground {
 	
 	private float[] textBounds;
 	
+	private float[] textBoundsActual;
+	
 	private boolean wrapText;
 	
 	private String elipsis;
@@ -105,31 +107,42 @@ public abstract class Labeled extends Control implements StyleBackground {
 	protected void size() {
 		// Get initial text bounds
 		if ( textBounds == null )
-			computeTextBounds(this.text);
+			textBounds = computeTextBounds2(this.text);
+
+		if ( textBoundsActual == null )
+			textBoundsActual = new float[textBounds.length];
+		
+		textBoundsActual[0] = textBounds[0];
+		textBoundsActual[1] = textBounds[1];
+		textBoundsActual[2] = textBounds[2];
+		textBoundsActual[3] = textBounds[3];
 		
 		// Normal sizing routine
 		super.size();
 		
 		// Add elipsis if text is too long!
-		if ( textBounds[2] - textBounds[1] > this.getWidth() ) {
+		float textWidth = textBoundsActual[2] - textBoundsActual[1];
+		if ( textWidth > this.getWidth() ) {
 			bindFont(this.getScene().getContext().getNVG());
 			
 			ByteBuffer newText = null;
-			float newWidth = textBounds[2] - textBounds[1];
 			for (int i = 0; i < this.text.length(); i++) {
 				String tempString = this.text.substring(0, i) + elipsis;
 				ByteBuffer tempBytes = toUtf8(tempString);
 				float tempWid = NanoVG.nvgTextBounds(this.getScene().getContext().getNVG(), 0, 0, tempBytes, new float[4]);
 				if ( tempWid <= this.getWidth() ) {
 					newText = tempBytes;
-					newWidth = tempWid;
+					textWidth = tempWid;
 				} else {
 					break;
 				}
 			}
 			
 			this.textInternal = newText;
-			textBounds[2] = textBounds[1] + newWidth;
+			textBoundsActual[2] = textBoundsActual[1] + textWidth;
+		} else {
+			if ( textInternal.capacity() < this.text.length() )
+				this.textInternal = toUtf8(text);
 		}
 	}
 	
@@ -139,10 +152,8 @@ public abstract class Labeled extends Control implements StyleBackground {
 		NanoVG.nvgFontFace(vg, this.getFont().getFamily());
 	}
 	
-	protected void computeTextBounds(String usingText) {
-		if ( textBounds == null )
-			textBounds = new float[4];
-		
+	protected float[] computeTextBounds2(String usingText) {
+		float[] bounds = new float[4];
 		bindFont(this.getScene().getContext().getNVG());
 		
 		try {
@@ -153,10 +164,12 @@ public abstract class Labeled extends Control implements StyleBackground {
 		
 		if ( wrapText ) {
 			float breakRowWidth = (float) Math.min(this.getAvailableSize().x, this.getMaxWidth());
-			NanoVG.nvgTextBoxBounds(this.getScene().getContext().getNVG(), 0, 0, breakRowWidth, textInternal, this.getTextBounds());
+			NanoVG.nvgTextBoxBounds(this.getScene().getContext().getNVG(), 0, 0, breakRowWidth, textInternal, bounds);
 		} else {
-			NanoVG.nvgTextBounds(this.getScene().getContext().getNVG(), 0, 0, textInternal, this.getTextBounds());
+			NanoVG.nvgTextBounds(this.getScene().getContext().getNVG(), 0, 0, textInternal, bounds);
 		}
+		
+		return bounds;
 	}
 
 	private ByteBuffer toUtf8(String s) {
@@ -183,8 +196,22 @@ public abstract class Labeled extends Control implements StyleBackground {
 		buffer.flip();
 		return buffer;
 	}
-
+	
 	@Override
+	protected double getMaxElementWidth() {
+		if ( textBounds == null )
+			return 0;
+		return textBounds[2]-textBounds[0];
+	}
+	
+	@Override
+	protected double getMaxElementHeight() {
+		if ( textBounds == null )
+			return 0;
+		return textBounds[3]-textBounds[1];
+	}
+
+	/*@Override
 	protected double computePrefWidth() {
 		float textSize = getTextBounds()[2]-getTextBounds()[0];
 		textSize += this.padding.getWidth();
@@ -208,10 +235,13 @@ public abstract class Labeled extends Control implements StyleBackground {
 			return Math.max(textSize, computedSize);
 		else
 			return computedSize;
-	}
+	}*/
 	
 	protected float[] getTextBounds() {
-		return this.textBounds;
+		if ( this.textBoundsActual == null )
+			return new float[4];
+		
+		return this.textBoundsActual;
 	}
 	
 	/**
@@ -284,7 +314,7 @@ public abstract class Labeled extends Control implements StyleBackground {
 			NanoVG.nvgFontBlur(vg, shadow.getBlurRadius());
 			NanoVG.nvgBeginPath(vg);
 			NanoVG.nvgFillColor(vg, shadow.getFromColor().getNVG());
-			//NanoVG.nvgText(vg, absX+shadow.getXOffset(), absY+shadow.getYOffset(), textInternal);
+			NanoVG.nvgText(vg, absX+shadow.getXOffset(), absY+shadow.getYOffset(), textInternal);
 			NanoVG.nvgClosePath(vg);
 		}
 

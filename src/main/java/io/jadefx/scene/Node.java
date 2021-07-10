@@ -9,7 +9,6 @@ import org.joml.Vector2d;
 
 import io.jadefx.collections.ObservableList;
 import io.jadefx.geometry.HPos;
-import io.jadefx.geometry.Insets;
 import io.jadefx.geometry.Orientation;
 import io.jadefx.geometry.Pos;
 import io.jadefx.geometry.VPos;
@@ -37,7 +36,6 @@ public abstract class Node {
 	protected Percentage minheightRatio;
 	protected Percentage maxwidthRatio;
 	protected Percentage maxheightRatio;
-	protected Insets padding = new Insets(0,0,0,0);
 	protected Pos alignment = Pos.CENTER;
 	
 	/**
@@ -177,12 +175,12 @@ public abstract class Node {
 	 * Logic to size the node based on its preferred sizing. Also limits based on what sizing is available.
 	 */
 	protected void sizePreferred() {
+		double prefWidth = this.computePrefWidth();
+		double prefHeight = this.computePrefHeight();
+		
 		Vector2d available = this.getAvailableSize();
 		double availableWidth = available.x;
 		double availableHeight = available.y;
-		
-		double prefWidth = this.computePrefWidth();
-		double prefHeight = this.computePrefHeight();
 		
 		// Clamp to pref size and available max size
 		sizeClamp(prefWidth, prefHeight, availableWidth, availableHeight);
@@ -192,16 +190,19 @@ public abstract class Node {
 	 * Get the actual preferred width with respect to fill ratios.
 	 */
 	protected double computePrefWidth() {
-		return computeMinSize(this.getPrefWidth()+this.padding.getWidth(), this.getPrefWidthRatio(), Orientation.HORIZONTAL);
+		return computeMinSize(this.getPrefWidth(), this.getPrefWidthRatio(), Orientation.HORIZONTAL);
 	}
 	
 	/**
 	 * Get the actual preferred height with respect to fill ratios.
 	 */
 	protected double computePrefHeight() {
-		return computeMinSize(this.getPrefHeight()+this.padding.getHeight(), this.getPrefHeightRatio(), Orientation.VERTICAL);
+		return computeMinSize(this.getPrefHeight(), this.getPrefHeightRatio(), Orientation.VERTICAL);
 	}
 	
+	/**
+	 * Get the min size based on a pre-defined pixel amount or a percentage of the parent size.
+	 */
 	protected double computeMinSize(double desiredSizePixels, Percentage desiredParentPercentage, Orientation orientation) {
 		double minSize = desiredSizePixels;
 		
@@ -217,7 +218,10 @@ public abstract class Node {
 		
 		return minSize;
 	}
-	
+
+	/**
+	 * Get the max size based on a pre-defined pixel amount or a percentage of the parent size.
+	 */
 	protected double computeMaxSize(double desiredSizePixels, Percentage desiredParentPercentage, Orientation orientation) {
 		double maxSize = desiredSizePixels;
 		
@@ -267,31 +271,31 @@ public abstract class Node {
 	 * Returns true if size was modified.
 	 */
 	private boolean sizeClamp(double minWidth, double minHeight, double maxWidth, double maxHeight) {
-		boolean dirty = false;
+		boolean resized = false;
 		
 		// Cap size to min size
 		if ( size.x < minWidth ) {
 			size.x = minWidth;
-			dirty = true;
+			resized = true;
 		}
 		
 		if ( size.y < minHeight ) {
 			size.y = minHeight;
-			dirty = true;
+			resized = true;
 		}
 
 		// Cap size to max size
 		if ( size.x > maxWidth ) {
 			size.x = maxWidth;
-			dirty = true;
+			resized = true;
 		}
 		
 		if ( size.y > maxHeight ) {
 			size.y = maxHeight;
-			dirty = true;
+			resized = true;
 		}
 		
-		return dirty;
+		return resized;
 	}
 	
 	protected void setParent(Node parent) {
@@ -378,7 +382,6 @@ public abstract class Node {
 		}
 		
 		max = Math.max(max, getMinWidth());
-		
 		return max;
 	}
 	
@@ -397,6 +400,50 @@ public abstract class Node {
 		max = Math.max(max, getMinHeight());
 		
 		return max;
+	}
+	
+
+	
+	/**
+	 * Get the width of the widest element inside this node.
+	 * @return
+	 */
+	protected double getMaxElementWidth() {
+		double runningX = 0;
+		for (int i = 0; i < children.size(); i++) {
+			Node child = children.get(i);
+			if ( child == null )
+				continue;
+
+			double tempSize = Math.max(child.getWidth(), Math.min(child.computePrefWidth(), this.getMaxWidth()));
+			if ( child.getPrefWidthRatio() != null && child.getPrefWidthRatio().getValue() > 0)
+				tempSize = Math.max(child.getPrefWidth(), child.getMinWidth());
+			
+			runningX = Math.max(runningX, tempSize);
+		}
+		
+		return runningX;
+	}
+	
+	/**
+	 * Get the height of the highest element inside this node.
+	 * @return
+	 */
+	protected double getMaxElementHeight() {
+		double runningY = 0;
+		for (int i = 0; i < children.size(); i++) {
+			Node child = children.get(i);
+			if ( child == null )
+				continue;
+
+			double tempSize = Math.max(child.getHeight(), Math.min(child.computePrefHeight(), this.getMaxHeight()));
+			if ( child.getPrefHeightRatio() != null && child.getPrefHeightRatio().getValue() > 0)
+				tempSize = Math.max(child.getPrefHeight(), child.getMinHeight());
+
+			runningY = Math.max(runningY, tempSize);
+		}
+		
+		return runningY;
 	}
 	
 	/**

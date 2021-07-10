@@ -7,6 +7,8 @@ import io.jadefx.scene.Parent;
 public abstract class Region extends Parent {
 	protected Insets border = Insets.EMPTY;
 	
+	protected Insets padding = Insets.EMPTY;
+	
 	/**
 	 * Set the padding insets of this node. All child nodes will be offset based on the insets.
 	 * @param value
@@ -68,62 +70,16 @@ public abstract class Region extends Parent {
 		return bounds;
 	}
 	
+	@Override
+	protected double computePrefWidth() {
+		float maxWidthInside = (float) (getMaxElementWidth()+getPadding().getWidth()+getBorder().getWidth());
+		return Math.max(super.computePrefWidth(), maxWidthInside);
+	}
 	
 	@Override
-	protected void sizePreferred() {
-		super.sizePreferred();
-		
-		float maxWidthInside = (float) (getMaxElementWidth()+getPadding().getWidth()+getBorder().getWidth());
-		maxWidthInside = (float) Math.max(maxWidthInside, this.computePrefWidth());
-		size.x = maxWidthInside;
-		
-		// Fit this pane to the height of its elements.
+	protected double computePrefHeight() {
 		float maxHeightInside = (float) (getMaxElementHeight()+getPadding().getHeight()+getBorder().getHeight());
-		maxHeightInside = (float) Math.max(maxHeightInside, this.computePrefHeight());
-		size.y = maxHeightInside;
-	}
-
-	
-	/**
-	 * Get the width of the widest element inside this node.
-	 * @return
-	 */
-	protected double getMaxElementWidth() {
-		double runningX = 0;
-		for (int i = 0; i < children.size(); i++) {
-			Node child = children.get(i);
-			if ( child == null )
-				continue;
-
-			double tempSize = child.getWidth();
-			if ( child.getPrefWidthRatio() != null && child.getPrefWidthRatio().getValue() > 0)
-				tempSize = Math.max(child.getPrefWidth(), child.getMinWidth());
-			
-			runningX = Math.max(runningX, tempSize);
-		}
-		
-		return runningX;
-	}
-	
-	/**
-	 * Get the height of the highest element inside this node.
-	 * @return
-	 */
-	protected double getMaxElementHeight() {
-		double runningY = 0;
-		for (int i = 0; i < children.size(); i++) {
-			Node child = children.get(i);
-			if ( child == null )
-				continue;
-			
-			double tempSize = child.getHeight();
-			if ( child.getPrefHeightRatio() != null && child.getPrefHeightRatio().getValue() > 0)
-				tempSize = Math.max(child.getPrefHeight(), child.getMinHeight());
-
-			runningY = Math.max(runningY, tempSize);
-		}
-		
-		return runningY;
+		return Math.max(super.computePrefHeight(), maxHeightInside);
 	}
 	
 	/**
