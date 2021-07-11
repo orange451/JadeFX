@@ -7,9 +7,6 @@ import io.jadefx.scene.Node;
 public class VBox extends DirectionalBox {
 
 	protected void layoutChildren() {
-		if ( !hasFlag(FLAG_LAYOUT_DIRTY) )
-			return;
-		
 		double yStart = 0;
 		for (int i = 0; i < this.children.size(); i++) {
 			Node node = this.children.get(i);

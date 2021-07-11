@@ -141,7 +141,7 @@ public abstract class Labeled extends Control implements StyleBackground {
 			this.textInternal = newText;
 			textBoundsActual[2] = textBoundsActual[1] + textWidth;
 		} else {
-			if ( textInternal.capacity() < this.text.length() )
+			if ( this.textInternal != null && this.text != null && textInternal.capacity() < this.text.length() )
 				this.textInternal = toUtf8(text);
 		}
 	}

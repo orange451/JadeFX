@@ -102,10 +102,16 @@ public abstract class Node {
 			lastSize.set(this.size);
 			
 			size();
-			sizeChildren();
-			layoutChildren();
+			
+			if ( hasFlag(FLAG_SIZE_DIRTY) )
+				sizeChildren();
+
+			if ( !hasFlag(FLAG_LAYOUT_DIRTY) )
+				layoutChildren();
+			
 			this.resetFlag(FLAG_LAYOUT_DIRTY);
 			this.resetFlag(FLAG_SIZE_DIRTY);
+			
 			for (int i = 0; i < this.children.size(); i++) {
 				Node node = this.children.get(i);
 				node.position();
@@ -119,9 +125,6 @@ public abstract class Node {
 	 * Position the children in this node.
 	 */
 	protected void layoutChildren() {
-		if ( !hasFlag(FLAG_LAYOUT_DIRTY) )
-			return;
-		
 		for (int i = 0; i < this.children.size(); i++) {
 			Node node = this.children.get(i);
 			Pos useAlignment = node.usingAlignment();
@@ -257,9 +260,6 @@ public abstract class Node {
 	 * Size all direct child nodes.
 	 */
 	private void sizeChildren() {
-		if ( !hasFlag(FLAG_SIZE_DIRTY) )
-			return;
-
 		for (int i = 0; i < this.children.size(); i++) {
 			Node node = this.children.get(i);
 			node.size();
@@ -1200,6 +1200,12 @@ public abstract class Node {
 	
 	public String name() {
 		return this.getClass() + "[id=" + this.getElementId() + " style=" + this.getStyle() + "]";
+	}
+	
+	public static void resizeRelocate(Node node, double x, double y, double width, double height) {
+		node.setAbsolutePosition(x, y);
+		node.forceSize(width, height);
+		node.dirty();
 	}
 	
 	public class LayoutBounds {
