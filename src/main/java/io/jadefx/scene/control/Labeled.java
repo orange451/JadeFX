@@ -154,6 +154,9 @@ public abstract class Labeled extends Control implements StyleBackground {
 	
 	protected float[] computeTextBounds2(String usingText) {
 		float[] bounds = new float[4];
+		if ( this.getScene() == null )
+			return bounds;
+		
 		bindFont(this.getScene().getContext().getNVG());
 		
 		try {
@@ -297,7 +300,7 @@ public abstract class Labeled extends Control implements StyleBackground {
 		long vg = context.getNVG();
 		
 		// get Absolute position
-		float absX = (float)(getX() + this.padding.getLeft());
+		float absX = (float)(getX() + this.getPadding().getLeft());
 		float absY = (float)(getY() + this.getPadding().getTop());
 		
 		// Draw background(s)

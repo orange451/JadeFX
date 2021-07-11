@@ -113,10 +113,14 @@ public class Window {
 
 	private Map<EventListenerType, List<EventListener>> eventListeners = new HashMap<>();
 	
+	private static Map<Long,Integer> flushMap = new HashMap<>();
+	
 	public Window(long handle, long nvgContext) {
 		this.handle = handle;
 		this.context = new Context(this, nvgContext);
 		this.setCallbacks();
+
+		flushMap.put(handle, 10);
 	}
 	
 	protected void setCallbacks() {
@@ -198,6 +202,10 @@ public class Window {
 		mouseHandler = new MouseHandler(this);
 		keyboardHandler = new KeyboardHandler(this);
 	}
+
+	public boolean isFlushed() {
+		return flushMap.get(this.getHandle()) > 0 || this.getContext().isFlushed();
+	}
 	
 	public void render() {
 		if ( this.getScene() == null )
@@ -206,10 +214,20 @@ public class Window {
 		if ( !this.getContext().isLoaded() )
 			return;
 		
+		if ( this.getContext().isFlushed() ) {
+			this.getContext().setFlushed(false);
+			flushMap.put(this.getHandle(), 5);
+		}
+		
+		int currentFlush = flushMap.get(this.getHandle());
+		if (currentFlush <= 0)
+			return;
+		
+		flushMap.put(this.getHandle(), Math.max(currentFlush-1, 0));
+		
 		this.getContext().refresh();
 		this.getScene().forceSize(this.getWidth(), this.getHeight());
 		this.getScene().render(this.getContext());
-		this.getContext().setFlushed(false);
 	}
 
 	public Context getContext() {

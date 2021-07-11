@@ -7,9 +7,6 @@ import io.jadefx.scene.Node;
 public class HBox extends DirectionalBox {
 
 	protected void layoutChildren() {
-		if ( !hasFlag(FLAG_LAYOUT_DIRTY) )
-			return;
-		
 		double xStart = 0;
 		for (int i = 0; i < this.children.size(); i++) {
 			Node node = this.children.get(i);
@@ -24,8 +21,10 @@ public class HBox extends DirectionalBox {
 			double yy = (this.getHeight()-node.getHeight())*yMult;
 			node.setLocalPosition(xStart, yy);
 			
-			xStart += node.getHeight();
+			xStart += node.getWidth();
 			xStart += spacing;
+			
+			System.out.println("HBOX UPDATING CHILD " + node.name() + " / " + node.getX() + " / " + node.getY());
 		}
 	}
 	

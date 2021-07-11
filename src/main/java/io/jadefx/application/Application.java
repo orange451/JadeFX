@@ -24,8 +24,6 @@ import io.jadefx.scene.layout.Pane;
 
 public abstract class Application {
 	
-	private static Map<Long,Integer> flushMap = new HashMap<>();
-	
 	public static void launch(String[] args) {
 		
 		// Get the class name that called launch method.
@@ -107,8 +105,6 @@ public abstract class Application {
 			vg = NanoVGGL2.nvgCreate(flags);
 		}
 		
-		flushMap.put(handle, 10);
-		
 		// Create scene
 		Window window = new Window(handle, vg);
 		Pane root = new Pane();
@@ -138,13 +134,8 @@ public abstract class Application {
 	}
 	
 	private static void render(Window window) {
-		if ( window.getContext().isFlushed() )
-			flushMap.put(window.getHandle(), 3);
-			
-		if (flushMap.get(window.getHandle()) < 0)
+		if ( !window.isFlushed() )
 			return;
-		
-		flushMap.put(window.getHandle(), flushMap.get(window.getHandle())-1);
 		
 		GL11.glClearColor(0.9741f, 0.9741f, 0.9741f, 1.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);

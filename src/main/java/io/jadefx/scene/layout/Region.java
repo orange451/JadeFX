@@ -81,44 +81,4 @@ public abstract class Region extends Parent {
 		float maxHeightInside = (float) (getMaxElementHeight()+getPadding().getHeight()+getBorder().getHeight());
 		return Math.max(super.computePrefHeight(), maxHeightInside);
 	}
-	
-	/**
-	 * Returns the widths of all direct children added together.
-	 * Treats fillable regions that stretch as size 0.
-	 * @return
-	 */
-	protected double getCombinedElementWidth() {
-		double totalSize = 0;
-		for (int i = 0; i < children.size(); i++) {
-			Node child = children.get(i);
-			double tempSize = child.getWidth();
-			
-			if ( child.getPrefWidthRatio() != null && child.getPrefWidthRatio().getValue() > 0)
-				tempSize = Math.max(child.getPrefWidth(), child.getMinWidth());
-		
-			totalSize += tempSize;
-		}
-		
-		return totalSize;
-	}
-	
-	/**
-	 * Returns the heights of all direct children added together.
-	 * Treats fillable regions that stretch as size 0.
-	 * @return
-	 */
-	protected double getCombinedElementHeight() {
-		double totalSize = 0;
-		for (int i = 0; i < children.size(); i++) {
-			Node child = children.get(i);
-			double tempSize = child.getHeight();
-			
-			if ( child.getPrefHeightRatio() != null && child.getPrefHeightRatio().getValue() > 0)
-				tempSize = Math.max(child.getPrefHeight(), child.getMinHeight());
-		
-			totalSize += tempSize;
-		}
-		
-		return totalSize;
-	}
 }
