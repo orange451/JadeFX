@@ -141,7 +141,8 @@ public abstract class Labeled extends Control implements StyleBackground {
 			this.textInternal = newText;
 			textBoundsActual[2] = textBoundsActual[1] + textWidth;
 		} else {
-			if ( this.textInternal != null && this.text != null && textInternal.capacity() < this.text.length() )
+			boolean isUpdated = this.textInternal != null && this.text != null && textInternal.capacity() < this.text.length();
+			if ( isUpdated || this.textInternal == null )
 				this.textInternal = toUtf8(text);
 		}
 	}
@@ -294,8 +295,9 @@ public abstract class Labeled extends Control implements StyleBackground {
 
 	@Override
 	public void render(Context context) {
-		if ( textInternal == null )
+		if ( textInternal == null ) {
 			return;
+		}
 		
 		long vg = context.getNVG();
 		
