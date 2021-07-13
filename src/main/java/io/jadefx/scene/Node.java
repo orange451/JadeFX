@@ -420,7 +420,7 @@ public abstract class Node {
 
 			double tempSize = Math.max(child.getWidth(), Math.min(child.computePrefWidth(), this.getMaxWidth()));
 			if ( child.getPrefWidthRatio() != null && child.getPrefWidthRatio().getValue() > 0)
-				tempSize = Math.max(child.getPrefWidth(), child.getMinWidth());
+				tempSize = Math.min(this.getMaxWidth(), Math.max(child.getPrefWidth(), child.getMinWidth()));
 			
 			runningX = Math.max(runningX, tempSize);
 		}
@@ -441,7 +441,7 @@ public abstract class Node {
 
 			double tempSize = Math.max(child.getHeight(), Math.min(child.computePrefHeight(), this.getMaxHeight()));
 			if ( child.getPrefHeightRatio() != null && child.getPrefHeightRatio().getValue() > 0)
-				tempSize = Math.max(child.getPrefHeight(), child.getMinHeight());
+				tempSize = Math.min(this.getMaxHeight(), Math.max(child.getPrefHeight(), child.getMinHeight()));
 
 			runningY = Math.max(runningY, tempSize);
 		}

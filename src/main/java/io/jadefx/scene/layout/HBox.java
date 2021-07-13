@@ -23,8 +23,6 @@ public class HBox extends DirectionalBox {
 			
 			xStart += node.getWidth();
 			xStart += spacing;
-			
-			System.out.println("HBOX UPDATING CHILD " + node.name() + " / " + node.getX() + " / " + node.getY());
 		}
 	}
 	
