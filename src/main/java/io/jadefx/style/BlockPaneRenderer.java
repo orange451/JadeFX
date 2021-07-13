@@ -25,10 +25,11 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 			boxClip = new float[4];
 			boxClips.put(context, boxClip);
 		}
-		boxClip[0] = (float) node.getX();
-		boxClip[1] = (float) node.getY();
-		boxClip[2] = (float) node.getWidth();
-		boxClip[3] = (float) node.getHeight();
+		Insets border = node.getBorder();
+		boxClip[0] = (float) (node.getX() + border.getLeft());
+		boxClip[1] = (float) (node.getY() + border.getRight());
+		boxClip[2] = (float) (node.getWidth() - border.getWidth());
+		boxClip[3] = (float) (node.getHeight() - border.getHeight());
 		
 		// Draw drop shadows
 		for (int i = 0; i < node.getBoxShadowList().size(); i++) {
@@ -39,7 +40,6 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 		}
 		
 		// Draw border
-		Insets border = node.getBorder();
 		if ( node.getBorderStyle() != BorderStyle.NONE && (border.getWidth() > 0 || border.getHeight() > 0) && node.getBorderColor() != null ) {
 			JadeFXUtil.drawBorder(context, node.getX(), node.getY(), node.getWidth(), node.getHeight(), border, node.getBackground(), node.getBorderColor(), node.getBorderRadii() );
 		}
