@@ -207,8 +207,11 @@ public class Window {
 		keyboardHandler = new KeyboardHandler(this);
 	}
 
+	private static final int NO_FLUSH = 0;
+	private static final int FLUSH = 4;
+	
 	public boolean isFlushed() {
-		return flushMap.get(this.getHandle()) > 0 || this.getContext().isFlushed();
+		return flushMap.get(this.getHandle()) > NO_FLUSH || this.getContext().isFlushed();
 	}
 	
 	public void render() {
@@ -220,11 +223,11 @@ public class Window {
 		
 		if ( this.getContext().isFlushed() ) {
 			this.getContext().setFlushed(false);
-			flushMap.put(this.getHandle(), 5);
-		}
+			flushMap.put(this.getHandle(), FLUSH);	// We need to flush for a few frames because
+		}											// GLFM doesnt have a swapbuffers implementation.
 		
 		int currentFlush = flushMap.get(this.getHandle());
-		if (currentFlush <= 0)
+		if (currentFlush <= NO_FLUSH)
 			return;
 		
 		flushMap.put(this.getHandle(), Math.max(currentFlush-1, 0));
@@ -328,7 +331,7 @@ public class Window {
 	public void show() {
 		setVisible(true);
 		//focus();
-		// focusHack();
+		//focusHack();
 	}
 
 	public void setVisible(boolean flag) {
