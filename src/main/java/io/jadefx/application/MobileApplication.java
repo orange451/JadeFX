@@ -10,7 +10,11 @@ import io.jadefx.scene.Scene;
 
 public abstract class MobileApplication extends Application {
 	
+	private static GApplicationDisplay appDisplay;
+	
 	static {
+		appDisplay = new GLFWApplicationDisplay();
+		
 		String callingClassName = getCallingClass(MobileApplication.class.getName(), "<clinit>");
 
 		// Force inject application to launcher
@@ -32,28 +36,38 @@ public abstract class MobileApplication extends Application {
 		}
 	}
 	
-	private static GApplicationDisplay appDisplay = new GLFWApplicationDisplay();
-	
 	public static void setOrientation(ScreenOrientation orientation) {
-		if ( orientation == null )
+		if ( orientation == null || appDisplay == null )
 			orientation = ScreenOrientation.ANY;
 		
 		appDisplay.setUserInterfaceOrientation(GCallBack.getInstance().getDisplay(), orientation.getValue());
 	}
     
     public static void showStatusBar() {
+    	if ( GCallBack.getInstance() == null || appDisplay == null )
+    		return;
+    	
     	appDisplay.setDisplayChrome(GCallBack.getInstance().getDisplay(), GLFM.GLFMUserInterfaceChromeNavigationAndStatusBar);
     }
     
     public static void hideStatusBar() {
+    	if ( GCallBack.getInstance() == null || appDisplay == null )
+    		return;
+    	
     	appDisplay.setDisplayChrome(GCallBack.getInstance().getDisplay(), GLFM.GLFMUserInterfaceChromeFullscreen);
     }
     
     public static void showKeyboard() {
+    	if ( GCallBack.getInstance() == null || appDisplay == null )
+    		return;
+    	
     	appDisplay.setKeyboardVisible(GCallBack.getInstance().getDisplay(), true);
     }
     
     public static void hideKeyboard() {
+    	if ( GCallBack.getInstance() == null || appDisplay == null )
+    		return;
+    	
     	appDisplay.setKeyboardVisible(GCallBack.getInstance().getDisplay(), false);
     }
 	

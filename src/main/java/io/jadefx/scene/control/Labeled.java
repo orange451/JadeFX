@@ -84,7 +84,11 @@ public abstract class Labeled extends Control implements StyleBackground {
 	
 
 	public void setFont(Font font) {
+		if ( this.font != null && this.font.equals(font) )
+			return;
+		
 		this.font = font;
+		this.textBounds = null; // reset this because we need to generate new one next render.
 		this.dirty();
 	}
 
@@ -95,12 +99,12 @@ public abstract class Labeled extends Control implements StyleBackground {
 	@Override
 	protected void stylePush() {
 		super.stylePush();
-		Stylesheet.findAndApplyStyle(this.getScene().getContext().getCurrentStyling(), this, this.getParent(), StyleOperationDefinitions.FONT_SIZE, StyleOperationDefinitions.COLOR);
+		Stylesheet.findAndApplyStyle(this.getScene().getContext().getCurrentStyling(), this, this, StyleOperationDefinitions.FONT_SIZE, StyleOperationDefinitions.COLOR);
 	}
 	
 	protected void stylePop() {
 		super.stylePop();
-		Stylesheet.findAndApplyStyle(this.getScene().getContext().getCurrentStyling(), this, this.getParent(), StyleOperationDefinitions.FONT_SIZE, StyleOperationDefinitions.COLOR);
+		Stylesheet.findAndApplyStyle(this.getScene().getContext().getCurrentStyling(), this, this, StyleOperationDefinitions.FONT_SIZE, StyleOperationDefinitions.COLOR);
 	}
 	
 	@Override
