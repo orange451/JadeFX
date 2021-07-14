@@ -36,8 +36,8 @@ public class GenericShader {
 
 	public GenericShader() {
 		this(
-				GenericShader.class.getClassLoader().getResource("lwjgui/gl/vertex.glsl"),
-				GenericShader.class.getClassLoader().getResource("lwjgui/gl/fragment.glsl")
+				GenericShader.class.getClassLoader().getResource("jadefx/gl/vertex.glsl"),
+				GenericShader.class.getClassLoader().getResource("jadefx/gl/fragment.glsl")
 			);
 	}
 
