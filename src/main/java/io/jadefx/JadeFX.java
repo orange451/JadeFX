@@ -50,11 +50,16 @@ public class JadeFX {
 	
 	/**
 	 * Render every JadeFX window under the same thread.
+	 * Will set the GLFW context before each window drawing.
+	 * Will call glfwPollEvents.
 	 */
 	public static void render() {
 		for (Window window : activeWindows.values()) {
+			GLFW.glfwMakeContextCurrent(window.getHandle());
 			render(window);
 		}
+		
+		GLFW.glfwPollEvents();
 	}
 	
 	/**
@@ -65,12 +70,9 @@ public class JadeFX {
 		if ( window == null )
 			return;
 		
-		GLFW.glfwMakeContextCurrent(window.getHandle());
-		
 		renderRoutine(window);
 		
 		GLFW.glfwSwapBuffers(window.getHandle());
-		GLFW.glfwPollEvents();
 	}
 	
 	private static void renderRoutine(Window window) {
