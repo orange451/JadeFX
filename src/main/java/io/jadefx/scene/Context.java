@@ -24,7 +24,7 @@ import io.jadefx.style.Stylesheet;
 
 public class Context {
 
-	private Window window;
+	private final Window window;
 
 	private long nvgContext;
 

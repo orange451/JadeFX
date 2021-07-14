@@ -41,6 +41,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryStack;
 
+import io.jadefx.JadeFX;
 import io.jadefx.collections.ObservableList;
 import io.jadefx.event.EventHelper;
 import io.jadefx.event.KeyEvent;
@@ -161,6 +162,9 @@ public class Window {
 			if ( this.framebufferWidth > 0 ) {
 				pixelRatio = (this.framebufferWidth <= this.width) ? 1 : this.framebufferWidth / this.width;
 			}
+			
+			Window.this.scene.dirty();
+			JadeFX.render(Window.this);
 		});
 
 		scrollCallback = new ScrollCallback();

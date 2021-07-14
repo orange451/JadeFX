@@ -1,26 +1,16 @@
 package io.jadefx.application;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.nanovg.NanoVGGL3.nvgDelete;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.lwjgl.glfm.GLFM;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGL2;
-import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 import org.mini.gui.GCallBack;
 
+import io.jadefx.JadeFX;
 import io.jadefx.scene.Scene;
 import io.jadefx.scene.Window;
-import io.jadefx.scene.layout.Pane;
+import io.jadefx.util.JadeFXUtil;
 
 public abstract class Application {
 	
@@ -63,59 +53,37 @@ public abstract class Application {
 		
 		long handle;
 		
-		// Initialize GLFW
+		// Initialize GLFM
 		if ( isGLFM ) {
-			//callback.init(800, 600);
 			handle = callback.getDisplay();
 			if ( handle == MemoryUtil.NULL )
 				throw new RuntimeException("Failed to create the GLFW window");
 			
-	        GLFM.glfmSetDisplayConfig(handle,
-	        		GLFM.GLFMRenderingAPIOpenGLES3,
-	        		GLFM.GLFMColorFormatRGBA8888,
-	        		GLFM.GLFMDepthFormat16,
-	        		GLFM.GLFMStencilFormat8,
-	        		GLFM.GLFMMultisampleNone);
-		} else {
+	        JadeFXUtil.setupDefaultDisplayGLFM(handle);
+		} else { // Initialize GLFW
 			if (!GLFW.glfwInit())
 				throw new IllegalStateException("Unable to initialize GLFW");
-			GLFW.glfwDefaultWindowHints();
-			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
-			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
-			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
-			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
-			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
-			handle = GLFW.glfwCreateWindow(300, 300, "Hello World!", MemoryUtil.NULL, MemoryUtil.NULL);
+			
+			handle = JadeFXUtil.createWindowGLFW(300, 300, "Window");
 			if ( handle == MemoryUtil.NULL )
 				throw new RuntimeException("Failed to create the GLFW window");
+
 			GLFW.glfwMakeContextCurrent(handle);
 			GLFW.glfwSwapInterval(1);
 			GL.createCapabilities();
 		}
 		
 		// NanoVG
-		long vg;
-		boolean modernOpenGL = (GL11.glGetInteger(GL30.GL_MAJOR_VERSION) > 3)
-				|| (GL11.glGetInteger(GL30.GL_MAJOR_VERSION) == 3 && GL11.glGetInteger(GL30.GL_MINOR_VERSION) >= 2);
-		if (modernOpenGL) {
-			int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
-			vg = NanoVGGL3.nvgCreate(flags);
-		} else {
-			int flags = NanoVGGL2.NVG_STENCIL_STROKES | NanoVGGL2.NVG_ANTIALIAS;
-			vg = NanoVGGL2.nvgCreate(flags);
-		}
+		long vg = JadeFXUtil.makeNanoVGContext(true);
 		
 		// Create scene
-		Window window = new Window(handle, vg);
-		Pane root = new Pane();
-		root.setBackgroundLegacy(null);
-		window.setScene(new Scene(root));
+		Window window  = JadeFX.create(handle, vg);
 		application.start(window.getScene());
 		
 		// Loop
 		window.setVisible(true);
 		if ( isGLFM ) {
-	        GLFM.glfmSetRenderFuncCallback(handle, (display, frameTime) -> render(window));
+	        GLFM.glfmSetRenderFuncCallback(handle, (display, frameTime) -> JadeFX.render(window));
 		} else {
 			loop(window);
 	        cleanup(window);
@@ -124,35 +92,13 @@ public abstract class Application {
 	
 	private static void loop(Window window) {
 		while ( !GLFW.glfwWindowShouldClose(window.getHandle()) ) {
-			GLFW.glfwMakeContextCurrent(window.getHandle());
-			
-			render(window);
-			
-			GLFW.glfwSwapBuffers(window.getHandle());
-			GLFW.glfwPollEvents();
+			JadeFX.render();
 		}
-	}
-	
-	private static void render(Window window) {
-		if ( !window.isFlushed() )
-			return;
-		
-		GL11.glClearColor(0.9741f, 0.9741f, 0.9741f, 1.0f);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
-		
-		NanoVG.nvgBeginFrame(window.getContext().getNVG(), window.getWidth(), window.getHeight(), window.getPixelRatio());
-		{
-			NanoVG.nvgReset(window.getContext().getNVG());
-			NanoVG.nvgResetScissor(window.getContext().getNVG());
-			window.render();
-		}
-		NanoVG.nvgEndFrame(window.getContext().getNVG());
 	}
 	
 	private static void cleanup(Window window) {
-		nvgDelete(window.getContext().getNVG());
+		JadeFX.cleanup(window);
         GL.setCapabilities(null);
-        glfwFreeCallbacks(window.getHandle());
         glfwTerminate();
 	}
 

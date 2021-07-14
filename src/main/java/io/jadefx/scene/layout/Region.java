@@ -1,7 +1,6 @@
 package io.jadefx.scene.layout;
 
 import io.jadefx.geometry.Insets;
-import io.jadefx.scene.Node;
 import io.jadefx.scene.Parent;
 
 public abstract class Region extends Parent {

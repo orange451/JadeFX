@@ -1,8 +1,15 @@
 package io.jadefx.util;
 
+import org.lwjgl.glfm.GLFM;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL2;
+import org.lwjgl.nanovg.NanoVGGL3;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import io.jadefx.geometry.Insets;
 import io.jadefx.gl.util.BoxShadowRenderer;
@@ -159,5 +166,55 @@ public class JadeFXUtil {
 
 		// Reset scissor
 		//NanoVG.nvgScissor(nvg, (float)bounds.getX(), (float)bounds.getY(), (float)bounds.getWidth(), (float)bounds.getHeight());
+	}
+	
+	/**
+	 * Returns a new nanovg context. If requestModernOpenGL is true then we will return a OpenGL 3.2-backed context if it is available on the system.
+	 */
+	public static long makeNanoVGContext(boolean requestModernOpenGL) {
+		long vg;
+		boolean modernOpenGL = (GL11.glGetInteger(GL30.GL_MAJOR_VERSION) > 3)
+				|| (GL11.glGetInteger(GL30.GL_MAJOR_VERSION) == 3 && GL11.glGetInteger(GL30.GL_MINOR_VERSION) >= 2);
+		if (modernOpenGL && requestModernOpenGL) {
+			int flags = NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS;
+			vg = NanoVGGL3.nvgCreate(flags);
+		} else {
+			int flags = NanoVGGL2.NVG_STENCIL_STROKES | NanoVGGL2.NVG_ANTIALIAS;
+			vg = NanoVGGL2.nvgCreate(flags);
+		}
+		
+		return vg;
+	}
+
+	/**
+	 * Create a GLFW window backed by OpenGL Core profile. GLVersion 3.3
+	 */
+	public static long createWindowGLFW(int width, int height, String title) {
+		return createWindowGLFW(width, height, title, 3, 3);
+	}
+
+	/**
+	 * Create a GLFW window backed by OpenGL Core profile. GLVersion is user supplied.
+	 */
+	public static long createWindowGLFW(int width, int height, String title, int major, int minor) {
+		GLFW.glfwDefaultWindowHints();
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, major);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, minor);
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+		return GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
+	}
+
+	/**
+	 * Setup the default display properties for a GLFM window.
+	 */
+	public static void setupDefaultDisplayGLFM(long handle) {
+		GLFM.glfmSetDisplayConfig(handle,
+        		GLFM.GLFMRenderingAPIOpenGLES3,
+        		GLFM.GLFMColorFormatRGBA8888,
+        		GLFM.GLFMDepthFormat16,
+        		GLFM.GLFMStencilFormat8,
+        		GLFM.GLFMMultisampleNone);
 	}
 }
