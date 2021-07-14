@@ -20,6 +20,11 @@ public class PercentageCalc extends Percentage {
 	}
 	
 	@Override
+	public String toString() {
+		return "calc(" + super.toString() + " " + this.operation.getOperator() + " " + this.offset + ")";
+	}
+	
+	@Override
 	public double getValue() {
 		Percentage percent = calc();
 		return percent == this ? super.getValue() : percent.getValue();

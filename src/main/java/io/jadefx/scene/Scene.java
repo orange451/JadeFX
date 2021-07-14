@@ -84,6 +84,10 @@ public class Scene extends Node implements StyleBackground {
 		// Render normal
 		root.render(context);
 	}
+	
+	public Window getWindow() {
+		return this.getContext().getWindow();
+	}
 
 	public Context getContext() {
 		return this.context;
