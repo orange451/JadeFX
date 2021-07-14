@@ -187,6 +187,10 @@ public abstract class Node {
 		Vector2d available = this.getAvailableSize();
 		double availableWidth = available.x;
 		double availableHeight = available.y;
+
+		// We dont care about what is available if it's bigger than we /want/ to be
+		availableWidth = Math.min(prefWidth, availableWidth);
+		availableHeight = Math.min(prefHeight, availableHeight);
 		
 		// Clamp to pref size and available max size
 		sizeClamp(prefWidth, prefHeight, availableWidth, availableHeight);
@@ -213,7 +217,7 @@ public abstract class Node {
 		double minSize = desiredSizePixels;
 		
 		if ( desiredParentPercentage != null ) {
-			Vector2d available = this.getAvailableSize();
+			Vector2d available = this.getAvailableSize();			
 			double availableSize = orientation == Orientation.HORIZONTAL ? available.x : available.y;
 			
 			if ( desiredParentPercentage instanceof PercentageCalc )
@@ -385,6 +389,7 @@ public abstract class Node {
 		}
 		
 		max = Math.max(max, getMinWidth());
+		
 		return max;
 	}
 	
@@ -458,11 +463,15 @@ public abstract class Node {
 		double totalSize = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
-			double tempSize = Math.max(child.getWidth(), Math.min(child.computePrefWidth(), this.getMaxWidth()));
 			
-			if ( child.getPrefWidthRatio() != null && child.getPrefWidthRatio().getValue() > 0)
+			boolean hasRatioFill = child.getPrefWidthRatio() != null;
+			
+			double tempSize;
+			if ( hasRatioFill )
 				tempSize = Math.max(child.getPrefWidth(), child.getMinWidth());
-		
+			else
+				tempSize = Math.max(child.getWidth(), Math.min(child.computePrefWidth(), this.getMaxWidth()));
+			
 			totalSize += tempSize;
 		}
 		
@@ -478,11 +487,15 @@ public abstract class Node {
 		double totalSize = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Node child = children.get(i);
-			double tempSize = Math.max(child.getHeight(), Math.min(child.computePrefHeight(), this.getMaxHeight()));
 			
-			if ( child.getPrefHeightRatio() != null && child.getPrefHeightRatio().getValue() > 0)
+			boolean hasRatioFill = child.getPrefHeightRatio() != null;
+					
+			double tempSize;
+			if ( hasRatioFill )
 				tempSize = Math.max(child.getPrefHeight(), child.getMinHeight());
-		
+			else
+				tempSize = Math.max(child.getHeight(), Math.min(child.computePrefHeight(), this.getMaxHeight()));
+			
 			totalSize += tempSize;
 		}
 		
@@ -1204,6 +1217,9 @@ public abstract class Node {
 			return;
 		
 		parent.descendents.add(node);
+		for (Node descendent : node.descendents)
+			parent.descendents.add(descendent);
+		
 		registerToParent(node, parent.getParent());
 	}
 	
