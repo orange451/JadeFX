@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.jadefx.collections.ObservableList;
 import io.jadefx.geometry.Insets;
+import io.jadefx.geometry.Pos;
 import io.jadefx.paint.Color;
 import io.jadefx.scene.Node;
 import io.jadefx.scene.control.Labeled;
@@ -23,6 +24,28 @@ public class StyleOperationDefinitions {
 	private final static String ALL = "all";
 	private final static String NONE = "none";
 	private final static String INSET = "inset";
+	
+	public static StyleOperation ALIGNMENT = new StyleOperation("alignment") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( value.size() == 0 )
+				return;
+			
+			StringBuilder overall = new StringBuilder();
+			for (int i = 0; i < value.get(0).size(); i++) {
+				Object o = value.get(0).get(i);
+				overall.append(o.toString().toUpperCase());
+				if ( i < value.get(0).size()-1 )
+					overall.append("_");
+			}
+			
+			Pos alignment = Pos.valueOf(overall.toString());
+			if ( alignment == null )
+				return;
+				
+			node.setAlignment(alignment);
+		}
+	};
 	
 	public static StyleOperation WIDTH = new StyleOperation("width") {
 		@Override

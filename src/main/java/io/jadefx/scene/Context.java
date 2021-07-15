@@ -206,7 +206,7 @@ class DefaultFonts {
 	
 	private Map<String, FontData> loadedFonts = new HashMap<>();
 	
-	protected static List<ByteBuffer> fontData = new ArrayList<>();
+	protected static Map<String, ByteBuffer> fontData = new HashMap<>();
 	
 	public DefaultFonts(long vg) throws IOException {
 		add(ROBOTO = new FontData(vg, "Roboto", "jadefx/font/Roboto-Regular.ttf"));
@@ -234,8 +234,12 @@ class FontData {
 	public FontData(long vg, String name, String resourcePath) throws IOException {
 		this.name = name;
 		
-		ByteBuffer data = Context.ioResourceToByteBuffer(resourcePath);
-		DefaultFonts.fontData.add(data);
+		ByteBuffer data = DefaultFonts.fontData.get(name);
+		if ( data == null ) {
+			data = Context.ioResourceToByteBuffer(resourcePath);
+			DefaultFonts.fontData.put(name, data);
+		}
+		
 		this.handle = NanoVG.nvgCreateFontMem(vg, name, data, 0);
 	}
 	
