@@ -26,7 +26,6 @@ public abstract class Node {
 	 * Positioning settings
 	 */
 	protected Vector2d absolutePosition = new Vector2d(); // ONLY USED INTERNALLY DONT TOUCH
-	private Vector2d localPosition = new Vector2d(); // ONLY USED INTERNALLY DONT TOUCH
 	protected Vector2d size = new Vector2d();
 	protected Vector2d prefsize = new Vector2d();
 	protected Percentage prefwidthRatio;
@@ -511,7 +510,6 @@ public abstract class Node {
 		
 		this.absolutePosition.x = x;
 		this.absolutePosition.y = y;
-		this.recomputeLocalPosition();
 		this.setFlag(FLAG_LAYOUT_DIRTY);
 	}
 	
@@ -528,21 +526,6 @@ public abstract class Node {
 		double changey = (topLeftY + y)-getY();
 		
 		setAbsolutePosition( this.getX()+changex, this.getY()+changey);
-	}
-	
-	/**
-	 * Computes the local position by comparing the absolute position to the parents absolute position.
-	 */
-	private void recomputeLocalPosition() {
-		if ( parent == null )
-			return;
-
-		LayoutBounds bounds = parent.getInnerBounds();
-
-		float topLeftX = (float) (parent.getX() + bounds.minX);
-		float topLeftY = (float) (parent.getY() + bounds.minY);
-		localPosition.set(getX()-topLeftX, getY()-topLeftY);
-		this.setFlag(FLAG_LAYOUT_DIRTY);
 	}
 
 	/**
