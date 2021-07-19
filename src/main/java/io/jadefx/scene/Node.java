@@ -144,7 +144,13 @@ public abstract class Node {
 				yMult = 1f;
 
 			node.setParent(this);
+
 			LayoutBounds bounds = this.getInnerBounds();
+			double offsetX = (bounds.getWidth()-node.getWidth())*xMult;
+			double offsetY = (bounds.getHeight()-node.getHeight())*yMult;
+			node.setLocalPosition(offsetX, offsetY);
+			
+			/*LayoutBounds bounds = this.getInnerBounds();
 
 			float topLeftX = (float) (this.getX() + bounds.minX);
 			float topLeftY = (float) (this.getY() + bounds.minY);
@@ -152,7 +158,7 @@ public abstract class Node {
 			double offsetX = (bounds.getWidth()-node.getWidth())*xMult;
 			double offsetY = (bounds.getHeight()-node.getHeight())*yMult;
 
-			node.setAbsolutePosition(topLeftX + offsetX, topLeftY + offsetY);
+			node.setAbsolutePosition(topLeftX + offsetX, topLeftY + offsetY);*/
 		}
 	}
 	
