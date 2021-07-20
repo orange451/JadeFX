@@ -12,6 +12,7 @@ import io.jadefx.geometry.HPos;
 import io.jadefx.geometry.Orientation;
 import io.jadefx.geometry.Pos;
 import io.jadefx.geometry.VPos;
+import io.jadefx.stage.Context;
 import io.jadefx.style.Percentage;
 import io.jadefx.style.PercentageCalc;
 import io.jadefx.style.StyleTransition;
