@@ -12,8 +12,9 @@ import org.lwjgl.opengl.GL11;
 
 import io.jadefx.geometry.Pos;
 import io.jadefx.scene.Scene;
-import io.jadefx.scene.Window;
 import io.jadefx.scene.layout.Pane;
+import io.jadefx.stage.Stage;
+import io.jadefx.stage.Window;
 import io.jadefx.util.JadeFXUtil;
 
 public class JadeFX {
@@ -30,7 +31,7 @@ public class JadeFX {
 	 * Attach JadeFX to an already established GLFW window handle. NanoVG context is supplied by user.
 	 */
 	public static Window create(long glfwHandle, long nanovg) {
-		Window window = new Window(glfwHandle, nanovg);
+		Window window = new Stage(glfwHandle, nanovg);
 		Pane root = new Pane();
 		root.setAlignment(Pos.ANCESTOR);
 		root.setBackgroundLegacy(null);

@@ -1,8 +1,8 @@
 import io.jadefx.application.Application;
-import io.jadefx.scene.Scene;
 import io.jadefx.scene.control.Label;
 import io.jadefx.scene.layout.BorderPane;
 import io.jadefx.scene.layout.Pane;
+import io.jadefx.stage.Stage;
 
 public class BorderPaneTest extends Application {
 	public static void main(String[] args) {
@@ -10,9 +10,9 @@ public class BorderPaneTest extends Application {
 	}
 
 	@Override
-	public void start(Scene scene) {
+	public void start(Stage stage) {
 		BorderPane layout = new BorderPane();
-		scene.setStylesheet(""
+		stage.getScene().setStylesheet(""
 				+ ".box {"
 				+ "		box-shadow: 8px 16px 32px 0px rgba(0, 0, 0, 0.3),"
 				+ "					2px 3px  6px  0px rgba(0, 0, 0, 0.1);"
@@ -31,6 +31,6 @@ public class BorderPaneTest extends Application {
 		layout.setBottom(new Label("Bottom"));
 		layout.setCenter(new Label("Center"));
 		
-		((Pane)scene.getRoot()).getChildren().add(layout);
+		((Pane)stage.getScene().getRoot()).getChildren().add(layout);
 	}
 }

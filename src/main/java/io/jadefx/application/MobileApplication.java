@@ -6,7 +6,6 @@ import org.mini.gui.GCallBack;
 import org.mini.gui.GLFWApplicationDisplay;
 
 import io.jadefx.geometry.ScreenOrientation;
-import io.jadefx.scene.Scene;
 
 public abstract class MobileApplication extends Application {
 	
@@ -70,6 +69,4 @@ public abstract class MobileApplication extends Application {
     	
     	appDisplay.setKeyboardVisible(GCallBack.getInstance().getDisplay(), false);
     }
-	
-	public abstract void start(Scene scene);
 }

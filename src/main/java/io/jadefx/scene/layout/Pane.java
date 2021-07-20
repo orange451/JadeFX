@@ -2,8 +2,8 @@ package io.jadefx.scene.layout;
 
 import io.jadefx.collections.ObservableList;
 import io.jadefx.paint.Color;
-import io.jadefx.scene.Context;
 import io.jadefx.scene.Node;
+import io.jadefx.stage.Context;
 import io.jadefx.style.Background;
 import io.jadefx.style.BackgroundSolid;
 import io.jadefx.style.BlockPaneRenderer;

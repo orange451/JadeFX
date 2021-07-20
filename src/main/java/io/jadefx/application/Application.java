@@ -1,6 +1,7 @@
 package io.jadefx.application;
 
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
+
 import org.lwjgl.glfm.GLFM;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -8,8 +9,8 @@ import org.lwjgl.system.MemoryUtil;
 import org.mini.gui.GCallBack;
 
 import io.jadefx.JadeFX;
-import io.jadefx.scene.Scene;
-import io.jadefx.scene.Window;
+import io.jadefx.stage.Stage;
+import io.jadefx.stage.Window;
 import io.jadefx.util.JadeFXUtil;
 
 public abstract class Application {
@@ -77,8 +78,8 @@ public abstract class Application {
 		long vg = JadeFXUtil.makeNanoVGContext(true);
 		
 		// Create scene
-		Window window  = JadeFX.create(handle, vg);
-		application.start(window.getScene());
+		Stage window  = (Stage) JadeFX.create(handle, vg);
+		application.start(window);
 		
 		// Loop
 		window.setVisible(true);
@@ -121,5 +122,5 @@ public abstract class Application {
 		return callingClassName;
 	}
 	
-	public abstract void start(Scene scene);
+	public abstract void start(Stage scene);
 }

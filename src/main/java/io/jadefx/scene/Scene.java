@@ -2,6 +2,8 @@ package io.jadefx.scene;
 
 import io.jadefx.collections.ObservableList;
 import io.jadefx.paint.Color;
+import io.jadefx.stage.Context;
+import io.jadefx.stage.Window;
 import io.jadefx.style.Background;
 import io.jadefx.style.BackgroundSolid;
 import io.jadefx.style.StyleBackground;
@@ -72,6 +74,7 @@ public class Scene extends Node implements StyleBackground {
 		// Stretch to match screen
 		this.absolutePosition.x = 0;
 		this.absolutePosition.y = 0;
+		this.forceSize(getWindow().getWidth(), getWindow().getHeight());
 		root.forceSize(getWidth(), getHeight());
 		
 		// Position elements

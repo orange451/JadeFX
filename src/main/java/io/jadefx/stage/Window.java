@@ -1,4 +1,4 @@
-package io.jadefx.scene;
+package io.jadefx.stage;
 
 import static io.jadefx.event.listener.EventListener.EventListenerType.CURSOR_POS_LISTENER;
 import static io.jadefx.event.listener.EventListener.EventListenerType.KEY_LISTENER;
@@ -38,11 +38,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryStack;
 
 import io.jadefx.JadeFX;
-import io.jadefx.collections.ObservableList;
 import io.jadefx.event.EventHelper;
 import io.jadefx.event.KeyEvent;
 import io.jadefx.event.MouseEvent;
@@ -74,8 +72,9 @@ import io.jadefx.glfw.Callbacks.WindowRefreshCallback;
 import io.jadefx.glfw.Callbacks.WindowSizeCallback;
 import io.jadefx.glfw.input.KeyboardHandler;
 import io.jadefx.glfw.input.MouseHandler;
+import io.jadefx.scene.Scene;
 
-public class Window {
+public abstract class Window {
 	
 	private Context context;
 	
@@ -233,7 +232,6 @@ public class Window {
 		flushMap.put(this.getHandle(), Math.max(currentFlush-1, 0));
 		
 		this.getContext().refresh();
-		this.getScene().forceSize(this.getWidth(), this.getHeight());
 		this.getScene().render(this.getContext());
 	}
 

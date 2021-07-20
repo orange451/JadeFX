@@ -5,7 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import io.jadefx.glfw.input.callbacks.KeyboardCharCallback;
 import io.jadefx.glfw.input.callbacks.KeyboardCharModsCallback;
 import io.jadefx.glfw.input.callbacks.KeyboardKeyCallback;
-import io.jadefx.scene.Window;
+import io.jadefx.stage.Window;
 
 /**
  * 

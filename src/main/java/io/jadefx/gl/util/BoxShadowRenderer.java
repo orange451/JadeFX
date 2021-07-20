@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL32;
 import io.jadefx.gl.BoxShadowShader;
 import io.jadefx.gl.TexturedQuad;
 import io.jadefx.paint.Color;
-import io.jadefx.scene.Context;
+import io.jadefx.stage.Context;
 
 public class BoxShadowRenderer {
 

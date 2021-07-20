@@ -1,6 +1,6 @@
 package io.jadefx.gl;
 
-import io.jadefx.scene.Context;
+import io.jadefx.stage.Context;
 
 public interface Renderer {
 	void render(Context context, int width, int height);

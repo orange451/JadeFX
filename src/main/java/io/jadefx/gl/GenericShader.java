@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
-import io.jadefx.scene.Context;
+import io.jadefx.stage.Context;
 
 public class GenericShader {
 	private final int id;

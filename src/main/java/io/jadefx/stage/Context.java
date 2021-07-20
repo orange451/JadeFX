@@ -1,4 +1,4 @@
-package io.jadefx.scene;
+package io.jadefx.stage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

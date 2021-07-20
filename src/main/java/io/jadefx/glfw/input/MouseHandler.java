@@ -4,7 +4,7 @@ import io.jadefx.glfw.input.callbacks.MouseButtonCallback;
 import io.jadefx.glfw.input.callbacks.MouseEnterCallback;
 import io.jadefx.glfw.input.callbacks.MousePosCallback;
 import io.jadefx.glfw.input.callbacks.MouseScrollCallback;
-import io.jadefx.scene.Window;
+import io.jadefx.stage.Window;
 
 /**
  * 

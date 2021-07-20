@@ -4,7 +4,7 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 
 import io.jadefx.paint.Color;
-import io.jadefx.scene.Context;
+import io.jadefx.stage.Context;
 
 public class BackgroundLinearGradient extends Background {
 	private ColorStop[] stops;

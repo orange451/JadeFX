@@ -5,7 +5,7 @@ import java.util.Map;
 
 import io.jadefx.collections.ObservableList;
 import io.jadefx.geometry.Insets;
-import io.jadefx.scene.Context;
+import io.jadefx.stage.Context;
 import io.jadefx.util.JadeFXUtil;
 
 public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxShadow {

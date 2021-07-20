@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
 
 import io.jadefx.paint.Color;
-import io.jadefx.scene.Context;
+import io.jadefx.stage.Context;
 
 public class OffscreenBuffer {
 	private int width = 0;

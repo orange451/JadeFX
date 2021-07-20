@@ -14,7 +14,7 @@ import org.lwjgl.system.MemoryUtil;
 import io.jadefx.geometry.Insets;
 import io.jadefx.gl.util.BoxShadowRenderer;
 import io.jadefx.paint.Color;
-import io.jadefx.scene.Context;
+import io.jadefx.stage.Context;
 import io.jadefx.style.Background;
 import io.jadefx.style.BoxShadow;
 

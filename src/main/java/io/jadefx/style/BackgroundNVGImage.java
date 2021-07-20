@@ -9,8 +9,8 @@ import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.system.MemoryStack;
 
 import io.jadefx.gl.OffscreenBuffer;
-import io.jadefx.scene.Context;
-import io.jadefx.scene.Window;
+import io.jadefx.stage.Context;
+import io.jadefx.stage.Window;
 import io.jadefx.util.JadeFXUtil;
 
 public class BackgroundNVGImage extends Background {
