@@ -61,6 +61,8 @@ public class Scene extends Node implements StyleBackground {
 		return this.root;
 	}
 	
+	private boolean firstFrame = true;
+	
 	@Override
 	public void render(Context context) {
 		if ( root == null )
@@ -78,7 +80,10 @@ public class Scene extends Node implements StyleBackground {
 		root.forceSize(getWidth(), getHeight());
 		
 		// Position elements
-		position();
+		int repeat = firstFrame ? 8 : 1;
+		for (int i = 0; i < repeat; i++) {
+			position();
+		}
 		
 		// Backgrounds
 		for (Background background : backgrounds)
