@@ -31,6 +31,9 @@ public class PercentageCalc extends Percentage {
 	}
 
 	private Percentage calc() {
+		if ( this.referenceSize == 0 )
+			return Percentage.ZERO;
+		
 		switch(operation) {
 			case ADD: {
 				Percentage offsetPercentage = Percentage.fromRatio(offset/referenceSize);

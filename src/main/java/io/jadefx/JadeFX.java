@@ -73,12 +73,11 @@ public class JadeFX {
 		if ( window == null )
 			return;
 		
-		renderRoutine(window);
-		
+		renderWindow(window);
 		GLFW.glfwSwapBuffers(window.getHandle());
 	}
 	
-	private static void renderRoutine(Window window) {
+	private static void renderWindow(Window window) {
 		if ( !window.isFlushed() )
 			return;
 		

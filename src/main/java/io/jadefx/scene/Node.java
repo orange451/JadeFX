@@ -79,12 +79,9 @@ public abstract class Node {
 	}
 	
 	protected void dirty() {
-		this.setFlag(FLAG_CSS_DIRTY);
-		this.setFlag(FLAG_LAYOUT_DIRTY);
-		this.setFlag(FLAG_SIZE_DIRTY);
-		
-		//if ( this.parent != null && this.parent != this )
-			//this.parent.dirty();
+		this.setFlag(FLAG_CSS_DIRTY | FLAG_LAYOUT_DIRTY | FLAG_SIZE_DIRTY);
+		//this.setFlag(FLAG_LAYOUT_DIRTY);
+		//this.setFlag(FLAG_SIZE_DIRTY);
 	}
 	
 	/**
@@ -115,11 +112,13 @@ public abstract class Node {
 			this.resetFlag(FLAG_LAYOUT_DIRTY);
 			this.resetFlag(FLAG_SIZE_DIRTY);
 			
-			for (int i = 0; i < this.children.size(); i++) {
-				Node node = this.children.get(i);
-				node.position();
+			int buffer = this.getScene().getContext().isFlushed() ? 2 : 1;
+			for (int k = 0; k < buffer; k++) {
+				for (int i = 0; i < this.children.size(); i++) {
+					Node node = this.children.get(i);
+					node.position();
+				}
 			}
-			size();
 		}
 		stylePop();
 	}
@@ -633,6 +632,20 @@ public abstract class Node {
 		return absolutePosition.y;
 	}
 	
+	private boolean isRatioSimilar(Percentage p1, Percentage p2) {
+		if ( p1 == null && p2 != null )
+			return false;
+		
+		if ( p1 != null && p2 == null )
+			return false;
+		
+		if ( p1.getValue() == p2.getValue() )
+			return true;
+		
+		double x = Math.abs(p1.getValue()-p2.getValue());
+		return x < 0.01;
+	}
+	
 	/**
 	 * Return the minimum width of this node.
 	 * @return
@@ -760,6 +773,9 @@ public abstract class Node {
 	 * @param ratio
 	 */
 	public void setPrefWidthRatio( Percentage ratio ) {
+		if ( isRatioSimilar(prefwidthRatio, ratio) )
+			return;
+		
 		this.prefwidthRatio = ratio;
 		this.setFlag(FLAG_SIZE_DIRTY);
 	}
@@ -795,6 +811,9 @@ public abstract class Node {
 	 * @param ratio
 	 */
 	public void setPrefHeightRatio( Percentage ratio ) {
+		if ( isRatioSimilar(prefheightRatio, ratio) )
+			return;
+		
 		this.prefheightRatio = ratio;
 		this.setFlag(FLAG_SIZE_DIRTY);
 	}
@@ -856,6 +875,9 @@ public abstract class Node {
 	 * @param ratio
 	 */
 	public void setMinWidthRatio( Percentage ratio ) {
+		if ( isRatioSimilar(minwidthRatio, ratio) )
+			return;
+		
 		this.minwidthRatio = ratio;
 		this.setFlag(FLAG_SIZE_DIRTY);
 	}
@@ -885,6 +907,9 @@ public abstract class Node {
 	 * @param ratio
 	 */
 	public void setMinHeightRatio( Percentage ratio ) {
+		if ( isRatioSimilar(minheightRatio, ratio) )
+			return;
+		
 		this.minheightRatio = ratio;
 		this.setFlag(FLAG_SIZE_DIRTY);
 	}
@@ -914,6 +939,9 @@ public abstract class Node {
 	 * @param ratio
 	 */
 	public void setMaxWidthRatio( Percentage ratio ) {
+		if ( isRatioSimilar(maxwidthRatio, ratio) )
+			return;
+		
 		this.maxwidthRatio = ratio;
 		this.setFlag(FLAG_SIZE_DIRTY);
 	}
@@ -943,6 +971,9 @@ public abstract class Node {
 	 * @param ratio
 	 */
 	public void setMaxHeightRatio( Percentage ratio ) {
+		if ( isRatioSimilar(maxheightRatio, ratio) )
+			return;
+		
 		this.maxheightRatio = ratio;
 		this.setFlag(FLAG_SIZE_DIRTY);
 	}
@@ -960,6 +991,17 @@ public abstract class Node {
 	 */
 	protected void setFlag(int flag) {
 		flags |= flag;
+		
+		for (int i = 0; i < this.children.size(); i++) {
+			if ( i >= this.children.size() )
+				continue;
+			
+			Node child = this.children.get(i);
+			if ( child == null )
+				continue;
+			
+			child.setFlag(flag);
+		}
 		
 		// If a flag changes, force a re-draw in the scene
 		if ( this.getScene() != null && this.getScene().getContext() != null )

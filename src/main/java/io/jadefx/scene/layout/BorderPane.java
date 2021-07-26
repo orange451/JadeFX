@@ -114,15 +114,13 @@ public class BorderPane extends Pane {
 	
 	private Pane sp(Node node) {
 		Pane ret = new Pane();
-		//ret.setBackgroundLegacy(Color.fromHSB((float)new Random().nextFloat(), 1, 1));
 		ret.setPrefHeightRatio(Percentage.ONE_HUNDRED);
 		ret.setAlignment(Pos.ANCESTOR);
 		if ( node != null ) {
 			ret.getChildren().add(node);
 			ret.setPrefWidth(node.getPrefWidth());
 		}
-		//ret.setBackgroundLegacy(null);
-		ret.setStyle("background-color:transparent");
+		ret.setBackgroundLegacy(null);
 		
 		return ret;
 	}
@@ -130,6 +128,9 @@ public class BorderPane extends Pane {
 	@Override
 	protected void size() {
 		super.size();
+		
+		if ( !this.hasFlag(FLAG_LAYOUT_DIRTY) && !this.hasFlag(FLAG_SIZE_DIRTY) )
+			return;
 		
 		float topBottomHeight = 0;
 		if ( top != null )
