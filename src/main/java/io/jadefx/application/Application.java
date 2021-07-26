@@ -2,6 +2,7 @@ package io.jadefx.application;
 
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
+import org.joml.Vector2i;
 import org.lwjgl.glfm.GLFM;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -65,7 +66,7 @@ public abstract class Application {
 			if (!GLFW.glfwInit())
 				throw new IllegalStateException("Unable to initialize GLFW");
 			
-			handle = JadeFXUtil.createWindowGLFW(300, 300, "Window");
+			handle = JadeFXUtil.createWindowGLFW(application.getDefaultWindowSize().x, application.getDefaultWindowSize().y, "Window");
 			if ( handle == MemoryUtil.NULL )
 				throw new RuntimeException("Failed to create the GLFW window");
 
@@ -78,7 +79,7 @@ public abstract class Application {
 		long vg = JadeFXUtil.makeNanoVGContext(true);
 		
 		// Create scene
-		Stage window  = (Stage) JadeFX.create(handle, vg);
+		Stage window  = JadeFX.create(handle, vg);
 		application.start(window);
 		
 		// Loop
@@ -91,6 +92,10 @@ public abstract class Application {
 		}
 	}
 	
+	protected Vector2i getDefaultWindowSize() {
+		return new Vector2i(800, 600);
+	}
+
 	private static void loop(Window window) {
 		while ( !GLFW.glfwWindowShouldClose(window.getHandle()) ) {
 			JadeFX.render();

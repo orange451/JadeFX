@@ -1,5 +1,6 @@
 package io.jadefx.application;
 
+import org.joml.Vector2i;
 import org.lwjgl.glfm.GLFM;
 import org.mini.gui.GApplicationDisplay;
 import org.mini.gui.GCallBack;
@@ -33,6 +34,10 @@ public abstract class MobileApplication extends Application {
 		} else {
 			System.out.println("Could not hook in to MiniJVM.");
 		}
+	}
+	
+	protected Vector2i getDefaultWindowSize() {
+		return new Vector2i(375, 667);
 	}
 	
 	public static void setOrientation(ScreenOrientation orientation) {

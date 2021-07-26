@@ -99,21 +99,21 @@ public abstract class Node {
 	protected void position() {
 		stylePush();
 		{
-			lastSize.set(this.size);
-			
-			size();
-			
-			if ( hasFlag(FLAG_SIZE_DIRTY) )
-				sizeChildren();
-
-			if ( !hasFlag(FLAG_LAYOUT_DIRTY) )
-				layoutChildren();
-			
-			this.resetFlag(FLAG_LAYOUT_DIRTY);
-			this.resetFlag(FLAG_SIZE_DIRTY);
-			
 			int buffer = this.getScene().getContext().isFlushed() ? 2 : 1; // TODO find a way to not require double buffering
 			for (int k = 0; k < buffer; k++) {
+				lastSize.set(this.size);
+				
+				size();
+				
+				if ( hasFlag(FLAG_SIZE_DIRTY) )
+					sizeChildren();
+
+				if ( !hasFlag(FLAG_LAYOUT_DIRTY) )
+					layoutChildren();
+				
+				this.resetFlag(FLAG_LAYOUT_DIRTY);
+				this.resetFlag(FLAG_SIZE_DIRTY);
+				
 				for (int i = 0; i < this.children.size(); i++) {
 					Node node = this.children.get(i);
 					node.position();
@@ -149,16 +149,6 @@ public abstract class Node {
 			double offsetX = (bounds.getWidth()-node.getWidth())*xMult;
 			double offsetY = (bounds.getHeight()-node.getHeight())*yMult;
 			node.setLocalPosition(offsetX, offsetY);
-			
-			/*LayoutBounds bounds = this.getInnerBounds();
-
-			float topLeftX = (float) (this.getX() + bounds.minX);
-			float topLeftY = (float) (this.getY() + bounds.minY);
-
-			double offsetX = (bounds.getWidth()-node.getWidth())*xMult;
-			double offsetY = (bounds.getHeight()-node.getHeight())*yMult;
-
-			node.setAbsolutePosition(topLeftX + offsetX, topLeftY + offsetY);*/
 		}
 	}
 	
@@ -177,6 +167,7 @@ public abstract class Node {
 			
 			if ( this.parent != null ) {
 				this.parent.setFlag(FLAG_LAYOUT_DIRTY);
+				this.parent.setFlag(FLAG_SIZE_DIRTY);
 				this.parent.cachedAvailableSize = null;
 			}
 		}
@@ -366,6 +357,7 @@ public abstract class Node {
 		this.setMinSize(width, height);
 		this.setMaxSize(width, height);
 		this.setPrefSize(width, height);
+		this.dirty();
 	}
 	
 	/**
