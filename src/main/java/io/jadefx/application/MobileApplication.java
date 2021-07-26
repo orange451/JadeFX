@@ -15,7 +15,7 @@ public abstract class MobileApplication extends Application {
 	static {
 		appDisplay = new GLFWApplicationDisplay();
 		
-		String callingClassName = getCallingClass(MobileApplication.class.getName(), "<clinit>");
+		/*String callingClassName = getCallingClass(MobileApplication.class.getName(), "<clinit>");
 
 		// Force inject application to launcher
 		if (callingClassName != null) {
@@ -33,7 +33,7 @@ public abstract class MobileApplication extends Application {
 			launch(application);
 		} else {
 			System.out.println("Could not hook in to MiniJVM.");
-		}
+		}*/
 	}
 	
 	protected Vector2i getDefaultWindowSize() {
