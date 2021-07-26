@@ -25,6 +25,17 @@ public class Percentage {
 	public String toString() {
 		return percent + "%";
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if ( object == null )
+			return false;
+		
+		if ( !(object instanceof Percentage) )
+			return false;
+		
+		return ((Percentage)object).value == value;
+	}
 
 	public double getValueClamped() {
 		return Math.min(1, Math.max(0, getValue()));

@@ -25,6 +25,27 @@ public class PercentageCalc extends Percentage {
 	}
 	
 	@Override
+	public boolean equals(Object object) {
+		boolean equals = super.equals(object);
+		if ( !equals )
+			return false;
+		
+		if (!(object instanceof PercentageCalc) ) {
+			if ( offset > 0 || offset < 0 )
+				return false;
+		}
+		
+		PercentageCalc per = (PercentageCalc)object;
+		if ( per.operation != operation )
+			return false;
+		
+		if ( per.offset != offset )
+			return false;
+		
+		return true;
+	}
+	
+	@Override
 	public double getValue() {
 		Percentage percent = calc();
 		return percent == this ? super.getValue() : percent.getValue();

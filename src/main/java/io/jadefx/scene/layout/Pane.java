@@ -101,13 +101,14 @@ public class Pane extends Region implements BlockPaneRenderer {
 	 * @param color
 	 */	
 	public void setBackground(Background color) {
+		if ( this.backgrounds.size() == 1 && this.getBackgrounds().get(0).equals(color) )
+			return;
+		
 		for (int i = 0; i < backgrounds.size(); i++) {
 			if ( backgrounds.get(i) instanceof BackgroundSolid ) {
 				backgrounds.remove(i--);
 			}
 		}
-		
-		this.setFlag(FLAG_CSS_DIRTY);
 		
 		if ( color != null )
 			getBackgrounds().add(0, color);
@@ -133,6 +134,9 @@ public class Pane extends Region implements BlockPaneRenderer {
 	
 	@Override
 	public void setBorderStyle(BorderStyle style) {
+		if ( this.borderStyle != null && this.borderStyle.equals(style) )
+			return;
+		
 		this.borderStyle = style;
 		this.setFlag(FLAG_CSS_DIRTY);
 	}
@@ -159,12 +163,20 @@ public class Pane extends Region implements BlockPaneRenderer {
 
 	@Override
 	public void setBorderRadii(float cornerTopLeft, float cornerTopRight, float cornerBottomRight, float cornerBottomLeft) {
+		if ( this.borderRadii != null ) {
+			if ( borderRadii[0] == cornerTopLeft && borderRadii[1] == cornerTopRight && borderRadii[2] == cornerBottomRight && borderRadii[3] == cornerBottomLeft ) {
+				return;
+			}
+		}
 		this.borderRadii = new float[] {cornerTopLeft, cornerTopRight, cornerBottomRight, cornerBottomLeft};
 		this.setFlag(FLAG_CSS_DIRTY);
 	}
 
 	@Override
 	public void setBorderColor(Color color) {
+		if ( this.borderColor != null && this.borderColor.equals(color) )
+			return;
+		
 		this.borderColor = color;
 		this.setFlag(FLAG_CSS_DIRTY);
 	}

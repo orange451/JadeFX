@@ -45,4 +45,22 @@ public class BackgroundSolid extends Background {
 	public String toString() {
 		return "BackgroundSolid("+color+")";
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if ( object == null )
+			return false;
+		
+		if ( !(object instanceof BackgroundSolid) )
+			return false;
+		
+		BackgroundSolid b = (BackgroundSolid)object;
+		if ( b.color == null && color == null )
+			return true;
+		
+		if ( color == null )
+			return false;
+		
+		return color.equals(b.color);
+	}
 }

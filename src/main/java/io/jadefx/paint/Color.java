@@ -780,6 +780,25 @@ public class Color {
 			throw new IllegalArgumentException("Color parameter outside of expected range: " + badComponentString);
 		}
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if ( object == null )
+			return false;
+		
+		if ( !(object instanceof Color) )
+			return false;
+		
+		Color color = (Color)object;
+		
+		if ( color.rgba != rgba )
+			return false;
+		
+		if ( color.immutable != immutable )
+			return false;
+		
+		return true;
+	}
 
 	public static Color match(String string) {
 		String matchName = string.toLowerCase();

@@ -99,20 +99,22 @@ public abstract class Node {
 	protected void position() {
 		stylePush();
 		{
+			lastSize.set(this.size);
+			
+			size();
+			
+			if ( hasFlag(FLAG_SIZE_DIRTY) )
+				sizeChildren();
+
+			if ( !hasFlag(FLAG_LAYOUT_DIRTY) )
+				layoutChildren();
+			
+			this.resetFlag(FLAG_LAYOUT_DIRTY);
+			this.resetFlag(FLAG_SIZE_DIRTY);
+			this.resetFlag(FLAG_CSS_DIRTY);
+			
 			int buffer = this.getScene().getContext().isFlushed() ? 2 : 1; // TODO find a way to not require double buffering
 			for (int k = 0; k < buffer; k++) {
-				lastSize.set(this.size);
-				
-				size();
-				
-				if ( hasFlag(FLAG_SIZE_DIRTY) )
-					sizeChildren();
-
-				if ( !hasFlag(FLAG_LAYOUT_DIRTY) )
-					layoutChildren();
-				
-				this.resetFlag(FLAG_LAYOUT_DIRTY);
-				this.resetFlag(FLAG_SIZE_DIRTY);
 				
 				for (int i = 0; i < this.children.size(); i++) {
 					Node node = this.children.get(i);
@@ -357,7 +359,6 @@ public abstract class Node {
 		this.setMinSize(width, height);
 		this.setMaxSize(width, height);
 		this.setPrefSize(width, height);
-		this.dirty();
 	}
 	
 	/**
@@ -632,6 +633,9 @@ public abstract class Node {
 			return false;
 		
 		if ( p1.getValue() == p2.getValue() )
+			return true;
+		
+		if ( p1.equals(p2) )
 			return true;
 		
 		double x = Math.abs(p1.getValue()-p2.getValue());
@@ -1021,11 +1025,6 @@ public abstract class Node {
 	protected void stylePush() {
 		if ( this.scene == null )
 			return;
-		
-		// If we are dirty css, make all of our descendants dirty too.
-		if (this.hasFlag(FLAG_CSS_DIRTY))
-			for (Node node : descendents)
-				node.setFlag(FLAG_CSS_DIRTY);
 		
 		Context context = this.scene.getContext();
 		if ( context != null ) {
