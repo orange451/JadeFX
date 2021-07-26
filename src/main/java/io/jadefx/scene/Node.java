@@ -112,7 +112,7 @@ public abstract class Node {
 			this.resetFlag(FLAG_LAYOUT_DIRTY);
 			this.resetFlag(FLAG_SIZE_DIRTY);
 			
-			int buffer = this.getScene().getContext().isFlushed() ? 2 : 1;
+			int buffer = this.getScene().getContext().isFlushed() ? 2 : 1; // TODO find a way to not require double buffering
 			for (int k = 0; k < buffer; k++) {
 				for (int i = 0; i < this.children.size(); i++) {
 					Node node = this.children.get(i);

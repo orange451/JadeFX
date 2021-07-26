@@ -81,9 +81,9 @@ public class Scene extends Node implements StyleBackground {
 		
 		// Position elements
 		int repeat = firstFrame ? 8 : 1;
-		for (int i = 0; i < repeat; i++) {
+		for (int i = 0; i < repeat; i++)
 			position();
-		}
+		firstFrame = false;
 		
 		// Backgrounds
 		for (Background background : backgrounds)

@@ -23,15 +23,15 @@ public class JadeFX {
 	/**
 	 * Attach JadeFX to an already established GLFW window handle. NanoVG context will be automatically created based on system specifications.
 	 */
-	public static Window create(long glfwHandle) {
+	public static Stage create(long glfwHandle) {
 		return create(glfwHandle, JadeFXUtil.makeNanoVGContext(true));
 	}
 	
 	/**
 	 * Attach JadeFX to an already established GLFW window handle. NanoVG context is supplied by user.
 	 */
-	public static Window create(long glfwHandle, long nanovg) {
-		Window window = new Stage(glfwHandle, nanovg);
+	public static Stage create(long glfwHandle, long nanovg) {
+		Stage window = new Stage(glfwHandle, nanovg);
 		Pane root = new Pane();
 		root.setAlignment(Pos.ANCESTOR);
 		root.setBackgroundLegacy(null);

@@ -78,8 +78,6 @@ public abstract class Window {
 	
 	private Context context;
 	
-	private Scene scene;
-	
 	private long handle;
 	
 	protected int width = 0;
@@ -113,14 +111,10 @@ public abstract class Window {
 
 	private Map<EventListenerType, List<EventListener>> eventListeners = new HashMap<>();
 	
-	private static Map<Long,Integer> flushMap = new HashMap<>();
-	
 	public Window(long handle, long nvgContext) {
 		this.handle = handle;
 		this.context = new Context(this, nvgContext);
 		this.setCallbacks();
-
-		flushMap.put(handle, 10);
 	}
 	
 	protected void setCallbacks() {
@@ -161,9 +155,6 @@ public abstract class Window {
 			if ( this.framebufferWidth > 0 ) {
 				pixelRatio = (this.framebufferWidth <= this.width) ? 1 : this.framebufferWidth / this.width;
 			}
-			
-			Window.this.scene.dirty();
-			JadeFX.render(Window.this);
 		});
 
 		scrollCallback = new ScrollCallback();
@@ -205,46 +196,13 @@ public abstract class Window {
 		mouseHandler = new MouseHandler(this);
 		keyboardHandler = new KeyboardHandler(this);
 	}
-
-	private static final int NO_FLUSH = 0;
-	private static final int FLUSH = 4;
 	
-	public boolean isFlushed() {
-		return flushMap.get(this.getHandle()) > NO_FLUSH || this.getContext().isFlushed();
-	}
+	public abstract boolean isFlushed();
 	
-	public void render() {
-		if ( this.getScene() == null )
-			return;
-		
-		if ( !this.getContext().isLoaded() )
-			return;
-		
-		if ( this.getContext().isFlushed() ) {
-			this.getContext().setFlushed(false);
-			flushMap.put(this.getHandle(), FLUSH);	// We need to flush for a few frames because
-		}											// GLFM doesnt have a swapbuffers implementation.
-		
-		int currentFlush = flushMap.get(this.getHandle());
-		if (currentFlush <= NO_FLUSH)
-			return;
-		
-		flushMap.put(this.getHandle(), Math.max(currentFlush-1, 0));
-		
-		this.getContext().refresh();
-		this.getScene().render(this.getContext());
-	}
+	public abstract void render();
 
 	public Context getContext() {
 		return this.context;
-	}
-	
-	public Scene getScene() {
-		return this.scene;
-	}
-	
-	public void setScene(Scene scene) {
-		this.scene = scene;
 	}
 
 	public int getWidth() {
@@ -443,10 +401,6 @@ public abstract class Window {
 	}
 
 	private void sizeCallback(long window, int width, int height) {
-		if ( this.scene != null ) {
-			this.scene.dirty();
-		}
-
 		/*
 		 * Call window event listeners
 		 */
