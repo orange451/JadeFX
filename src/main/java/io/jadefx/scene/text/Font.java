@@ -30,7 +30,7 @@ public class Font {
 			return false;
 		
 		Font font = (Font)object;
-		if ( font.name.equals(name) )
+		if ( !font.name.equals(name) )
 			return false;
 		
 		if ( font.size != size )
