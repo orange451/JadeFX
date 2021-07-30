@@ -8,11 +8,8 @@ import java.util.Map;
 import org.joml.Vector2d;
 
 import io.jadefx.collections.ObservableList;
-import io.jadefx.geometry.HPos;
 import io.jadefx.geometry.Orientation;
 import io.jadefx.geometry.Pos;
-import io.jadefx.geometry.VPos;
-import io.jadefx.scene.Node.LayoutBounds;
 import io.jadefx.stage.Context;
 import io.jadefx.style.Percentage;
 import io.jadefx.style.PercentageCalc;
@@ -630,7 +627,11 @@ public abstract class Node {
 	 */
 	public void setTranslateX(double value) {
 		_ensureTranslation();
+		if ( value == translation.x )
+			return;
+		
 		translation.x = value;
+		this.setFlag(FLAG_LAYOUT_DIRTY);
 	}
 	
 	/**
@@ -646,7 +647,11 @@ public abstract class Node {
 	 */
 	public void setTranslateY(double value) {
 		_ensureTranslation();
+		if ( value == translation.y )
+			return;
+		
 		translation.y = value;
+		this.setFlag(FLAG_LAYOUT_DIRTY);
 	}
 	
 	private void _ensureTranslation() {
