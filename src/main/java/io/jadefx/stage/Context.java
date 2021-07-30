@@ -211,8 +211,8 @@ class DefaultFonts {
 	public DefaultFonts(long vg) throws IOException {
 		add(ROBOTO = new FontData(vg, "Roboto", "jadefx/font/Roboto-Regular.ttf"));
 
-		fallback(vg, new FontData(vg, "NotoColorEmoji", "jadefx/font/NotoColorEmoji.ttf"));
-		fallback(vg, new FontData(vg, "NotoSans", "jadefx/font/NotoSansCJKsc-Medium.otf"));
+		//fallback(vg, new FontData(vg, "NotoColorEmoji", "jadefx/font/NotoColorEmoji.ttf"));
+		//fallback(vg, new FontData(vg, "NotoSans", "jadefx/font/NotoSansCJKsc-Medium.otf"));
 		fallback(vg, new FontData(vg, "Entypo", "jadefx/font/entypo.ttf"));
 	}
 

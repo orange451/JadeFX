@@ -113,9 +113,9 @@ public class BorderPane extends Pane {
 	}
 	
 	private Pane sp(Node node) {
-		Pane ret = new Pane();
+		Pane ret = new StackPane();
 		ret.setPrefHeightRatio(Percentage.ONE_HUNDRED);
-		ret.setAlignment(Pos.ANCESTOR);
+		
 		if ( node != null ) {
 			ret.getChildren().add(node);
 			ret.setPrefWidth(node.getPrefWidth());

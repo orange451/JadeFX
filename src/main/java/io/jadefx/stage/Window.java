@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.glfm.GLFM;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 
@@ -291,19 +292,22 @@ public abstract class Window {
 	}
 
 	public void setVisible(boolean flag) {
+		System.out.println(GLFM.class);
+		System.out.println(this.getHandle());
 		GLFW.glfwShowWindow(this.getHandle());
 
-		try ( MemoryStack stack = MemoryStack.stackPush() ) {
-			IntBuffer fWidth = stack.mallocInt(1);
-			IntBuffer fHeight = stack.mallocInt(1);
-			GLFW.glfwGetFramebufferSize(getHandle(), fWidth, fHeight);
-			this.getFramebufferSizeCallback().invoke(this.getHandle(), fWidth.get(0), fHeight.get(0));
-			
-			IntBuffer pWidth = stack.mallocInt(1);
-			IntBuffer pHeight = stack.mallocInt(1);
-			GLFW.glfwGetWindowSize(getHandle(), pWidth, pHeight);
-			this.getWindowSizeCallback().invoke(this.getHandle(), pWidth.get(0), pHeight.get(0));
-		}
+		int[] fWidth = new int[1];
+		int[] fHeight = new int[1];
+		GLFW.glfwGetFramebufferSize(getHandle(), fWidth, fHeight);
+		if ( this.getFramebufferSizeCallback() != null )
+			this.getFramebufferSizeCallback().invoke(this.getHandle(), fWidth[0], fHeight[0]);
+		
+		int[] pWidth = new int[1];
+		int[] pHeight = new int[1];
+		GLFW.glfwGetWindowSize(getHandle(), pWidth, pHeight);
+
+		if ( this.getWindowSizeCallback() != null )
+			this.getWindowSizeCallback().invoke(this.getHandle(), pWidth[0], pHeight[0]);
 		/*WindowManager.runLater(() -> {
 			if (flag)
 				glfwShowWindow(this.windowID);

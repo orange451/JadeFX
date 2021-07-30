@@ -12,6 +12,7 @@ import io.jadefx.geometry.HPos;
 import io.jadefx.geometry.Orientation;
 import io.jadefx.geometry.Pos;
 import io.jadefx.geometry.VPos;
+import io.jadefx.scene.Node.LayoutBounds;
 import io.jadefx.stage.Context;
 import io.jadefx.style.Percentage;
 import io.jadefx.style.PercentageCalc;
@@ -27,6 +28,7 @@ public abstract class Node {
 	 * Positioning settings
 	 */
 	protected Vector2d absolutePosition = new Vector2d(); // ONLY USED INTERNALLY DONT TOUCH
+	protected Vector2d translation = new Vector2d();
 	protected Vector2d size = new Vector2d();
 	protected Vector2d prefsize = new Vector2d();
 	protected Percentage prefwidthRatio;
@@ -36,7 +38,7 @@ public abstract class Node {
 	protected Percentage minheightRatio;
 	protected Percentage maxwidthRatio;
 	protected Percentage maxheightRatio;
-	protected Pos alignment = Pos.CENTER;
+	protected Pos alignment;
 	
 	/**
 	 * Flags
@@ -60,6 +62,8 @@ public abstract class Node {
 	private Scene scene;
 	
 	public Node() {
+		this.setAlignment(Pos.ANCESTOR);
+		
 		children.setAddCallback((e)->{
 			this.dirty();
 			e.setParent(this);
@@ -131,26 +135,8 @@ public abstract class Node {
 	protected void layoutChildren() {
 		for (int i = 0; i < this.children.size(); i++) {
 			Node node = this.children.get(i);
-			Pos useAlignment = node.usingAlignment();
 
-			double xMult = 0;
-			if ( useAlignment.getHpos() == HPos.CENTER)
-				xMult = 0.5f;
-			if ( useAlignment.getHpos() == HPos.RIGHT)
-				xMult = 1;
-
-			double yMult = 0;
-			if ( useAlignment.getVpos() == VPos.CENTER)
-				yMult = 0.5f;
-			if ( useAlignment.getVpos() == VPos.BOTTOM)
-				yMult = 1f;
-
-			node.setParent(this);
-
-			LayoutBounds bounds = this.getInnerBounds();
-			double offsetX = (bounds.getWidth()-node.getWidth())*xMult;
-			double offsetY = (bounds.getHeight()-node.getHeight())*yMult;
-			node.setLocalPosition(offsetX, offsetY);
+			node.setLocalPosition(getTranslateX(), getTranslateY());
 		}
 	}
 	
@@ -518,13 +504,19 @@ public abstract class Node {
 	public void setLocalPosition(double x, double y) {
 		LayoutBounds bounds = parent.getInnerBounds();
 		
-		float topLeftX = (float) (parent.absolutePosition.x + bounds.minX);
-		float topLeftY = (float) (parent.absolutePosition.y + bounds.minY);
+		float topLeftX = (float) (parent.getAbsolutePosition().x + bounds.minX);
+		float topLeftY = (float) (parent.getAbsolutePosition().y + bounds.minY);
 		
 		double changex = (topLeftX + x)-getX();
 		double changey = (topLeftY + y)-getY();
 		
 		setAbsolutePosition( this.getX()+changex, this.getY()+changey);
+	}
+
+	protected Vector2d getAbsolutePosition() {
+		if ( this.absolutePosition == null )
+			return new Vector2d();
+		return this.absolutePosition;
 	}
 
 	/**
@@ -555,7 +547,7 @@ public abstract class Node {
 	 * Set the layout alignment.
 	 * @param pos
 	 */
-	public void setAlignment(Pos pos) {
+	protected void setAlignment(Pos pos) {
 		this.alignment = pos;
 	}
 	
@@ -599,7 +591,7 @@ public abstract class Node {
 	 * Return the current layout alignment.
 	 * @return
 	 */
-	public Pos getAlignment() {
+	protected Pos getAlignment() {
 		return this.alignment;
 	}
 	
@@ -623,6 +615,43 @@ public abstract class Node {
 			absolutePosition = new Vector2d();
 		
 		return absolutePosition.y;
+	}
+	
+	/**
+	 * Defines the x coordinate of the translation that is added to this Node's transform.
+	 */
+	public double getTranslateX() {
+		_ensureTranslation();
+		return translation.x;
+	}
+
+	/**
+	 * Defines the x coordinate of the translation that is added to this Node's transform.
+	 */
+	public void setTranslateX(double value) {
+		_ensureTranslation();
+		translation.x = value;
+	}
+	
+	/**
+	 * Defines the y coordinate of the translation that is added to this Node's transform.
+	 */
+	public double getTranslateY() {
+		_ensureTranslation();
+		return translation.y;
+	}
+	
+	/**
+	 * Defines the y coordinate of the translation that is added to this Node's transform.
+	 */
+	public void setTranslateY(double value) {
+		_ensureTranslation();
+		translation.y = value;
+	}
+	
+	private void _ensureTranslation() {
+		if ( translation == null )
+			translation = new Vector2d();
 	}
 	
 	private boolean isRatioSimilar(Percentage p1, Percentage p2) {

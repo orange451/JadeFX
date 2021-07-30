@@ -2,7 +2,7 @@ package io.jadefx.scene.layout;
 
 import io.jadefx.geometry.Pos;
 
-public abstract class DirectionalBox extends Pane implements Spacable {
+public abstract class DirectionalBox extends StackPane implements Spacable {
 	protected float spacing;
 	
 	public DirectionalBox() {

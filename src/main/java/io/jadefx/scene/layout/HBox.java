@@ -6,6 +6,7 @@ import io.jadefx.scene.Node;
 
 public class HBox extends DirectionalBox {
 
+	@Override
 	protected void layoutChildren() {
 		double xStart = 0;
 		for (int i = 0; i < this.children.size(); i++) {

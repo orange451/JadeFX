@@ -10,9 +10,9 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
 
-import io.jadefx.geometry.Pos;
 import io.jadefx.scene.Scene;
 import io.jadefx.scene.layout.Pane;
+import io.jadefx.scene.layout.StackPane;
 import io.jadefx.stage.Stage;
 import io.jadefx.stage.Window;
 import io.jadefx.util.JadeFXUtil;
@@ -32,8 +32,7 @@ public class JadeFX {
 	 */
 	public static Stage create(long glfwHandle, long nanovg) {
 		Stage window = new Stage(glfwHandle, nanovg);
-		Pane root = new Pane();
-		root.setAlignment(Pos.ANCESTOR);
+		Pane root = new StackPane();
 		root.setBackgroundLegacy(null);
 		window.setScene(new Scene(root));
 		

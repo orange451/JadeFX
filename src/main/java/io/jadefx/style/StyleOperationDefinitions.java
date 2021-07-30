@@ -12,6 +12,7 @@ import io.jadefx.scene.Node;
 import io.jadefx.scene.control.Labeled;
 import io.jadefx.scene.layout.Region;
 import io.jadefx.scene.layout.Spacable;
+import io.jadefx.scene.layout.StackPane;
 import io.jadefx.scene.text.Font;
 import io.jadefx.transition.FillTransition;
 import io.jadefx.transition.Transition;
@@ -31,6 +32,9 @@ public class StyleOperationDefinitions {
 			if ( value.size() == 0 )
 				return;
 			
+			if ( !(node instanceof StackPane) )
+				return;
+			
 			StringBuilder overall = new StringBuilder();
 			for (int i = 0; i < value.get(0).size(); i++) {
 				Object o = value.get(0).get(i);
@@ -43,7 +47,7 @@ public class StyleOperationDefinitions {
 			if ( alignment == null )
 				return;
 				
-			node.setAlignment(alignment);
+			((StackPane)node).setAlignment(alignment);
 		}
 	};
 	
