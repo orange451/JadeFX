@@ -43,6 +43,7 @@ public class Stage extends Window {
 		return flushMap.get(this.getHandle()) > NO_FLUSH || this.getContext().isFlushed();
 	}
 	
+	@Override
 	public void render() {
 		if ( this.getScene() == null )
 			return;
