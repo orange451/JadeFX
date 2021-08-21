@@ -10,6 +10,8 @@ import io.jadefx.util.JadeFXUtil;
 public class Stage extends Window {
 	
 	private Scene scene;
+	
+	private Context context;
 
 	private static final int NO_FLUSH = 0;
 	private static final int FLUSH = 4;
@@ -22,6 +24,7 @@ public class Stage extends Window {
 	
 	public Stage(long handle, long nvgContext) {
 		super(handle, nvgContext);
+		this.context = new Context(this, nvgContext);
 
 		flushMap.put(handle, 10);
 		
@@ -29,6 +32,10 @@ public class Stage extends Window {
 			scene.dirty();
 			JadeFX.render(Stage.this);
 		});
+	}
+
+	public Context getContext() {
+		return this.context;
 	}
 	
 	public Scene getScene() {
@@ -59,7 +66,7 @@ public class Stage extends Window {
 		int currentFlush = flushMap.get(this.getHandle());
 		if (currentFlush <= NO_FLUSH)
 			return;
-		
+
 		flushMap.put(this.getHandle(), Math.max(currentFlush-1, 0));
 		
 		this.getContext().refresh();

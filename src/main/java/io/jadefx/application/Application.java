@@ -96,13 +96,13 @@ public abstract class Application {
 		return new Vector2i(800, 600);
 	}
 
-	private static void loop(Window window) {
+	private static void loop(Stage window) {
 		while ( !GLFW.glfwWindowShouldClose(window.getHandle()) ) {
 			JadeFX.render();
 		}
 	}
 	
-	private static void cleanup(Window window) {
+	private static void cleanup(Stage window) {
 		JadeFX.cleanup(window);
         GL.setCapabilities(null);
         glfwTerminate();

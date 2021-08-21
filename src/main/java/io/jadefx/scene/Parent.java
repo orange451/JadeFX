@@ -16,6 +16,6 @@ public abstract class Parent extends Node {
      * @return read-only access to this parent's children ObservableList
      */
     public ObservableList<Node> getChildrenUnmodifyable() {
-        return new ObservableList<Node>(super.getChildren());
+        return new ObservableList<Node>(this.getChildren());
     }
 }

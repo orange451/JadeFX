@@ -10,7 +10,7 @@ import org.lwjgl.system.MemoryStack;
 
 import io.jadefx.gl.OffscreenBuffer;
 import io.jadefx.stage.Context;
-import io.jadefx.stage.Window;
+import io.jadefx.stage.Stage;
 import io.jadefx.util.JadeFXUtil;
 
 public class BackgroundNVGImage extends Background {
@@ -39,7 +39,7 @@ public class BackgroundNVGImage extends Background {
 	 * @param buffer
 	 * @return
 	 */
-	public static BackgroundNVGImage fromOffscreenBuffer(Window window, OffscreenBuffer buffer) {
+	public static BackgroundNVGImage fromOffscreenBuffer(Stage window, OffscreenBuffer buffer) {
 		if ( window.getContext().isModernOpenGL() ) {
 			return new BackgroundNVGImage(NanoVGGL3.nvglCreateImageFromHandle(window.getContext().getNVG(), buffer.getTexId(), buffer.getWidth(), buffer.getHeight(), NanoVG.NVG_IMAGE_FLIPY));
 		} else {

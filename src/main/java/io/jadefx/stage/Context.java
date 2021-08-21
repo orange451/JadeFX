@@ -1,13 +1,7 @@
 package io.jadefx.stage;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +14,17 @@ import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import io.jadefx.collections.ObservableList;
+import io.jadefx.glfw.input.MouseHandler;
+import io.jadefx.scene.Node;
+import io.jadefx.scene.Parent;
+import io.jadefx.scene.Scene;
 import io.jadefx.style.Stylesheet;
+import io.jadefx.util.IOUtil;
 
 public class Context {
 
-	private final Window window;
+	private final Stage window;
 
 	private long nvgContext;
 
@@ -35,15 +35,17 @@ public class Context {
 
 	private List<Stylesheet> currentSheets = new ArrayList<>();
 	
+	private List<Node> hoveredNodes = new ArrayList<>();
+	
 	private DefaultFonts fonts;
 
 	private boolean loaded = false;
 	
-	public Context(Window window) {
+	public Context(Stage window) {
 		this(window, -1);
 	}
 	
-	public Context(Window window, long nvgContext) {
+	public Context(Stage window, long nvgContext) {
 		this.window = window;
 		this.nvgContext = nvgContext;
 		try {
@@ -158,46 +160,114 @@ public class Context {
 	public List<Stylesheet> getCurrentStyling() {
 		return currentSheets;
 	}
-	
-	private static InputStream inputStream(String path) throws IOException {
-		InputStream stream;
-		File file = new File(path);
-		if (file.exists() && file.isFile()) {
-			stream = new FileInputStream(file);
-		} else {
-			stream = Context.class.getClassLoader().getResourceAsStream(path);
-		}
-		return stream;
+
+	public void updateContext() {
+		mouseHover();
 	}
-	
-	private static byte[] toByteArray(InputStream stream, int bufferSize) {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-		int nRead;
-		byte[] data = new byte[bufferSize];
+	protected boolean hoveringOverPopup;
 
-		try {
-			while ((nRead = stream.read(data, 0, data.length)) != -1) {
-				buffer.write(data, 0, nRead);
+	private void mouseHover() {
+		// Get scene
+		Scene scene = window.getScene();
+
+		// Calculate current hover
+		hoveringOverPopup = false;
+		Node hovered = calculateHoverRecursive(null, scene);
+		Node last = hovered;
+		//hovered = calculateHoverPopups(scene);
+
+		// Check if hovering over a popup
+		if (last != null && !last.equals(hovered)) {
+			hoveringOverPopup = true;
+		}
+
+		// Not hovering over popups
+		/*if (last != null && last.equals(hovered)) {
+			for (int i = 0; i < scene.getPopups().size(); i++) {
+				PopupWindow popup = scene.getPopups().get(i);
+				popup.weakClose();
 			}
-			buffer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		}*/
 
-		return buffer.toByteArray();
+		// Check all hovered nodes to see if no longer hovered
+		for (int i = 0; i < hoveredNodes.size(); i++) {
+			if ( i >= hoveredNodes.size() )
+				continue;
+			Node node = hoveredNodes.get(i);
+			if ( node == null )
+				continue;
+			
+			MouseHandler mh = window.getMouseHandler();
+			float mouseX = mh.getX();
+			float mouseY = mh.getY();
+			
+			if ( !node.contains(mouseX, mouseY) ) {
+				hoveredNodes.remove(i--);
+				node.onMouseExited();
+				this.flush();
+			}
+		}
 	}
 
-	public static ByteBuffer ioResourceToByteBuffer(String resource) throws IOException {
-		ByteBuffer data = null;
-		InputStream stream = inputStream(resource);
-		if (stream == null) {
-			throw new FileNotFoundException(resource);
+	/*private Node calculateHoverPopups(Scene scene) {
+		MouseHandler mh = window.getMouseHandler();
+		ObservableList<PopupWindow> popups = scene.getPopups();
+		for (int i = 0; i < popups.size(); i++) {
+			PopupWindow popup = popups.get(i);
+			if (popup.contains(mh.getX(), mh.getY())) {
+				return calculateHoverRecursive(null, popup);
+			}
 		}
-		byte[] bytes = toByteArray(stream, stream.available());
-		data = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder()).put(bytes);
-		data.flip();
-		return data;
+
+		return hovered;
+	}*/
+
+	protected Node calculateHoverRecursive(Node parent, Node root) {
+		// Use scene as an entry point into nodes
+		if (parent == null && root instanceof Scene)
+			root = ((Scene) root).getRoot();
+
+		// If there's no root. then there's nothing to hover
+		if (root == null)
+			return null;
+
+		// Ignore if unclickable
+		if (root.isMouseTransparent())
+			return parent;
+
+		MouseHandler mh = window.getMouseHandler();
+		float mouseX = mh.getX();
+		float mouseY = mh.getY();
+
+		// If mouse is out of our bounds, ignore.
+		if ( !root.contains(mouseX, mouseY) ) {
+			return parent;
+		}
+
+		// Handle mouse enter logic
+		if (!hoveredNodes.contains(root)) {
+			hoveredNodes.add(root);
+			root.onMouseEntered();
+			this.flush();
+			System.out.println("MOUSE ENTER: " + root);
+		}
+
+		// Check children
+		if ( root instanceof Parent ) {
+			ObservableList<Node> children = ((Parent)root).getChildrenUnmodifyable();
+			for (int i = children.size() - 1; i >= 0; i--) {
+				Node ret = calculateHoverRecursive(root, children.get(i));
+				if (ret != null && !ret.equals(root)) {
+					return ret;
+				}
+			}
+		}
+		return root;
+	}
+
+	public Boolean isNodeHovered(Node node) {
+		return this.hoveredNodes.contains(node);
 	}
 }
 
@@ -236,7 +306,7 @@ class FontData {
 		
 		ByteBuffer data = DefaultFonts.fontData.get(name);
 		if ( data == null ) {
-			data = Context.ioResourceToByteBuffer(resourcePath);
+			data = IOUtil.ioResourceToByteBuffer(resourcePath);
 			DefaultFonts.fontData.put(name, data);
 		}
 		

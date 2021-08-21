@@ -58,6 +58,13 @@ public abstract class Node {
 	private ObservableList<String> classList = new ObservableList<String>();
 	private Scene scene;
 	
+	/**
+	 * Other
+	 */
+	private boolean mouseTransparent = false;
+	private Vector2d cachedAvailableSize;
+	private LayoutBounds innerBounds;
+	
 	public Node() {
 		this.setAlignment(Pos.ANCESTOR);
 		
@@ -348,7 +355,6 @@ public abstract class Node {
 	 * Return a vector containing the available size derived from the parent node.
 	 * @return Vector2d
 	 */
-	private Vector2d cachedAvailableSize;
 	public Vector2d getAvailableSize() {
 		//if ( cachedAvailableSize != null )
 			//return cachedAvailableSize;
@@ -552,7 +558,6 @@ public abstract class Node {
 	 * Return a bounds fit to the size of the node.
 	 * @return
 	 */
-	private LayoutBounds innerBounds;
 	public LayoutBounds getInnerBounds() {
 		if ( innerBounds == null )
 			innerBounds = new LayoutBounds(0,0,0,0);
@@ -1376,5 +1381,38 @@ public abstract class Node {
 		public double getY() {
 			return minY;
 		}
+	}
+
+	/**
+	 * Returns whether a point in scene-space is within the rectangle-bounds of this node.
+	 */
+	public boolean contains(float x, float y) {
+		return x >= this.getX() && x <= this.getX() + this.getWidth() && y >= this.getY() && y <= this.getY() + this.getHeight();
+	}
+
+	/**
+	 * Returns whether this node will ignore all mouse events.
+	 */
+	public boolean isMouseTransparent() {
+		return this.mouseTransparent;
+	}
+	
+	public void setMouseTransparent(boolean mouseTransparent) {
+		this.mouseTransparent = mouseTransparent;
+	}
+
+	public Boolean isHover() {
+		if ( this.getScene() == null || this.getScene().getContext() == null )
+			return false;
+		
+		return this.getScene().getContext().isNodeHovered(this);
+	}
+
+	public void onMouseExited() {
+		//
+	}
+
+	public void onMouseEntered() {
+		//
 	}
 }

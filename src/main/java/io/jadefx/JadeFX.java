@@ -14,11 +14,10 @@ import io.jadefx.scene.Scene;
 import io.jadefx.scene.layout.Pane;
 import io.jadefx.scene.layout.StackPane;
 import io.jadefx.stage.Stage;
-import io.jadefx.stage.Window;
 import io.jadefx.util.JadeFXUtil;
 
 public class JadeFX {
-	private static Map<Long, Window> activeWindows = new HashMap<>();
+	private static Map<Long, Stage> activeWindows = new HashMap<>();
 	
 	/**
 	 * Attach JadeFX to an already established GLFW window handle. NanoVG context will be automatically created based on system specifications.
@@ -44,7 +43,7 @@ public class JadeFX {
 	/**
 	 * Cleanup JadeFX window.
 	 */
-	public static void cleanup(Window window) {
+	public static void cleanup(Stage window) {
 		activeWindows.remove(window.getHandle());
 		nvgDelete(window.getContext().getNVG());
         glfwFreeCallbacks(window.getHandle());
@@ -56,7 +55,7 @@ public class JadeFX {
 	 * Will call glfwPollEvents.
 	 */
 	public static void render() {
-		for (Window window : activeWindows.values()) {
+		for (Stage window : activeWindows.values()) {
 			GLFW.glfwMakeContextCurrent(window.getHandle());
 			render(window);
 		}
@@ -67,7 +66,7 @@ public class JadeFX {
 	/**
 	 * Render a specific JadeFX window in the current thread.
 	 */
-	public static void render(Window window) {
+	public static void render(Stage window) {
 		window = activeWindows.get(window.getHandle());
 		if ( window == null )
 			return;
@@ -76,7 +75,9 @@ public class JadeFX {
 		GLFW.glfwSwapBuffers(window.getHandle());
 	}
 	
-	private static void renderWindow(Window window) {
+	private static void renderWindow(Stage window) {
+		window.getContext().updateContext();
+		
 		if ( !window.isFlushed() )
 			return;
 		

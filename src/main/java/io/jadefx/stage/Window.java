@@ -77,8 +77,6 @@ import io.jadefx.scene.Scene;
 
 public abstract class Window {
 	
-	private Context context;
-	
 	private long handle;
 	
 	protected int width = 0;
@@ -114,7 +112,6 @@ public abstract class Window {
 	
 	public Window(long handle, long nvgContext) {
 		this.handle = handle;
-		this.context = new Context(this, nvgContext);
 		this.setCallbacks();
 	}
 	
@@ -201,10 +198,6 @@ public abstract class Window {
 	public abstract boolean isFlushed();
 	
 	public abstract void render();
-
-	public Context getContext() {
-		return this.context;
-	}
 
 	public int getWidth() {
 		return this.width;
