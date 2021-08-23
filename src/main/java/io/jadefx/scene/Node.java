@@ -1409,10 +1409,10 @@ public abstract class Node {
 	}
 
 	public void onMouseExited() {
-		//
+		this.setFlag(FLAG_CSS_DIRTY);
 	}
 
 	public void onMouseEntered() {
-		//
+		this.setFlag(FLAG_CSS_DIRTY);
 	}
 }

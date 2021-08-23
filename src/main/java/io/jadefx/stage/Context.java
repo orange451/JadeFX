@@ -205,7 +205,6 @@ public class Context {
 			if ( !node.contains(mouseX, mouseY) ) {
 				hoveredNodes.remove(i--);
 				node.onMouseExited();
-				this.flush();
 			}
 		}
 	}
@@ -249,8 +248,6 @@ public class Context {
 		if (!hoveredNodes.contains(root)) {
 			hoveredNodes.add(root);
 			root.onMouseEntered();
-			this.flush();
-			System.out.println("MOUSE ENTER: " + root);
 		}
 
 		// Check children
