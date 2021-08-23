@@ -14,6 +14,7 @@ import io.jadefx.scene.Scene;
 import io.jadefx.scene.layout.Pane;
 import io.jadefx.scene.layout.StackPane;
 import io.jadefx.stage.Stage;
+import io.jadefx.transition.TransitionManager;
 import io.jadefx.util.JadeFXUtil;
 
 public class JadeFX {
@@ -55,6 +56,8 @@ public class JadeFX {
 	 * Will call glfwPollEvents.
 	 */
 	public static void render() {
+		TransitionManager.tick();
+		
 		for (Stage window : activeWindows.values()) {
 			GLFW.glfwMakeContextCurrent(window.getHandle());
 			render(window);

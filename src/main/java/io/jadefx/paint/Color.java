@@ -736,6 +736,8 @@ public class Color {
 	 * @return
 	 */
 	public static Color blend(Color from, Color to, Color store, double mult) {
+		mult = Math.min(1, Math.max(0, mult));
+		
 		// May not be the best approach, but if it looks good, then whatever.
 		int r1 = from.getRed();
 		int g1 = from.getGreen();
@@ -747,8 +749,17 @@ public class Color {
 		int b2 = to.getBlue();
 		int a2 = to.getAlpha();
 
-		store.set((int) mix(r1, r2, mult), (int) mix(g1, g2, mult), (int) mix(b1, b2, mult), (int) mix(a1, a2, mult));
+		int nr = (int) mix(r1, r2, mult);
+		int ng = (int) mix(g1, g2, mult);
+		int nb = (int) mix(b1, b2, mult);
+		int na = (int) mix(a1, a2, mult);
 
+		nr = Math.min(255, Math.max(0, nr));
+		ng = Math.min(255, Math.max(0, ng));
+		nb = Math.min(255, Math.max(0, nb));
+		na = Math.min(255, Math.max(0, na));
+		
+		store.set(nr, ng, nb, na);
 		return store;
 	}
 

@@ -80,6 +80,7 @@ public abstract class Application {
 		
 		// Create scene
 		Stage window  = JadeFX.create(handle, vg);
+		application.preStart(window);
 		application.start(window);
 		
 		// Loop
@@ -92,6 +93,10 @@ public abstract class Application {
 		}
 	}
 	
+	protected void preStart(Stage window) {
+		//
+	}
+
 	protected Vector2i getDefaultWindowSize() {
 		return new Vector2i(800, 600);
 	}
