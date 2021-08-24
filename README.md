@@ -1,6 +1,11 @@
 ## JadeFX
 Client Application Platform for Desktop and Mobile. Develop Desktop applications utilising GLFW and Mobile applications utilising GLFM. JadeFX can be run with a standard JDK/JVM using LWJGL3 or with MiniJVM. JadeFX can be incorporated in to your already existing OpenGL project, and/or it can be used to manage all your windowing and rendering code.
 
+## Features
+- JavaFX-like scene graph implementation
+- CSS Styling (not complete)
+- Deployment on both Desktop and Mobile
+
 [![](https://jitpack.io/v/orange451/JadeFX.svg)](https://jitpack.io/#orange451/JadeFX)
 
 (This library is heavily under development)
