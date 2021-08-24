@@ -24,6 +24,8 @@ import io.jadefx.style.Stylesheet;
 import io.jadefx.util.IOUtil;
 
 public class Context {
+	
+	private static Context currentContext;
 
 	private final Stage window;
 
@@ -97,6 +99,7 @@ public class Context {
 	 * Force resets the OpenGL Viewport to fit the window.
 	 */
 	public void refresh() {
+		currentContext = this;
 		GL11.glViewport(0, 0, (int) (window.getWidth() * window.getPixelRatio()), (int) (window.getHeight() * window.getPixelRatio()));
 	}
 	
@@ -266,6 +269,10 @@ public class Context {
 
 	public Boolean isNodeHovered(Node node) {
 		return this.hoveredNodes.contains(node);
+	}
+
+	public static Context getCurrent() {
+		return currentContext;
 	}
 }
 

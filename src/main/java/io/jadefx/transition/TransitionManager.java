@@ -2,6 +2,8 @@ package io.jadefx.transition;
 
 import java.util.ArrayList;
 
+import io.jadefx.stage.Context;
+
 public class TransitionManager {
 	private static ArrayList<Transition> activeTransitions = new ArrayList<Transition>();
 	
@@ -14,6 +16,11 @@ public class TransitionManager {
 	}
 	
 	public static void tick() {
+		if ( activeTransitions.size() <= 0 )
+			return;
+		
+		Context.getCurrent().flush();
+		
 		for (int i = 0; i < activeTransitions.size(); i++) {
 			Transition t = activeTransitions.get(i);
 			t.tick(t.getProgress());

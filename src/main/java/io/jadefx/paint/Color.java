@@ -701,7 +701,8 @@ public class Color {
 		int r = getRed();
 		int g = getGreen();
 		int b = getBlue();
-		return "Color:{" + r + "," + g + "," + b + "}";
+		int a = getAlpha();
+		return "Color:{" + r + "," + g + "," + b + "," + a + "}";
 	}
 
 	public void getColorComponents(float[] array) {
@@ -729,13 +730,13 @@ public class Color {
 	 * 
 	 * @param from  - starting color
 	 * @param to    - what color to transition to
-	 * @param store - the Color object to store the blended colors into (to prevent
+	 * @param dest - the Color object to store the blended colors into (to prevent
 	 *              making garbage)
 	 * @param mult  - how much of the transition is completed (0 = 100% the from
 	 *              color, 1 = 100% the to color)
 	 * @return
 	 */
-	public static Color blend(Color from, Color to, Color store, double mult) {
+	public static Color blend(Color from, Color to, Color dest, double mult) {
 		mult = Math.min(1, Math.max(0, mult));
 		
 		// May not be the best approach, but if it looks good, then whatever.
@@ -759,8 +760,8 @@ public class Color {
 		nb = Math.min(255, Math.max(0, nb));
 		na = Math.min(255, Math.max(0, na));
 		
-		store.set(nr, ng, nb, na);
-		return store;
+		dest.set(nr, ng, nb, na);
+		return dest;
 	}
 
 	public static double mix(double x, double y, double a) {

@@ -11,7 +11,6 @@ import org.mini.gui.GCallBack;
 
 import io.jadefx.JadeFX;
 import io.jadefx.stage.Stage;
-import io.jadefx.stage.Window;
 import io.jadefx.util.JadeFXUtil;
 
 public abstract class Application {
@@ -94,7 +93,7 @@ public abstract class Application {
 	}
 	
 	protected void preStart(Stage window) {
-		//
+		// Override this if you want.
 	}
 
 	protected Vector2i getDefaultWindowSize() {

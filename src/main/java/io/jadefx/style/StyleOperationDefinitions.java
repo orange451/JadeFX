@@ -562,10 +562,17 @@ public class StyleOperationDefinitions {
 			Color destColor = getColor(value.get(0).get(0));
 			Background currentBackground = t.getBackground();
 			
+			// Dont do anything if background is not changing
+			if ( currentBackground != null && currentBackground instanceof BackgroundSolid && ((BackgroundSolid)currentBackground).getColor().equals(destColor))
+				return;
+			
+			boolean isTransparent = currentBackground != null && currentBackground instanceof BackgroundSolid && ((BackgroundSolid)currentBackground).getColor().equals(Color.TRANSPARENT);
+			
 			StyleTransition transition = node.getStyleTransition(this.getName());
-			if ( transition == null || currentBackground == null || !(currentBackground instanceof BackgroundSolid) ) {
+			if ( transition == null || currentBackground == null || isTransparent || !(currentBackground instanceof BackgroundSolid) ) {
 				t.setBackground(new BackgroundSolid(destColor));
 			} else {
+				
 				List<Transition> current = transition.getTransitions();
 				if ( current.size() > 0 )
 					return;
@@ -1029,12 +1036,12 @@ public class StyleOperationDefinitions {
 		@Override
 		public void process(Node node, StyleVarArgs value) {
 			for (int i = 0; i< value.size(); i++) {
-				if ( value.get(i).size() < 2 )
+				StyleParams params = value.get(i);
+				if ( params.size() < 2 )
 					continue;
 				
-				String property = value.get(i).get(0).toString().trim();
-				long duration = ParseUtil.toDuration(value.get(i).get(1));
-				
+				String property = params.get(0).toString().trim();
+				long duration = ParseUtil.toDuration(params.get(1));
 				
 				StyleTransition styleTransition = node.getStyleTransition(property);
 				if ( styleTransition == null ) {

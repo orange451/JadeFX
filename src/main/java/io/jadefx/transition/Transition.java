@@ -47,7 +47,9 @@ public abstract class Transition {
 	/**
 	 * Callback for when the transition is finished and is about to be removed from the TransitionManager.
 	 */
-	public void completedCallback() {}
+	public void completedCallback() {
+		//
+	}
 	
 	/**
 	 * @return a value from 0 to 1 based on the transition time.
@@ -57,9 +59,11 @@ public abstract class Transition {
 		
 		double maxDistance = endStamp - startStamp;
 		double distance = Math.max(endStamp - currentTime, 0);
-		double progress = 1f - (distance / maxDistance);
+		double progress = 0;
+		if ( maxDistance != 0 )
+			progress = 1f - (distance / maxDistance);
 		
-		//System.err.println(maxDistance + " " + distance + " -> " + progress);
+		System.err.println(maxDistance + " " + distance + " -> " + progress);
 		
 		return progress;
 	}

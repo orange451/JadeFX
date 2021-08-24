@@ -5,10 +5,19 @@ public class ParseUtil {
 		String str = object.toString();
 		double multiplier = 1.0;
 		
-		if ( !str.endsWith("ms") )
+		if ( !str.endsWith("ms")  && str.endsWith("s") )
 			multiplier = 1000;
 		
-		str = str.replace("ms", "").replace("s", "");
+		int letters = 0;
+		for (int i = str.length()-1; i >= 0; i--) {
+			char c = str.charAt(i);
+			if ( Character.isLetter(c) )
+				letters++;
+			else
+				break;
+		}
+		
+		str = str.substring(0, str.length()-letters).trim();
 		return (long) (toNumber(str) * multiplier);
 	}
 
