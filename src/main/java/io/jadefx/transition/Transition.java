@@ -63,8 +63,6 @@ public abstract class Transition {
 		if ( maxDistance != 0 )
 			progress = 1f - (distance / maxDistance);
 		
-		System.err.println(maxDistance + " " + distance + " -> " + progress);
-		
 		return progress;
 	}
 	

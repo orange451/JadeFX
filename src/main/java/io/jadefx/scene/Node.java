@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.joml.Vector2d;
 
@@ -16,6 +17,7 @@ import io.jadefx.style.PercentageCalc;
 import io.jadefx.style.StyleTransition;
 import io.jadefx.style.Stylesheet;
 import io.jadefx.style.StylesheetCompileError;
+import io.jadefx.transition.Transition;
 
 public abstract class Node {
 	protected Node parent;
@@ -1067,6 +1069,25 @@ public abstract class Node {
 		
 		Context context = this.scene.getContext();
 		if ( context != null ) {
+			
+			for (Entry<String, StyleTransition> entry : styleTransitions.entrySet()) {
+				StyleTransition transition = entry.getValue();
+				for (int i = 0; i < transition.getTransitions().size(); i++) {
+					if ( i >= transition.getTransitions().size() )
+						continue;
+					
+					Transition innerTrans = transition.getTransitions().get(i);
+					if ( innerTrans == null )
+						continue;
+					
+					if ( innerTrans.isFinished() ) {
+						transition.getTransitions().remove(i--);
+						continue;
+					}
+					
+					this.dirty();
+				}
+			}
 			
 			// Add our sheet to the stack
 			if ( this.getStylesheet() != null )
