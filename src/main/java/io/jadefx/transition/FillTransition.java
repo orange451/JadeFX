@@ -38,4 +38,8 @@ public class FillTransition extends Transition {
 	public void tick(double progress) {
 		Color.blend(fromFill, toFill, storeFill, progress);
 	}
+
+	public Color getColor() {
+		return storeFill;
+	}
 }

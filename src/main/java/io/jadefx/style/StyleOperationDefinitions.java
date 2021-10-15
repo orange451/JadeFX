@@ -563,8 +563,8 @@ public class StyleOperationDefinitions {
 			Background currentBackground = t.getBackground();
 			
 			// Dont do anything if background is not changing
-			if ( currentBackground != null && currentBackground instanceof BackgroundSolid && ((BackgroundSolid)currentBackground).getColor().equals(destColor))
-				return;
+			//if ( currentBackground != null && currentBackground instanceof BackgroundSolid && ((BackgroundSolid)currentBackground).getColor().equals(destColor))
+				//return;
 			
 			boolean isTransparent = currentBackground != null && currentBackground instanceof BackgroundSolid && ((BackgroundSolid)currentBackground).getColor().equals(Color.TRANSPARENT);
 			
@@ -572,16 +572,29 @@ public class StyleOperationDefinitions {
 			if ( transition == null || currentBackground == null || isTransparent || !(currentBackground instanceof BackgroundSolid) ) {
 				t.setBackground(new BackgroundSolid(destColor));
 			} else {
-				
 				List<Transition> current = transition.getTransitions();
-				if ( current.size() > 0 )
-					return;
+				FillTransition fill_the_tranny = null;
+				if ( current.size() > 0 ) {
+					for (int i = 0; i < current.size(); i++) {
+						Transition trannies = current.get(i);
+						
+						if ( trannies instanceof FillTransition ) {
+							trannies.stop();
+							fill_the_tranny = (FillTransition) trannies;
+							current.remove(i--);
+						}
+					}
+				}
 				
 				Color sourceColor = new Color(((BackgroundSolid)currentBackground).getColor());
+				if ( fill_the_tranny != null )
+					sourceColor = fill_the_tranny.getColor();
+				
 				if ( sourceColor.equals(destColor) )
 					return;
 				
 				Color fillColor = new Color(sourceColor);
+				fillColor.immutable(false);
 				
 				// Color transition
 				FillTransition tran = new FillTransition(transition.getDurationMillis(), sourceColor, destColor, fillColor);

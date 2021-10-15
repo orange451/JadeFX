@@ -9,7 +9,13 @@ public class ApplicationTest extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		Pane pane = new Pane();
+		Pane pane = new Pane() {
+			@Override
+			public void size() {
+				super.size();
+				
+			}
+		};
 		stage.getScene().setStylesheet(""
 				+ ".box {"
 				+ "		box-shadow: 4px 8px 32px 0px rgba(0, 0, 0, 0.4),"
@@ -18,6 +24,11 @@ public class ApplicationTest extends Application {
 				+ "		height: 128px;"
 				+ "		background-color: yellow;"
 				+ "		border-radius: 8px;"
+				+ "		transition: background-color 0.2s;"
+				+ "}"
+				+ ""
+				+ ".box:hover {"
+				+ "		background-color: green;"
 				+ "}");
 		pane.getClassList().add("box");
 		

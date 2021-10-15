@@ -101,8 +101,9 @@ public class Pane extends Region implements BlockPaneRenderer {
 	 * @param color
 	 */	
 	public void setBackground(Background color) {
-		if ( this.backgrounds.size() == 1 && this.getBackgrounds().get(0).equals(color) )
-			return;
+		if ( this.backgrounds.size() == 1 && this.getBackgrounds().get(0).equals(color) ) {
+			this.getBackgrounds().set(0, color);
+		}
 		
 		for (int i = 0; i < backgrounds.size(); i++) {
 			if ( backgrounds.get(i) instanceof BackgroundSolid ) {
