@@ -42,4 +42,17 @@ public class FillTransition extends Transition {
 	public Color getColor() {
 		return storeFill;
 	}
+
+	public boolean equals(long durationMillis, Color sourceColor, Color destColor) {
+		if ( durationMillis != this.getDuration() )
+			return false;
+		
+		if ( !sourceColor.equals(this.storeFill) )
+			return false;
+		
+		if ( !destColor.equals(this.toFill) )
+			return false;
+		
+		return true;
+	}
 }

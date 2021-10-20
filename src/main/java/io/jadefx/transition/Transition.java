@@ -52,6 +52,13 @@ public abstract class Transition {
 	}
 	
 	/**
+	 * Return the max duration of this transition in milliseconds.
+	 */
+	public long getDuration() {
+		return this.durationInMillis;
+	}
+	
+	/**
 	 * @return a value from 0 to 1 based on the transition time.
 	 */
 	public double getProgress() {

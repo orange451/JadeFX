@@ -441,7 +441,7 @@ public abstract class Window {
 		//
 	}
 
-	private void mouseButtonCallback(long window, int button, int downup, int modifier) {
+	protected void mouseButtonCallback(long window, int button, int downup, int modifier) {
 
 		/*
 		 * Call window event listeners
@@ -455,7 +455,7 @@ public abstract class Window {
 		//
 	}
 
-	public void cursorPosCallback(long window, double x, double y) {
+	protected void cursorPosCallback(long window, double x, double y) {
 
 		/*
 		 * Call window event listeners
@@ -469,7 +469,7 @@ public abstract class Window {
 		//
 	}
 
-	public void scrollCallback(long window, double dx, double dy) {
+	protected void scrollCallback(long window, double dx, double dy) {
 		/*
 		 * Call window event listeners
 		 */

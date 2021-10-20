@@ -571,7 +571,9 @@ public class StyleOperationDefinitions {
 			StyleTransition transition = node.getStyleTransition(this.getName());
 			if ( transition == null || currentBackground == null || isTransparent || !(currentBackground instanceof BackgroundSolid) ) {
 				t.setBackground(new BackgroundSolid(destColor));
-			} else {
+			} else {				
+				Color sourceColor = new Color(((BackgroundSolid)currentBackground).getColor());
+				
 				List<Transition> current = transition.getTransitions();
 				FillTransition fill_the_tranny = null;
 				if ( current.size() > 0 ) {
@@ -579,16 +581,18 @@ public class StyleOperationDefinitions {
 						Transition trannies = current.get(i);
 						
 						if ( trannies instanceof FillTransition ) {
-							trannies.stop();
 							fill_the_tranny = (FillTransition) trannies;
+							sourceColor = fill_the_tranny.getColor();
+							
+							if ( fill_the_tranny.equals(transition.getDurationMillis(), sourceColor, destColor) ) {
+								return;
+							}
+
+							fill_the_tranny.stop();
 							current.remove(i--);
 						}
 					}
 				}
-				
-				Color sourceColor = new Color(((BackgroundSolid)currentBackground).getColor());
-				if ( fill_the_tranny != null )
-					sourceColor = fill_the_tranny.getColor();
 				
 				if ( sourceColor.equals(destColor) )
 					return;

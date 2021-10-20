@@ -12,6 +12,7 @@ import org.mini.gui.GCallBack;
 import io.jadefx.JadeFX;
 import io.jadefx.stage.Stage;
 import io.jadefx.util.JadeFXUtil;
+import mobile.jadefx.stage.MobileStage;
 
 public abstract class Application {
 	
@@ -55,6 +56,7 @@ public abstract class Application {
 		long handle;
 		
 		// Initialize GLFM
+		Stage stage;
 		if ( isGLFM ) {
 			handle = callback.getDisplay();
 			if ( handle == MemoryUtil.NULL )
@@ -74,11 +76,11 @@ public abstract class Application {
 			GL.createCapabilities();
 		}
 		
-		// NanoVG
 		long vg = JadeFXUtil.makeNanoVGContext(true);
+        stage = application.newStage(handle, vg);
 		
 		// Create scene
-		Stage window  = JadeFX.create(handle, vg);
+		Stage window  = JadeFX.create(stage);
 		application.preStart(window);
 		application.start(window);
 		
@@ -87,9 +89,15 @@ public abstract class Application {
 		if ( isGLFM ) {
 	        GLFM.glfmSetRenderFuncCallback(handle, (display, frameTime) -> JadeFX.render(window));
 		} else {
-			loop(window);
+			while ( !GLFW.glfwWindowShouldClose(window.getHandle()) ) {
+				JadeFX.render();
+			}
 	        cleanup(window);
 		}
+	}
+	
+	protected Stage newStage(long handle, long vg) {
+		return new Stage(handle, vg);
 	}
 	
 	protected void preStart(Stage window) {
@@ -98,12 +106,6 @@ public abstract class Application {
 
 	protected Vector2i getDefaultWindowSize() {
 		return new Vector2i(800, 600);
-	}
-
-	private static void loop(Stage window) {
-		while ( !GLFW.glfwWindowShouldClose(window.getHandle()) ) {
-			JadeFX.render();
-		}
 	}
 	
 	private static void cleanup(Stage window) {

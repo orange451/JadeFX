@@ -1,11 +1,12 @@
 package io.jadefx.transition;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.jadefx.stage.Context;
 
 public class TransitionManager {
-	private static ArrayList<Transition> activeTransitions = new ArrayList<Transition>();
+	private static List<Transition> activeTransitions = new ArrayList<Transition>();
 	
 	static void add(Transition transition) {
 		activeTransitions.add(transition);

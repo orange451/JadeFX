@@ -1024,7 +1024,7 @@ public abstract class Node {
 	}
 	
 	/**
-	 * Resets a flag if it is enabled.
+	 * Sets a flag to true, and updates all child nodes.
 	 */
 	protected void setFlag(int flag) {
 		flags |= flag;
@@ -1422,7 +1422,7 @@ public abstract class Node {
 		this.mouseTransparent = mouseTransparent;
 	}
 
-	public Boolean isHover() {
+	public boolean isHover() {
 		if ( this.getScene() == null || this.getScene().getContext() == null )
 			return false;
 		

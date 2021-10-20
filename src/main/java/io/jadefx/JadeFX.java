@@ -31,14 +31,20 @@ public class JadeFX {
 	 * Attach JadeFX to an already established GLFW window handle. NanoVG context is supplied by user.
 	 */
 	public static Stage create(long glfwHandle, long nanovg) {
-		Stage window = new Stage(glfwHandle, nanovg);
+		return create(new Stage(glfwHandle, nanovg));
+	}
+	
+	/**
+	 * Attach JadeFX to an already established Stage.
+	 */
+	public static Stage create(Stage stage) {
 		Pane root = new StackPane();
 		root.setBackgroundLegacy(null);
-		window.setScene(new Scene(root));
+		stage.setScene(new Scene(root));
 		
-		activeWindows.put(glfwHandle, window);
+		activeWindows.put(stage.getHandle(), stage);
 		
-		return window;
+		return stage;
 	}
 	
 	/**
@@ -56,8 +62,6 @@ public class JadeFX {
 	 * Will call glfwPollEvents.
 	 */
 	public static void render() {
-		TransitionManager.tick();
-		
 		for (Stage window : activeWindows.values()) {
 			GLFW.glfwMakeContextCurrent(window.getHandle());
 			render(window);
@@ -70,6 +74,8 @@ public class JadeFX {
 	 * Render a specific JadeFX window in the current thread.
 	 */
 	public static void render(Stage window) {
+		TransitionManager.tick();
+		
 		window = activeWindows.get(window.getHandle());
 		if ( window == null )
 			return;

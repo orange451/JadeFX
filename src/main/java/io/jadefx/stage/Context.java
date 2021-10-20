@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.joml.Matrix4f;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
@@ -198,6 +197,7 @@ public class Context {
 		for (int i = 0; i < hoveredNodes.size(); i++) {
 			if ( i >= hoveredNodes.size() )
 				continue;
+			
 			Node node = hoveredNodes.get(i);
 			if ( node == null )
 				continue;
@@ -225,6 +225,10 @@ public class Context {
 
 		return hovered;
 	}*/
+	
+	public List<Node> getHoveredNodes() {
+		return new ArrayList<>(this.hoveredNodes);
+	}
 
 	protected Node calculateHoverRecursive(Node parent, Node root) {
 		// Use scene as an entry point into nodes
@@ -267,7 +271,7 @@ public class Context {
 		return root;
 	}
 
-	public Boolean isNodeHovered(Node node) {
+	public boolean isNodeHovered(Node node) {
 		return this.hoveredNodes.contains(node);
 	}
 

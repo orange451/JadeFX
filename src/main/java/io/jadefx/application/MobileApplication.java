@@ -7,13 +7,20 @@ import org.mini.gui.GCallBack;
 import org.mini.gui.GLFMApplicationDisplay;
 
 import io.jadefx.geometry.ScreenOrientation;
+import io.jadefx.stage.Stage;
+import mobile.jadefx.stage.MobileStage;
 
 public abstract class MobileApplication extends Application {
 	
 	private static final GApplicationDisplay appDisplay = new GLFMApplicationDisplay();
 	
 	protected Vector2i getDefaultWindowSize() {
-		return new Vector2i(375, 667);
+		return new Vector2i(375, 667); // This is not used by mobile devices, only when ran on desktop machines.
+	}
+	
+	@Override
+	protected Stage newStage(long handle, long vg) {
+		return new MobileStage(handle, vg);
 	}
 	
 	public static void setOrientation(ScreenOrientation orientation) {

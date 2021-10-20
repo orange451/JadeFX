@@ -34,6 +34,9 @@ public class StyleTransition {
 		return "Transition(" + this.property + ", " + timeMillis + "ms, " + this.type + ")";
 	}
 	
+	/**
+	 * Returns a list of currently playing transitions for this style transition.
+	 */
 	public List<Transition> getTransitions() {
 		
 		for (int i = 0; i < this.currentTransitions.size(); i++) {
