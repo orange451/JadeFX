@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
@@ -39,6 +40,10 @@ public class Context {
 	
 	private List<Node> hoveredNodes = new ArrayList<>();
 	
+	private List<Node> clickedNodes = new ArrayList<>();
+	
+	private List<Node> selectedNodes = new ArrayList<>();
+	
 	private DefaultFonts fonts;
 
 	private boolean loaded = false;
@@ -57,6 +62,39 @@ public class Context {
 			e.printStackTrace();
 		}
 		this.loaded = true;
+		
+		window.getMouseButtonCallback().addCallback((handle, button, action, mods)->{
+			if ( action == GLFW.GLFW_PRESS )
+				mouseHover();
+			if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
+				if ( action == GLFW.GLFW_PRESS ) {
+					List<Node> removedNodes = new ArrayList<>();
+					List<Node> newNodes = new ArrayList<>();
+					for (Node node : clickedNodes)
+						if ( !hoveredNodes.contains(node) )
+							removedNodes.add(node); // This node is now no longer clicked
+					for (Node node : hoveredNodes)
+						if ( !clickedNodes.contains(node) )
+							newNodes.add(node); // This node was just clicked for first time
+					
+					clickedNodes.removeAll(removedNodes);
+					clickedNodes.addAll(newNodes);
+					
+					selectedNodes.clear();
+					selectedNodes.addAll(hoveredNodes);
+					
+					for (Node node : newNodes)
+						node.onMousePress();
+				}
+				
+				if ( action == GLFW.GLFW_RELEASE ) {
+					for (Node node : clickedNodes)
+						node.onMouseRelease();
+					
+					clickedNodes.clear();
+				}
+			}
+		});
 	}
 
 	public void init() {
@@ -271,12 +309,20 @@ public class Context {
 		return root;
 	}
 
+	public static Context getCurrent() {
+		return currentContext;
+	}
+
 	public boolean isNodeHovered(Node node) {
 		return this.hoveredNodes.contains(node);
 	}
 
-	public static Context getCurrent() {
-		return currentContext;
+	public boolean isNodeSelected(Node node) {
+		return this.selectedNodes.contains(node);
+	}
+
+	public boolean isNodeClicked(Node node) {
+		return this.clickedNodes.contains(node);
 	}
 }
 

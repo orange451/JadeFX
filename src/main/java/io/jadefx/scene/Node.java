@@ -1429,11 +1429,33 @@ public abstract class Node {
 		return this.getScene().getContext().isNodeHovered(this);
 	}
 
+	public boolean isClicked() {
+		if ( this.getScene() == null || this.getScene().getContext() == null )
+			return false;
+		
+		return this.getScene().getContext().isNodeClicked(this);
+	}
+
+	public boolean isSelected() {
+		if ( this.getScene() == null || this.getScene().getContext() == null )
+			return false;
+		
+		return this.getScene().getContext().isNodeSelected(this);
+	}
+
 	public void onMouseExited() {
 		this.setFlag(FLAG_CSS_DIRTY);
 	}
 
 	public void onMouseEntered() {
+		this.setFlag(FLAG_CSS_DIRTY);
+	}
+
+	public void onMousePress() {
+		this.setFlag(FLAG_CSS_DIRTY);
+	}
+
+	public void onMouseRelease() {
 		this.setFlag(FLAG_CSS_DIRTY);
 	}
 }

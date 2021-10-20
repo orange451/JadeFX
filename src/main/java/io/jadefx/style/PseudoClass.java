@@ -1,6 +1,7 @@
 package io.jadefx.style;
 
 import io.jadefx.scene.Node;
+import io.jadefx.scene.control.Control;
 
 /**
  * Pseudo Class enum list. Used to check if a pseudo class is active or not.
@@ -34,7 +35,7 @@ public enum PseudoClass {
 	FOCUS("focus", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
-			return false;//node.isSelected() || node.isClicked();
+			return node.isSelected() || node.isClicked();
 		}
 	}),
 	
@@ -44,7 +45,7 @@ public enum PseudoClass {
 	SELECT("select", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
-			return false;//node.isSelected();
+			return node.isSelected();
 		}
 	}),
 	
@@ -54,7 +55,7 @@ public enum PseudoClass {
 	ACTIVE("active", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
-			return false;//node.isClicked();
+			return node.isClicked();
 		}
 	}),
 	
@@ -64,11 +65,10 @@ public enum PseudoClass {
 	DISABLED("disabled", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
-			/*if ( !(node instanceof Control) )
+			if ( !(node instanceof Control) )
 				return false;
 			
-			return ((Control)node).isDisabled();*/
-			return false;
+			return ((Control)node).isDisabled();
 		}
 	});
 	
