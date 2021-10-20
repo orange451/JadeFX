@@ -9,6 +9,10 @@ import java.util.Map.Entry;
 import org.joml.Vector2d;
 
 import io.jadefx.collections.ObservableList;
+import io.jadefx.event.Event;
+import io.jadefx.event.EventHandler;
+import io.jadefx.event.EventHelper;
+import io.jadefx.event.MouseEvent;
 import io.jadefx.geometry.Orientation;
 import io.jadefx.geometry.Pos;
 import io.jadefx.stage.Context;
@@ -59,6 +63,24 @@ public abstract class Node {
 	private List<Node> descendents = new ObservableList<Node>();
 	private ObservableList<String> classList = new ObservableList<String>();
 	private Scene scene;
+	
+	/**
+	 * Events
+	 */
+	protected EventHandler<MouseEvent> mousePressedEvent;
+	protected EventHandler<MouseEvent> mousePressedEventInternal;
+	
+	protected EventHandler<MouseEvent> mouseReleasedEvent;
+	protected EventHandler<MouseEvent> mouseReleasedEventInternal;
+	
+	protected EventHandler<MouseEvent> mouseClickedEvent;
+	protected EventHandler<MouseEvent> mouseClickedEventInternal;
+	
+	protected EventHandler<Event> mouseEnteredEvent;
+	protected EventHandler<Event> mouseEnteredEventInternal;
+	
+	protected EventHandler<Event> mouseExitedEvent;
+	protected EventHandler<Event> mouseExitedEventInternal;
 	
 	/**
 	 * Other
@@ -1418,10 +1440,16 @@ public abstract class Node {
 		return this.mouseTransparent;
 	}
 	
+	/**
+	 * Sets the mouse transparency property. See {@link #isMouseTransparent()}.
+	 */
 	public void setMouseTransparent(boolean mouseTransparent) {
 		this.mouseTransparent = mouseTransparent;
 	}
 
+	/**
+	 * Returns whether this node is hovered by mouse or touch gesture.
+	 */
 	public boolean isHover() {
 		if ( this.getScene() == null || this.getScene().getContext() == null )
 			return false;
@@ -1429,6 +1457,9 @@ public abstract class Node {
 		return this.getScene().getContext().isNodeHovered(this);
 	}
 
+	/**
+	 * Returns whether this node is currently being clicked by mouse or touch gesture.
+	 */
 	public boolean isClicked() {
 		if ( this.getScene() == null || this.getScene().getContext() == null )
 			return false;
@@ -1436,6 +1467,9 @@ public abstract class Node {
 		return this.getScene().getContext().isNodeClicked(this);
 	}
 
+	/**
+	 * Returns whether this node is currently selected as a result of mouse or touch gesture.
+	 */
 	public boolean isSelected() {
 		if ( this.getScene() == null || this.getScene().getContext() == null )
 			return false;
@@ -1443,19 +1477,139 @@ public abstract class Node {
 		return this.getScene().getContext().isNodeSelected(this);
 	}
 
-	public void onMouseExited() {
+	public void onMouseExited(Event event) {
 		this.setFlag(FLAG_CSS_DIRTY);
+		
+		if (mouseExitedEventInternal != null)
+			EventHelper.fireEvent(mouseExitedEventInternal, event);
+		if (mouseExitedEvent != null)
+			EventHelper.fireEvent(mouseExitedEvent, event);
 	}
 
-	public void onMouseEntered() {
+	public void onMouseEntered(Event event) {
 		this.setFlag(FLAG_CSS_DIRTY);
+		
+		if (mouseEnteredEventInternal != null)
+			EventHelper.fireEvent(mouseEnteredEventInternal, event);
+		if (mouseEnteredEvent != null)
+			EventHelper.fireEvent(mouseEnteredEvent, event);
 	}
 
-	public void onMousePress() {
+	public void onMousePress(MouseEvent event) {
 		this.setFlag(FLAG_CSS_DIRTY);
+
+		if (mousePressedEventInternal != null)
+			EventHelper.fireEvent(mousePressedEventInternal, event);
+		if (mousePressedEvent != null)
+			EventHelper.fireEvent(mousePressedEvent, event);
 	}
 
-	public void onMouseRelease() {
+	public void onMouseRelease(MouseEvent event) {
 		this.setFlag(FLAG_CSS_DIRTY);
+		
+		// Click logic
+		long time = System.currentTimeMillis()-_lastClick;
+		if ( time > 300 )
+			_flag_clicks = 0;
+		_flag_clicks++;
+		_lastClick = System.currentTimeMillis();
+		event.clicks = _flag_clicks;
+		
+		// Click event
+		if (mouseClickedEventInternal != null)
+			EventHelper.fireEvent(mouseClickedEventInternal, event);
+		if (mouseClickedEvent != null)
+			EventHelper.fireEvent(mouseClickedEvent, event);
+		
+		// Releaseevent
+		if (mouseReleasedEventInternal != null)
+			EventHelper.fireEvent(mouseReleasedEventInternal, event);
+		if (mouseReleasedEvent != null)
+			EventHelper.fireEvent(mouseReleasedEvent, event);
+	}
+	private long _lastClick = 0;
+	private int _flag_clicks = 0;
+	
+	protected EventHandler<MouseEvent> getMousePressedEventInternal() {
+		return mousePressedEventInternal;
+	}
+	
+	protected void setOnMousePressedInternal(EventHandler<MouseEvent> mousePressedEventInternal) {
+		this.mousePressedEventInternal = mousePressedEventInternal;
+	}
+	
+	public EventHandler<MouseEvent> getMousePressedEvent() {
+		return this.mousePressedEvent;
+	}
+	
+	public void setOnMousePressed( EventHandler<MouseEvent> event ) {
+		this.mousePressedEvent = event;
+	}
+
+	
+	protected EventHandler<MouseEvent> getMouseReleasedEventInternal() {
+		return mouseReleasedEventInternal;
+	}
+
+	protected void setOnMouseReleasedInternal(EventHandler<MouseEvent> mouseReleasedEventInternal) {
+		this.mouseReleasedEventInternal = mouseReleasedEventInternal;
+	}
+	
+	public EventHandler<MouseEvent> getMouseReleasedEvent() {
+		return this.mouseReleasedEvent;
+	}
+	
+	public void setOnMouseReleased( EventHandler<MouseEvent> event ) {
+		this.mouseReleasedEvent = event;
+	}
+	
+
+	protected EventHandler<MouseEvent> getMouseClickedEventInternal() {
+		return mouseClickedEventInternal;
+	}
+
+	protected void setOnMouseClickedInternal(EventHandler<MouseEvent> mouseClickedEventInternal) {
+		this.mouseClickedEventInternal = mouseClickedEventInternal;
+	}
+	
+	public EventHandler<MouseEvent> getOnMouseClicked() {
+		return this.mouseClickedEvent;
+	}
+	
+	public void setOnMouseClicked( EventHandler<MouseEvent> event) {
+		this.mouseClickedEvent = event;
+	}
+	
+
+	protected EventHandler<Event> getMouseEnteredEventInternal() {
+		return mouseEnteredEventInternal;
+	}
+
+	protected void setOnMouseEnteredInternal(EventHandler<Event> mouseEnteredEventInternal) {
+		this.mouseEnteredEventInternal = mouseEnteredEventInternal;
+	}
+	
+	public EventHandler<Event> getMouseEnteredEvent() {
+		return mouseEnteredEvent;
+	}
+	
+	public void setOnMouseEntered( EventHandler<Event> event ) {
+		this.mouseEnteredEvent = event;
+	}
+	
+
+	protected EventHandler<Event> getMouseExitedEventInternal() {
+		return mouseExitedEventInternal;
+	}
+
+	protected void setOnMouseExitedInternal(EventHandler<Event> mouseExitedEventInternal) {
+		this.mouseExitedEventInternal = mouseExitedEventInternal;
+	}
+	public EventHandler<Event> getMouseExitedEvent() {
+		return this.mouseExitedEvent;
+	}
+	
+	public void setOnMouseExited( EventHandler<Event> event ) {
+		this.mouseExitedEvent = event;
 	}
 }

@@ -16,6 +16,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import io.jadefx.collections.ObservableList;
+import io.jadefx.event.Event;
+import io.jadefx.event.MouseEvent;
 import io.jadefx.glfw.input.MouseHandler;
 import io.jadefx.scene.Node;
 import io.jadefx.scene.Parent;
@@ -66,6 +68,9 @@ public class Context {
 		window.getMouseButtonCallback().addCallback((handle, button, action, mods)->{
 			if ( action == GLFW.GLFW_PRESS )
 				mouseHover();
+
+			MouseEvent event = new MouseEvent(window.getMouseHandler().getX(), window.getMouseHandler().getY(), button);
+			
 			if ( button == GLFW.GLFW_MOUSE_BUTTON_LEFT ) {
 				if ( action == GLFW.GLFW_PRESS ) {
 					List<Node> removedNodes = new ArrayList<>();
@@ -84,12 +89,12 @@ public class Context {
 					selectedNodes.addAll(hoveredNodes);
 					
 					for (Node node : newNodes)
-						node.onMousePress();
+						node.onMousePress(event);
 				}
 				
 				if ( action == GLFW.GLFW_RELEASE ) {
 					for (Node node : clickedNodes)
-						node.onMouseRelease();
+						node.onMouseRelease(event);
 					
 					clickedNodes.clear();
 				}
@@ -246,7 +251,7 @@ public class Context {
 			
 			if ( !node.contains(mouseX, mouseY) ) {
 				hoveredNodes.remove(i--);
-				node.onMouseExited();
+				node.onMouseExited(new Event());
 			}
 		}
 	}
@@ -293,7 +298,7 @@ public class Context {
 		// Handle mouse enter logic
 		if (!hoveredNodes.contains(root)) {
 			hoveredNodes.add(root);
-			root.onMouseEntered();
+			root.onMouseEntered(new Event());
 		}
 
 		// Check children
