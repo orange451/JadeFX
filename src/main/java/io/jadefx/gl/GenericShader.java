@@ -3,11 +3,15 @@ package io.jadefx.gl;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
@@ -19,13 +23,15 @@ import io.jadefx.stage.Context;
 
 public class GenericShader {
 	private final int id;
-	private final int vertexId;
-	private final int fragmentId;
+	private final int[] vertexId;
+	private final int[] fragmentId;
 	protected final int posLoc;
 	protected final int texCoordLoc;
+	protected final int colorLoc;
 	protected final int projMatLoc;
 	protected final int viewMatLoc;
 	protected final int worldMatLoc;
+	private final String shaderName;
 	private int texId;
 	
 	private boolean bound = false;
@@ -35,24 +41,27 @@ public class GenericShader {
 	private static final Matrix4f IDENTITY_MATRIX = new Matrix4f();
 
 	public GenericShader() {
-		this(
+		this( "generic",
 				GenericShader.class.getClassLoader().getResource("jadefx/gl/vertex.glsl"),
 				GenericShader.class.getClassLoader().getResource("jadefx/gl/fragment.glsl")
 			);
 	}
-
-	public GenericShader(URL vertexShader, URL fragmentShader) {
+	
+	public GenericShader(String shaderName, URL vertexShader, URL fragmentShader) {
+		this.shaderName = shaderName;
+		System.out.println("Compiling shader: " + this.shaderName);
 		// make the shader
-		vertexId = compileShader(vertexShader, true);
-		fragmentId = compileShader(fragmentShader, false);
+		vertexId = compileShader(true, vertexShader);
+		fragmentId = compileShader(false, fragmentShader);
 		posLoc = 0;
 		texCoordLoc = 1;
+		colorLoc = 2;
 		id = createProgram(
 				vertexId,
-				new int[] { fragmentId },
-				new String[] { "inPos", "inTexCoord" },
-				new int[] { posLoc, texCoordLoc }
-				);
+				fragmentId,
+				new String[] { "inPos", "inTexCoord", "inColor" },
+				new int[] { posLoc, texCoordLoc, colorLoc }
+		);
 
 		projMatLoc = GL20.glGetUniformLocation(id, "projectionMatrix");
 		viewMatLoc = GL20.glGetUniformLocation(id, "viewMatrix");
@@ -81,13 +90,16 @@ public class GenericShader {
 		
 		bound = true;
 	}
-
+	
 	public void cleanup() {
-		GL20.glDeleteShader(vertexId);
-		GL20.glDeleteShader(fragmentId);
+		for (int i = 0; i < vertexId.length; i++)
+			GL20.glDeleteShader(vertexId[i]);
+
+		for (int i = 0; i < fragmentId.length; i++)
+			GL20.glDeleteShader(fragmentId[i]);
+
 		GL20.glDeleteProgram(id);
 	}
-
 	public int getUniformLocation(String uniform) {
 		if ( !bound )
 			return -1;
@@ -103,14 +115,18 @@ public class GenericShader {
 		return loc;
 	}
 
-	protected static int createProgram(int vertexShaderId, int[] fragmentShaderIds, String[] attrs, int[] indices) {
+	protected int createProgram(int[] vertexShaderIds, int[] fragmentShaderIds, String[] attrs, int[] indices) {
 
 		// build the shader program
 		int id = GL20.glCreateProgram();
-		GL20.glAttachShader(id, vertexShaderId);
+		for (int vertexShaderId : vertexShaderIds) {
+			GL20.glAttachShader(id, vertexShaderId);
+		}
 		for (int fragmentShaderId : fragmentShaderIds) {
 			GL20.glAttachShader(id, fragmentShaderId);
 		}
+
+		create(id);
 
 		assert (attrs.length == indices.length);
 		for (int i=0; i<attrs.length; i++) {
@@ -120,33 +136,64 @@ public class GenericShader {
 		GL20.glLinkProgram(id);
 		boolean isSuccess = GL20.glGetProgrami(id, GL20.GL_LINK_STATUS) == GL11.GL_TRUE;
 		if (!isSuccess) {
-			throw new RuntimeException("Shader program did not link:\n" + GL20.glGetProgramInfoLog(id, 4096));
+			System.err.println("Shader program could not link." + GL20.glGetProgramInfoLog(id, 4096));
+			throw new RuntimeException("Shader program could not link." + GL20.glGetProgramInfoLog(id, 4096));
 		}
 
 		return id;
 	}
 
-	protected static int compileShader(URL url, boolean isVertex) {
-		if (url == null)
-			return -1;
+	public void create(int id) {
+		//
+	}
 
+	protected static int[] compileShader(boolean isVertex, URL... url) {
+		if (url == null)
+			return null;
+		
+		// Create program
+		String source = "";
+		for (int i = 0; i < url.length; i++) {
+			source = readFileToShader(url[i]);
+		}
+
+		// Get final shader source & compile
+		int[] ret = new int[1];
+		ret[0] = compileShader(source, isVertex);
+		
+		return ret;
+	}
+
+	private static String readFileToShader(URL url) {
 		try {
 			InputStream in = url.openStream();
 			InputStreamReader isr = new InputStreamReader(in);
 			BufferedReader br = new BufferedReader(isr);
 
 			String source = "";
-			String st;
-			while ((st = br.readLine()) != null)
-				source += st + "\n";
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				if ( line.startsWith("#include") ) {
+					String includeName = line.substring("#include".length()).replace("./", "").trim();
+					String includeFile = "jadefx/gl/" + includeName;
+					System.out.println(includeFile);
+					line = readFileToShader(GenericShader.class.getClassLoader().getResource(includeFile));
+				}
+				
+				if ( line == null )
+					continue;
+				
+				String finalLine = line + "\n";
+				source += finalLine;
+			}
 			
 			br.close();
 			isr.close();
-			in.close();	 
+			in.close();
 			
-			return compileShader(source, isVertex);
+			return source;
 		} catch (IOException ex) {
-			throw new RuntimeException("can't compile shader at: " + url, ex);
+			return null;
 		}
 	}
 
@@ -167,7 +214,7 @@ public class GenericShader {
         String glVersion = new String(GL11.glGetString(GL11.GL_VERSION));
         boolean isOpenGLES = glVersion.contains("OpenGL ES");
         if ( isOpenGLES )
-        	source = source.replace("#version 330", "#version 300 es\r\nprecision highp float;\r\nprecision highp sampler2DShadow;\r\n");
+        	source = source.replace("#version 330", "#version 300 es\nprecision highp float;\nprecision highp sampler2DShadow;\n");
 
 		int id = GL20.glCreateShader(type);
 		GL20.glShaderSource(id, source);
@@ -193,6 +240,7 @@ public class GenericShader {
 				buf.append("\n");
 			}
 
+			System.err.println(buf.toString());
 			throw new RuntimeException(buf.toString());
 		}
 

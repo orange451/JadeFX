@@ -15,6 +15,111 @@ public class StyleFunctionDefinitions {
 		}
 	};
 	
+	public static StyleFunction LINEAR_GRADIENT = new StyleFunction("linear-gradient") {
+		@Override
+		public Object process(Node node, StyleVarArgs value, String attribute) {
+			if ( value.size() == 0 )
+				return null;
+			
+			// Must have at least 2 args!
+			StyleParams params = value.get(0);
+			if ( params.size() < 2 )
+				return null;
+			
+			// Get direction
+			float direction = 90;
+			int a = 0;
+			boolean firstArgIsDirection = false;
+			if ( ParseUtil.isNumber(params.get(0)) ) {
+				firstArgIsDirection = true;
+				direction = ParseUtil.toNumber(params.get(0)) - 90;
+				a++;
+			}
+			
+			// Must have 2 colors
+			int amtColors = params.size() - (firstArgIsDirection?1:0);
+			if ( amtColors < 2 )
+				return null;
+
+			ColorStop[] colors = new ColorStop[amtColors];
+			int t = 0;
+
+			// Parse exact color stops first
+			for (int i = a; i < params.size(); i++) {
+				Object arg1 = params.get(i);
+				ColorStop stop = null;
+				
+				if ( arg1.toString().contains("%") )
+					stop = StyleOperationDefinitions.parseColorStop(arg1);
+				
+				if ( stop == null )
+					continue;
+				
+				colors[i-a] = stop;
+				t++;
+			}
+			
+			// Make sure first color stop is defined
+			if ( colors[0] == null )
+				colors[0] = StyleOperationDefinitions.parseColorStop(params.get(a) + " 0%");
+			
+			// Make sure last color stop is defined
+			if ( colors[colors.length-1] == null )
+				colors[colors.length-1] = StyleOperationDefinitions.parseColorStop(params.get(params.size()-1) + " 100%");
+			
+			// Parse non precomputed stops... (Does not contain %)
+			if ( t != colors.length ) {
+				ColorStop[] colorsFinal = new ColorStop[amtColors];
+				int leftMost = 0;
+				int rightMost = -1; // Most likely will end up being the last color
+
+				for (int i = 0; i < colors.length; i++) {
+					ColorStop tempStop = colors[i];
+					
+					// Define left most stop if it's not null
+					if ( tempStop != null ) {
+						leftMost = i;
+						if ( leftMost == rightMost )
+							rightMost = -1;
+						
+						colorsFinal[i] = colors[i];
+					}
+					
+					if ( tempStop == null ) {
+						
+						Object arg1 = params.get(i+a);
+						Color color = StyleOperationDefinitions.getColor(arg1);
+						
+						// Search for right most stop
+						if ( rightMost == -1 ) {
+							for (int j = i; j < colors.length; j++) {
+								ColorStop aaaa = colors[j];
+								if ( aaaa != null ) {
+									rightMost = j;
+								}
+							}
+						}
+						
+						// Compute color stop with our own percent
+						float lowerRatio = colors[leftMost].getRatio();
+						float higherRatio = colors[rightMost].getRatio();
+						float percent = lowerRatio + ((i-leftMost) / (float)(rightMost-leftMost))*(higherRatio-lowerRatio);
+						ColorStop stop = new ColorStop(color, percent);
+						
+						// Store to final
+						colorsFinal[i] = stop;
+					}
+				}
+				
+				// Overwrite colors
+				colors = colorsFinal;
+			}
+			
+			// Return gradient
+			return new BackgroundLinearGradient(direction, colors);
+		}
+	};
+	
 	public static StyleFunction RGB = new StyleFunction("rgb") {
 		@Override
 		public Object process(Node node, StyleVarArgs value, String attribute) {

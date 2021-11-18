@@ -667,10 +667,11 @@ public class StyleOperationDefinitions {
 			// Parse bacgkrounds
 			for (int i = 0; i < value.size(); i++) {
 				StyleParams params = value.get(i);
+				System.out.println(params);
 				if ( params.size() == 0 )
 					continue;
 				
-				Background back = getBackground(params.get(0));
+				Background back = (Background) params.get(0);
 				if ( back == null )
 					continue;
 				
@@ -1392,7 +1393,7 @@ public class StyleOperationDefinitions {
 		return null;
 	}
 
-	private static ColorStop parseColorStop(Object arg) {
+	protected static ColorStop parseColorStop(Object arg) {
 		String[] split = arg.toString().split(" ");
 		if ( split.length != 2 )
 			return null;

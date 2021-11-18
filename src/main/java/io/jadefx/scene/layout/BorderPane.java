@@ -34,6 +34,11 @@ public class BorderPane extends Pane {
 
 		this.hbox.setPrefWidthRatio(Percentage.ONE_HUNDRED);
 	}
+
+	@Override
+	public String getElementType() {
+		return "borderpane";
+	}
 	
 	public void setCenter(Node node) {
 		this.center = node;

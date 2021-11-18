@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.jadefx.JadeFX;
+import io.jadefx.gl.Renderer;
 import io.jadefx.scene.Scene;
 import io.jadefx.util.JadeFXUtil;
 
@@ -12,6 +13,8 @@ public class Stage extends Window {
 	private Scene scene;
 	
 	private Context context;
+	
+	private Renderer renderCallback;
 
 	private static final int NO_FLUSH = 0;
 	private static final int FLUSH = 4;
@@ -49,6 +52,18 @@ public class Stage extends Window {
 	public boolean isFlushed() {
 		return flushMap.get(this.getHandle()) > NO_FLUSH || this.getContext().isFlushed();
 	}
+
+
+	/**
+	 * Sets the rendering callback for this window. By default there is no rendering
+	 * callback.<br>
+	 * A rendering callback runs directly before the window renders its UI.
+	 * 
+	 * @param callback
+	 */
+	public void setRenderingCallback(Renderer callback) {
+		this.renderCallback = callback;
+	}
 	
 	@Override
 	public void render() {
@@ -70,6 +85,10 @@ public class Stage extends Window {
 		flushMap.put(this.getHandle(), Math.max(currentFlush-1, 0));
 		
 		this.getContext().refresh();
+		
+		if ( this.renderCallback != null )
+			this.renderCallback.render(this.getContext(), this.getWidth(), this.getHeight());
+		
 		this.getScene().render(this.getContext());
 	}
 }

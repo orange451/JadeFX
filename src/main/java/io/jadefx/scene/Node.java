@@ -1513,13 +1513,13 @@ public abstract class Node {
 			_flag_clicks = 0;
 		_flag_clicks++;
 		_lastClick = System.currentTimeMillis();
-		event.clicks = _flag_clicks;
+		MouseEvent clickEvent = new MouseEvent(event.getMouseX(), event.getMouseY(), event.getButton(), _flag_clicks);
 		
 		// Click event
 		if (mouseClickedEventInternal != null)
-			EventHelper.fireEvent(mouseClickedEventInternal, event);
+			EventHelper.fireEvent(mouseClickedEventInternal, clickEvent);
 		if (mouseClickedEvent != null)
-			EventHelper.fireEvent(mouseClickedEvent, event);
+			EventHelper.fireEvent(mouseClickedEvent, clickEvent);
 		
 		// Releaseevent
 		if (mouseReleasedEventInternal != null)

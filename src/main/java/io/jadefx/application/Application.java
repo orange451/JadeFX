@@ -12,7 +12,6 @@ import org.mini.gui.GCallBack;
 import io.jadefx.JadeFX;
 import io.jadefx.stage.Stage;
 import io.jadefx.util.JadeFXUtil;
-import mobile.jadefx.stage.MobileStage;
 
 public abstract class Application {
 	

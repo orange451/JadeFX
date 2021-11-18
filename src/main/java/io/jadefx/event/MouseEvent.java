@@ -1,9 +1,9 @@
 package io.jadefx.event;
 
 public class MouseEvent extends Event {
-	public final double mouseX, mouseY;
-	public final int button;
-	public int clicks;
+	private final double mouseX, mouseY;
+	private final int button;
+	private int clicks;
 
 	public MouseEvent(double mouseX, double mouseY, int button) {
 		this(mouseX, mouseY, button, 0);

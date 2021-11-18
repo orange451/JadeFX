@@ -57,4 +57,11 @@ public abstract class MobileApplication extends Application {
     	
     	appDisplay.setKeyboardVisible(GCallBack.getInstance().getDisplay(), false);
     }
+    
+    public static void setMultitouchEnabled(boolean multitouchEnabled) {
+    	if ( GCallBack.getInstance() == null || appDisplay == null )
+    		return;
+    	
+    	appDisplay.setMultitouchEnabled(GCallBack.getInstance().getDisplay(), multitouchEnabled);
+    }
 }

@@ -13,10 +13,12 @@ import org.lwjgl.system.MemoryUtil;
 
 import io.jadefx.geometry.Insets;
 import io.jadefx.gl.util.BoxShadowRenderer;
+import io.jadefx.gl.util.LinearGradientRenderer;
 import io.jadefx.paint.Color;
 import io.jadefx.stage.Context;
 import io.jadefx.style.Background;
 import io.jadefx.style.BoxShadow;
+import io.jadefx.style.ColorStop;
 
 public class JadeFXUtil {
 
@@ -42,6 +44,65 @@ public class JadeFXUtil {
 
 	public static void fillRoundRect(Context context, double x, double y, double width, double height, float[] cornerRadii, Color color) {
 		fillRoundRect(context, x, y, width, height, cornerRadii[0], cornerRadii[1], cornerRadii[2], cornerRadii[3], color);
+	}
+	
+	public static void linearGradient(Context context, float angle, ColorStop[] stops, double x, double y, double width, double height, float[] cornerRadii) {
+		if ( context == null )
+			return;
+		
+		if ( context.isCoreOpenGL() ) {
+			float xx = (float)x;
+			float yy = (float)y;
+			float ww = (float)width;
+			float hh = (float)height;
+			
+			// Flip the y :shrug:
+			yy = context.getWindow().getHeight() - yy - hh;
+			
+			// Save NANOVG
+			NanoVG.nvgSave(context.getNVG());
+			NanoVG.nvgEndFrame(context.getNVG());
+
+			LinearGradientRenderer.render(context, angle, stops, xx, yy, ww, hh, cornerRadii);
+			
+			// Restore NANOVG
+			NanoVG.nvgRestore(context.getNVG());
+			context.refresh();
+		} else {
+			for (int i = 0; i < stops.length-1; i++) {
+				// Compute position
+				float centerx = (float)x + (float)width*0.5f;
+				float centery = (float)y + (float)height*0.5f;
+				float xx = centerx - (float)((Math.cos(Math.toRadians(angle)) * width) * 0.5 + 0.5);
+				float yy = centery - (float)((Math.sin(Math.toRadians(angle)) * height) * 0.5 + 0.5);
+				float dirX = (float) Math.cos(Math.toRadians(angle));
+				float dirY = (float) Math.sin(Math.toRadians(angle));
+				float step = stops[i].getRatio();
+				float nextstep = stops[i+1].getRatio();
+				float startX = (float)xx + (dirX * step * (float)width);
+				float startY = (float)yy + (dirY * step * (float)height);
+				float endX = (float)xx + (dirX * nextstep * (float)width);
+				float endY = (float)yy + (dirY * nextstep * (float)height);
+				
+				// Compute colors
+				Color c = stops[i].getColor();
+				if ( i > 0 )
+					c = Color.TRANSPARENT;
+				Color e = stops[i+1].getColor();
+				
+				try(MemoryStack stack = MemoryStack.stackPush()) {
+					// Create gradient paint
+					NVGPaint grad = NanoVG.nvgLinearGradient(context.getNVG(), startX, startY, endX, endY, c.getNVG(), e.getNVG(), NVGPaint.mallocStack(stack));
+
+					// Draw gradient
+					NanoVG.nvgBeginPath(context.getNVG());
+					NanoVG.nvgRoundedRectVarying(context.getNVG(), (int)x, (int)y, (int)width, (int)height, (float)cornerRadii[0], (float)cornerRadii[1], (float)cornerRadii[2], (float)cornerRadii[3]);
+					NanoVG.nvgFillPaint(context.getNVG(), grad);
+					NanoVG.nvgFill(context.getNVG());
+					NanoVG.nvgClosePath(context.getNVG());
+				}
+			}
+		}
 	}
 
 	public static void boxShadow(Context context, BoxShadow boxShadow, double x, double y, double width, double height, float[] cornerRadii, float borderWidth, float[] boxClip) {

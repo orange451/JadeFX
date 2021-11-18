@@ -475,8 +475,6 @@ public abstract class Window {
 		 */
 		List<EventListener> listeners = getEventListenersForType(MOUSE_WHEEL_LISTENER);
 
-		// System.out.println(dy);
-
 		// Scale scrolling down
 		if (dx != 1 && dx != -1 && dy != -1 && dy != 1) {
 			if (Math.abs(dx) < 1 || Math.abs(dy) < 1) {
