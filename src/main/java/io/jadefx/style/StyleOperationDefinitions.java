@@ -574,23 +574,20 @@ public class StyleOperationDefinitions {
 			} else {				
 				Color sourceColor = new Color(((BackgroundSolid)currentBackground).getColor());
 				
-				List<Transition> current = transition.getTransitions();
-				FillTransition fill_the_tranny = null;
-				if ( current.size() > 0 ) {
-					for (int i = 0; i < current.size(); i++) {
-						Transition trannies = current.get(i);
+				List<Transition> currentTransitions = transition.getTransitions();
+				for (int i = 0; i < currentTransitions.size(); i++) {
+					Transition trannies = currentTransitions.get(i);
+					
+					if ( trannies instanceof FillTransition ) {
+						FillTransition fill_the_tranny = (FillTransition) trannies;
+						sourceColor = fill_the_tranny.getColor();
 						
-						if ( trannies instanceof FillTransition ) {
-							fill_the_tranny = (FillTransition) trannies;
-							sourceColor = fill_the_tranny.getColor();
-							
-							if ( fill_the_tranny.equals(transition.getDurationMillis(), sourceColor, destColor) ) {
-								return;
-							}
-
-							fill_the_tranny.stop();
-							current.remove(i--);
+						if ( fill_the_tranny.equals(transition.getDurationMillis(), sourceColor, destColor) ) {
+							return;
 						}
+
+						fill_the_tranny.stop();
+						currentTransitions.remove(i--);
 					}
 				}
 				
@@ -603,7 +600,7 @@ public class StyleOperationDefinitions {
 				// Color transition
 				FillTransition tran = new FillTransition(transition.getDurationMillis(), sourceColor, destColor, fillColor);
 				tran.play();
-				current.add(tran);
+				currentTransitions.add(tran);
 
 				// Apply fill color
 				t.setBackground(new BackgroundSolid(fillColor));
@@ -770,9 +767,12 @@ public class StyleOperationDefinitions {
 					t.getBoxShadowList().add(newShadows.get(i));
 				}
 			} else {
-				List<Transition> current = transition.getTransitions();
-				if ( current.size() > 0 )
-					return;
+				List<Transition> currentTransitions = transition.getTransitions();
+				for (int i = 0; i < currentTransitions.size(); i++) {
+					Transition trannies = currentTransitions.get(i);
+					trannies.stop();
+					currentTransitions.remove(i--);
+				}
 				
 				// Transition already existing shadows
 				for (int i = 0; i < Math.max(newShadows.size(), t.getBoxShadowList().size()); i++) {
@@ -815,7 +815,7 @@ public class StyleOperationDefinitions {
 							}
 						};
 						tran.play();
-						current.add(tran);
+						currentTransitions.add(tran);
 					}
 					
 					// Blur transition
@@ -829,7 +829,7 @@ public class StyleOperationDefinitions {
 							}
 						};
 						tran.play();
-						current.add(tran);
+						currentTransitions.add(tran);
 					}
 					
 					// Spread transition
@@ -843,7 +843,7 @@ public class StyleOperationDefinitions {
 							}
 						};
 						tran.play();
-						current.add(tran);
+						currentTransitions.add(tran);
 					}
 					
 					// Color transition
@@ -852,7 +852,7 @@ public class StyleOperationDefinitions {
 						Transition tran = new FillTransition(transition.getDurationMillis(), new Color(sourceShadow.getFromColor()), destShadow.getFromColor(), tt);
 						sourceShadow.setFromColor(tt);
 						tran.play();
-						current.add(tran);
+						currentTransitions.add(tran);
 					}
 				}
 			}

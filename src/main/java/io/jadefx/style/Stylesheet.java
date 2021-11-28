@@ -17,6 +17,8 @@ public class Stylesheet {
 	private boolean compiled;
 	private Map<String, StyleSelector> idToStyleSelector = new HashMap<>();
 	private Map<StyleSelector, StyleData> styleData = new HashMap<>();
+	
+	private static Map<Node, Map<String, StyleOperationValue>> lastNodeStyleOperationMap = new HashMap<>();
 
 	public Stylesheet(String css) {
 		this.source = css;
@@ -91,7 +93,21 @@ public class Stylesheet {
 		Iterator<Entry<String, StyleOperationValue>> iterator = declarations.entrySet().iterator();
 		while(iterator.hasNext()) {
 			Entry<String, StyleOperationValue> val = iterator.next();
-			val.getValue().process(node);
+			StyleOperationValue styleOperation = val.getValue();
+			
+			// If we've already processed this style operation on this node, no need to do it again!
+			Map<String, StyleOperationValue> lastOperations = lastNodeStyleOperationMap.get(node);
+			if ( lastOperations != null && styleOperation.equals(lastOperations.get(val.getKey()))) {
+				continue;
+			}
+			
+			// Process
+			styleOperation.process(node);
+			
+			// Mark this style operation for this node
+			if ( lastOperations == null )
+				lastNodeStyleOperationMap.put(node, lastOperations = new HashMap<>());
+			lastOperations.put(val.getKey(), styleOperation);
 		}
 	}
 
