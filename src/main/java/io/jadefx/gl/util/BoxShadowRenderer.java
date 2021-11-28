@@ -27,8 +27,9 @@ public class BoxShadowRenderer {
 			boxShadowShader.bind();
 
 			// Enable blending
+			//GL32.glBlendFunc(GL32.GL_SRC_ALPHA, GL32.GL_ONE_MINUS_SRC_ALPHA);
+			//GL32.glBlendFuncSeparate(GL32.GL_ONE, GL32.GL_ONE_MINUS_SRC_ALPHA, GL32.GL_ONE, GL32.GL_ONE_MINUS_SRC_ALPHA);
 			GL32.glBlendFunc(GL32.GL_SRC_ALPHA, GL32.GL_ONE_MINUS_SRC_ALPHA);
-			GL32.glBlendFuncSeparate(GL32.GL_ONE, GL32.GL_ONE_MINUS_SRC_ALPHA, GL32.GL_ONE, GL32.GL_ONE_MINUS_SRC_ALPHA);
 			GL32.glEnable(GL32.GL_BLEND);
 
 			if (f < 0.5)
