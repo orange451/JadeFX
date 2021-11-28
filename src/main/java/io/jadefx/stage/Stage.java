@@ -50,9 +50,20 @@ public class Stage extends Window {
 	}
 	
 	public boolean isFlushed() {
-		return flushMap.get(this.getHandle()) > NO_FLUSH || this.getContext().isFlushed();
+		return this.canDraw() || this.getContext().isFlushed();
 	}
 
+	private boolean canDraw() {
+		return this.getFlush() > NO_FLUSH;
+	}
+	
+	private int getFlush() {
+		return flushMap.get(this.getHandle());
+	}
+	
+	private void setFlush(int flush) {
+		flushMap.put(this.getHandle(), flush);
+	}
 
 	/**
 	 * Sets the rendering callback for this window. By default there is no rendering
@@ -70,25 +81,31 @@ public class Stage extends Window {
 		if ( this.getScene() == null )
 			return;
 		
+		// If context hasent finished initializing, we cannot draw.
 		if ( !this.getContext().isLoaded() )
 			return;
 		
+		// iIf context has been flushed, make window flush.
 		if ( this.getContext().isFlushed() ) {
 			this.getContext().setFlushed(false);
-			flushMap.put(this.getHandle(), FLUSH);	// We need to flush for a few frames because
-		}											// GLFM doesnt have a swapbuffers implementation.
+			this.setFlush(FLUSH);	// We need to flush for a few frames because
+		}							// GLFM doesnt have a swapbuffers implementation.
 		
-		int currentFlush = flushMap.get(this.getHandle());
-		if (currentFlush <= NO_FLUSH)
+		// If we can not draw, stop
+		if ( !this.canDraw() )
 			return;
 
-		flushMap.put(this.getHandle(), Math.max(currentFlush-1, 0));
+		// Decrement flush
+		this.setFlush(Math.max(this.getFlush()-1, 0));
 		
+		// Prepare context for rendering
 		this.getContext().refresh();
 		
+		// Render callback
 		if ( this.renderCallback != null )
 			this.renderCallback.render(this.getContext(), this.getWidth(), this.getHeight());
 		
+		// Render stage
 		this.getScene().render(this.getContext());
 	}
 }

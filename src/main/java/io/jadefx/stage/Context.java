@@ -85,9 +85,6 @@ public class Context {
 					clickedNodes.removeAll(removedNodes);
 					clickedNodes.addAll(newNodes);
 					
-					selectedNodes.clear();
-					selectedNodes.addAll(hoveredNodes);
-					
 					for (Node node : newNodes)
 						node.onMousePress(event);
 				}
@@ -96,6 +93,9 @@ public class Context {
 					for (Node node : clickedNodes)
 						node.onMouseRelease(event);
 					
+					// Move clicked nodes in to selected nodes
+					selectedNodes.clear();
+					selectedNodes.addAll(clickedNodes);
 					clickedNodes.clear();
 				}
 			}
