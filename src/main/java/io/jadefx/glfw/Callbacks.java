@@ -1,6 +1,5 @@
 package io.jadefx.glfw;
 
-import org.lwjgl.glfm.GLFMTouchCallbackI;
 import org.lwjgl.glfw.GLFWCharCallbackI;
 import org.lwjgl.glfw.GLFWCharModsCallbackI;
 import org.lwjgl.glfw.GLFWCursorEnterCallbackI;

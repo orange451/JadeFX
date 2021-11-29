@@ -38,8 +38,8 @@ public class LinearGradientRenderer {
 			}
 
 			GL20.glUniform1f(shader.getUniformLocation("numStops"), stops.length);
-			GL20.glUniform4fv(shader.getUniformLocation("colors"), stops.length, fColors, 0);
-			GL20.glUniform1fv(shader.getUniformLocation("stops"), stops.length, fStops, 0);
+			GL20.glUniform4fv(shader.getUniformLocation("colors"), fColors);
+			GL20.glUniform1fv(shader.getUniformLocation("stops"), fStops);
 			GL20.glUniform2f(shader.getUniformLocation("gradientStartPos"), (float)xx, (float)yy);
 			GL20.glUniform2f(shader.getUniformLocation("gradientEndPos"), (float)(xx+ww), (float)(yy+hh));
 

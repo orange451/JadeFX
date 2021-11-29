@@ -24,11 +24,15 @@ public class ApplicationTest extends Application {
 				+ "		height: 128px;"
 				+ "		background-color: yellow;"
 				+ "		border-radius: 8px;"
-				+ "		transition: background-color 0.2s;"
+				+ "		transition: background-color 0.1s;"
 				+ "}"
 				+ ""
 				+ ".box:hover {"
 				+ "		background-color: green;"
+				+ "}"
+				+ ""
+				+ ".box:active {"
+				+ "		background-color: gray;"
 				+ "}");
 		pane.getClassList().add("box");
 		
