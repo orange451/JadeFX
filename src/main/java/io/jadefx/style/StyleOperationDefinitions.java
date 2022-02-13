@@ -1203,7 +1203,7 @@ public class StyleOperationDefinitions {
 		}
 	};*/
 	
-	/*public static StyleOperation POINTER_EVENTS = new StyleOperation("pointer-events") {
+	public static StyleOperation POINTER_EVENTS = new StyleOperation("pointer-events") {
 		@Override
 		public void process(Node node, StyleVarArgs value) {
 			String evts = value.get(0).get(0).toString().toUpperCase();
@@ -1212,7 +1212,20 @@ public class StyleOperationDefinitions {
 			else if ( evts.equals(NONE) )
 				node.setMouseTransparent(true);
 		}
-	};*/
+	};
+	
+	public static StyleOperation FONT_FAMILY = new StyleOperation("font-family") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof Labeled) )
+				return;
+			
+			Labeled t = (Labeled)node;
+			String desiredFont = value.get(0).asString();
+			Font newFont = new Font(desiredFont, t.getFont().getSize());
+			((Labeled)node).setFont(newFont);
+		}
+	};
 	
 	public static StyleOperation FONT_SIZE = new StyleOperation("font-size") {
 		@Override

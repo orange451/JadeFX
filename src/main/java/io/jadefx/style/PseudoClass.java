@@ -50,7 +50,7 @@ public enum PseudoClass {
 	}),
 	
 	/**
-	 * Active pseudo class. Active when node is just clicked.
+	 * Active pseudo class. Active when node is being clicked.
 	 */
 	ACTIVE("active", new DataCallback<Boolean, Node>() {
 		@Override

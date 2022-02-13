@@ -333,6 +333,7 @@ public class Context {
 
 class DefaultFonts {
 	public final FontData ROBOTO;
+	public final FontData GOOGLE_SANS;
 	
 	private Map<String, FontData> loadedFonts = new HashMap<>();
 	
@@ -340,6 +341,7 @@ class DefaultFonts {
 	
 	public DefaultFonts(long vg) throws IOException {
 		add(ROBOTO = new FontData(vg, "Roboto", "jadefx/font/Roboto-Regular.ttf"));
+		add(GOOGLE_SANS = new FontData(vg, "Google Sans", "jadefx/font/OpenSans-Regular.ttf"));
 
 		//fallback(vg, new FontData(vg, "NotoColorEmoji", "jadefx/font/NotoColorEmoji.ttf"));
 		//fallback(vg, new FontData(vg, "NotoSans", "jadefx/font/NotoSansCJKsc-Medium.otf"));

@@ -99,12 +99,20 @@ public abstract class Labeled extends Control implements StyleBackground {
 	@Override
 	protected void stylePush() {
 		super.stylePush();
-		Stylesheet.findAndApplyStyle(this.getScene().getContext().getCurrentStyling(), this, this, StyleOperationDefinitions.FONT_SIZE, StyleOperationDefinitions.COLOR);
+		Stylesheet.findAndApplyStyle(this.getScene().getContext().getCurrentStyling(), this, this,
+				StyleOperationDefinitions.FONT_SIZE,
+				StyleOperationDefinitions.FONT_FAMILY,
+				StyleOperationDefinitions.COLOR
+		);
 	}
 	
 	protected void stylePop() {
 		super.stylePop();
-		Stylesheet.findAndApplyStyle(this.getScene().getContext().getCurrentStyling(), this, this, StyleOperationDefinitions.FONT_SIZE, StyleOperationDefinitions.COLOR);
+		Stylesheet.findAndApplyStyle(this.getScene().getContext().getCurrentStyling(), this, this,
+				StyleOperationDefinitions.FONT_SIZE,
+				StyleOperationDefinitions.FONT_FAMILY,
+				StyleOperationDefinitions.COLOR
+		);
 	}
 	
 	@Override

@@ -717,4 +717,13 @@ class StyleParams {
 	public StyleParams clone() {
 		return new StyleParams(values.toArray());
 	}
+
+	public String asString() {
+		StringBuilder builder = new StringBuilder();
+		for (Object params : values) {
+			builder.append(params.toString() + " ");
+		}
+		
+		return builder.toString().trim();
+	}
 }
