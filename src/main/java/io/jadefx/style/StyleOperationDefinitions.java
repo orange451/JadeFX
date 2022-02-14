@@ -1298,7 +1298,7 @@ public class StyleOperationDefinitions {
 		return (float) (value1 + (value2-value1)*progress);
 	}
 	
-	protected static Background getBackground(Object arg) {
+	/*protected static Background getBackground(Object arg) {
 		
 		if ( arg instanceof StyleFunctionValue ) {
 			StyleFunctionValue func = (StyleFunctionValue)arg;
@@ -1404,14 +1404,15 @@ public class StyleOperationDefinitions {
 		}
 		
 		return null;
-	}
+	}*/
 
 	protected static ColorStop parseColorStop(Object arg) {
 		String[] split = arg.toString().split(" ");
 		if ( split.length != 2 )
 			return null;
 		
-		double percent = ParseUtil.toNumber(split[1].replace("%", "")) / 100d;
+		String percentStr = split[1].toString().replace("/%", " ").replace("%", " ").trim();
+		double percent = ParseUtil.toNumber(percentStr) / 100d;
 		return new ColorStop(getColor(split[0]), (float)percent);
 	}
 

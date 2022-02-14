@@ -25,7 +25,7 @@ public enum PseudoClass {
 	HOVER("hover", new DataCallback<Boolean, Node>() {
 		@Override
 		public Boolean callback(Node node) {
-			return node.isHover();
+			return node.isHovered();
 		}
 	}),
 	

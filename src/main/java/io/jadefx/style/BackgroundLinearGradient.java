@@ -1,9 +1,5 @@
 package io.jadefx.style;
 
-import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.system.MemoryStack;
-
 import io.jadefx.paint.Color;
 import io.jadefx.stage.Context;
 import io.jadefx.util.JadeFXUtil;

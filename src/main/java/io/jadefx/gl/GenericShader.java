@@ -3,16 +3,11 @@ package io.jadefx.gl;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;

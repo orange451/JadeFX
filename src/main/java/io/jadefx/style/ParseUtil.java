@@ -29,7 +29,7 @@ public class ParseUtil {
 			return ((Number)value).floatValue();
 		
 		try {
-			return (float) Double.parseDouble(value.toString());
+			return (float) Double.parseDouble(value.toString().trim());
 		} catch(Exception e) {
 			return 0;
 		}

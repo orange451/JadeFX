@@ -31,7 +31,6 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,14 +38,6 @@ import java.util.Map;
 
 import org.lwjgl.glfm.GLFM;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.system.MemoryStack;
-
-import io.jadefx.JadeFX;
-import io.jadefx.event.EventHelper;
-import io.jadefx.event.KeyEvent;
-import io.jadefx.event.MouseEvent;
-import io.jadefx.event.ScrollEvent;
-import io.jadefx.event.TypeEvent;
 import io.jadefx.event.listener.CursorPositionListener;
 import io.jadefx.event.listener.EventListener;
 import io.jadefx.event.listener.KeyListener;
@@ -73,7 +64,6 @@ import io.jadefx.glfw.Callbacks.WindowRefreshCallback;
 import io.jadefx.glfw.Callbacks.WindowSizeCallback;
 import io.jadefx.glfw.input.KeyboardHandler;
 import io.jadefx.glfw.input.MouseHandler;
-import io.jadefx.scene.Scene;
 
 public abstract class Window {
 	

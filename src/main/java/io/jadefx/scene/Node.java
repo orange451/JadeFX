@@ -1450,7 +1450,7 @@ public abstract class Node {
 	/**
 	 * Returns whether this node is hovered by mouse or touch gesture.
 	 */
-	public boolean isHover() {
+	public boolean isHovered() {
 		if ( this.getScene() == null || this.getScene().getContext() == null )
 			return false;
 		
@@ -1458,7 +1458,8 @@ public abstract class Node {
 	}
 
 	/**
-	 * Returns whether this node is currently being clicked by mouse or touch gesture.
+	 * Returns whether this node is currently being clicked down by mouse or touch gesture.
+	 * Generally, before a node is clicked it will be hovered. See {@link #isHovered()}.
 	 */
 	public boolean isClicked() {
 		if ( this.getScene() == null || this.getScene().getContext() == null )
@@ -1469,6 +1470,7 @@ public abstract class Node {
 
 	/**
 	 * Returns whether this node is currently selected as a result of mouse or touch gesture.
+	 * Generally, before a node is selected it will be clicked. See {@link #isClicked()}.
 	 */
 	public boolean isSelected() {
 		if ( this.getScene() == null || this.getScene().getContext() == null )

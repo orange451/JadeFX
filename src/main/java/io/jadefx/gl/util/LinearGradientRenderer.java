@@ -33,17 +33,20 @@ public class LinearGradientRenderer {
 				fColors[i+2] = stop.getColor().getVector().z;
 				fColors[i+3] = stop.getColor().getVector().w;
 				fStops[i / 4] = stop.getRatio();
-				System.out.println(fStops.length + " / " + (i/4) + " / " + stop.getRatio());
 				i+=4;
 			}
 
-			GL20.glUniform1f(shader.getUniformLocation("numStops"), stops.length);
+			double ex = xx+ww;
+			double ey = yy+hh;
+			float pixelRatio = context.getWindow().getPixelRatio();
+
+			GL20.glUniform1i(shader.getUniformLocation("numStops"), stops.length);
 			GL20.glUniform4fv(shader.getUniformLocation("colors"), fColors);
 			GL20.glUniform1fv(shader.getUniformLocation("stops"), fStops);
 			GL20.glUniform2f(shader.getUniformLocation("gradientStartPos"), (float)xx, (float)yy);
-			GL20.glUniform2f(shader.getUniformLocation("gradientEndPos"), (float)(xx+ww), (float)(yy+hh));
+			GL20.glUniform2f(shader.getUniformLocation("gradientEndPos"), (float)(ex), (float)(ey));
 
-			GL20.glUniform4f(shader.getUniformLocation("boxClip"), (float)xx, (float)yy, (float)(xx+ww)*context.getWindow().getPixelRatio(), (float)(yy+hh)*context.getWindow().getPixelRatio() );
+			GL20.glUniform4f(shader.getUniformLocation("boxClip"), (float)xx, (float)yy, (float)ex*pixelRatio, (float)ey*pixelRatio );
 			GL20.glUniform4f(shader.getUniformLocation("scissor"),
 					(float)0,
 					(float)0,

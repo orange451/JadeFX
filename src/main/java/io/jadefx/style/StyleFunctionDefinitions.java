@@ -83,9 +83,7 @@ public class StyleFunctionDefinitions {
 							rightMost = -1;
 						
 						colorsFinal[i] = colors[i];
-					}
-					
-					if ( tempStop == null ) {
+					} else {
 						
 						Object arg1 = params.get(i+a);
 						Color color = StyleOperationDefinitions.getColor(arg1);
