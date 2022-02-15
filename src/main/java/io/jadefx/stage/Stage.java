@@ -76,6 +76,19 @@ public class Stage extends Window {
 		this.renderCallback = callback;
 	}
 	
+	protected void recomputeWindowSize() {
+		this.width = 20000;
+		this.height = 20000;
+		
+		for (int i = 0; i < 10; i++) {
+			this.getScene().render(this.getContext());
+		}
+
+		double width = this.getScene().getPrefWidth() > 0 ? this.getScene().getPrefWidth() : this.getScene().getRoot().getWidth();
+		double height = this.getScene().getPrefHeight() > 0 ? this.getScene().getPrefHeight() : this.getScene().getRoot().getHeight();
+		this.setSize(width, height);
+	}
+
 	@Override
 	public void render() {
 		if ( this.getScene() == null )

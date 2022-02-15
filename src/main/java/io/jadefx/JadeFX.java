@@ -43,7 +43,6 @@ public class JadeFX {
 		stage.setScene(new Scene(root));
 		
 		activeWindows.put(stage.getHandle(), stage);
-		
 		return stage;
 	}
 	

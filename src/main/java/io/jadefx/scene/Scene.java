@@ -2,10 +2,12 @@ package io.jadefx.scene;
 
 import io.jadefx.collections.ObservableList;
 import io.jadefx.paint.Color;
+import io.jadefx.scene.layout.StackPane;
 import io.jadefx.stage.Context;
 import io.jadefx.stage.Window;
 import io.jadefx.style.Background;
 import io.jadefx.style.BackgroundSolid;
+import io.jadefx.style.Percentage;
 import io.jadefx.style.StyleBackground;
 
 /**
@@ -18,13 +20,22 @@ public class Scene extends Node implements StyleBackground {
 	private Context context;
 	
 	private ObservableList<Background> backgrounds;
+	
+	private StackPane internal;
 
 	public Scene(Node root) {
 		this(root, root.getPrefWidth(), root.getPrefHeight());
 	}
 	
 	public Scene(Node root, double prefWidth, double prefHeight) {
+		this.internal = new StackPane();
+		this.internal.setBackgroundLegacy(null);
+		this.internal.setPrefWidthRatio(Percentage.ONE_HUNDRED);
+		this.internal.setPrefHeightRatio(Percentage.ONE_HUNDRED);
+		this.children.add(this.internal);
+		
 		setRoot(root);
+		
 		this.setPrefSize(prefWidth, prefHeight);
 		
 		this.backgrounds = new ObservableList<>();
@@ -52,8 +63,8 @@ public class Scene extends Node implements StyleBackground {
 	 * @param node
 	 */
 	public void setRoot(Node node) {
-		this.children.clear();
-		this.children.add(node);
+		this.internal.children.clear();
+		this.internal.children.add(node);
 		this.root = node;
 	}
 
@@ -76,8 +87,11 @@ public class Scene extends Node implements StyleBackground {
 		// Stretch to match screen
 		this.absolutePosition.x = 0;
 		this.absolutePosition.y = 0;
-		this.forceSize(getWindow().getWidth(), getWindow().getHeight());
-		root.forceSize(getWidth(), getHeight());
+		this.size.x = getWindow().getWidth();
+		this.size.y = getWindow().getHeight();
+		this.setMinSize(getWindow().getWidth(), getWindow().getHeight());
+		this.setMaxSize(getWindow().getWidth(), getWindow().getHeight());
+		internal.forceSize(getWidth(), getHeight());
 		
 		// Position elements
 		int repeat = firstFrame ? 8 : 1;
@@ -90,7 +104,7 @@ public class Scene extends Node implements StyleBackground {
 			background.render(context, getX(), getY(), getWidth(), getHeight(), new float[4]);
 		
 		// Render normal
-		root.render(context);
+		internal.render(context);
 	}
 	
 	public Window getWindow() {

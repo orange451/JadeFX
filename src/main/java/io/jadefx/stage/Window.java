@@ -31,6 +31,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,14 @@ import java.util.Map;
 
 import org.lwjgl.glfm.GLFM;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.system.MemoryStack;
+
+import io.jadefx.JadeFX;
+import io.jadefx.event.EventHelper;
+import io.jadefx.event.KeyEvent;
+import io.jadefx.event.MouseEvent;
+import io.jadefx.event.ScrollEvent;
+import io.jadefx.event.TypeEvent;
 import io.jadefx.event.listener.CursorPositionListener;
 import io.jadefx.event.listener.EventListener;
 import io.jadefx.event.listener.KeyListener;
@@ -64,6 +73,7 @@ import io.jadefx.glfw.Callbacks.WindowRefreshCallback;
 import io.jadefx.glfw.Callbacks.WindowSizeCallback;
 import io.jadefx.glfw.input.KeyboardHandler;
 import io.jadefx.glfw.input.MouseHandler;
+import io.jadefx.scene.Scene;
 
 public abstract class Window {
 	
@@ -98,6 +108,9 @@ public abstract class Window {
 	private MouseHandler mouseHandler;
 	private KeyboardHandler keyboardHandler;
 
+	private boolean firstShow = true;
+	private boolean visible = false;
+	
 	private Map<EventListenerType, List<EventListener>> eventListeners = new HashMap<>();
 	
 	public Window(long handle, long nvgContext) {
@@ -188,6 +201,12 @@ public abstract class Window {
 	public abstract boolean isFlushed();
 	
 	public abstract void render();
+	
+	public void setSize(double width, double height) {
+		GLFW.glfwSetWindowSize(this.getHandle(), (int)width, (int)height);
+		this.width = (int)width;
+		this.height = (int)height;
+	}
 
 	public int getWidth() {
 		return this.width;
@@ -269,28 +288,41 @@ public abstract class Window {
 	 * Attempts to show this Window by setting visibility to true
 	 */
 	public void show() {
+		if ( firstShow ) {
+			recomputeWindowSize();
+		}
 		setVisible(true);
 		//focus();
 		//focusHack();
 	}
+	
+	protected abstract void recomputeWindowSize();
+	
+	public boolean isVisible() {
+		return this.visible;
+	}
 
 	public void setVisible(boolean flag) {
-		System.out.println(GLFM.class);
-		System.out.println(this.getHandle());
+		// Show window
+		visible = flag;
+		firstShow = false;
+		this.setSize(this.getWidth(), this.getHeight());
 		GLFW.glfwShowWindow(this.getHandle());
 
+		// Update framebuffer callback
 		int[] fWidth = new int[1];
 		int[] fHeight = new int[1];
 		GLFW.glfwGetFramebufferSize(getHandle(), fWidth, fHeight);
 		if ( this.getFramebufferSizeCallback() != null )
 			this.getFramebufferSizeCallback().invoke(this.getHandle(), fWidth[0], fHeight[0]);
 		
+		// Update window size callback
 		int[] pWidth = new int[1];
 		int[] pHeight = new int[1];
 		GLFW.glfwGetWindowSize(getHandle(), pWidth, pHeight);
-
 		if ( this.getWindowSizeCallback() != null )
 			this.getWindowSizeCallback().invoke(this.getHandle(), pWidth[0], pHeight[0]);
+		
 		/*WindowManager.runLater(() -> {
 			if (flag)
 				glfwShowWindow(this.windowID);
