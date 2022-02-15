@@ -42,6 +42,11 @@ public class JadeFX {
 		root.setBackgroundLegacy(null);
 		stage.setScene(new Scene(root));
 		
+		int[] pWidth = new int[1];
+		int[] pHeight = new int[1];
+		GLFW.glfwGetWindowSize(stage.getHandle(), pWidth, pHeight);
+		stage.setSize(pWidth[0], pHeight[0]);
+		
 		activeWindows.put(stage.getHandle(), stage);
 		return stage;
 	}

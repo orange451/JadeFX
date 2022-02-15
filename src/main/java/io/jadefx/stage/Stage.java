@@ -77,6 +77,9 @@ public class Stage extends Window {
 	}
 	
 	protected void recomputeWindowSize() {
+		double oldWidth = this.width;
+		double oldHeight = this.height;
+		
 		this.width = 20000;
 		this.height = 20000;
 		
@@ -86,6 +89,12 @@ public class Stage extends Window {
 
 		double width = this.getScene().getPrefWidth() > 0 ? this.getScene().getPrefWidth() : this.getScene().getRoot().getWidth();
 		double height = this.getScene().getPrefHeight() > 0 ? this.getScene().getPrefHeight() : this.getScene().getRoot().getHeight();
+		
+		if ( width < 4 || height < 4 ) {
+			width = (int)oldWidth;
+			height = (int)oldHeight;
+		}
+		
 		this.setSize(width, height);
 	}
 
