@@ -1,7 +1,10 @@
 import io.jadefx.application.Application;
+import io.jadefx.paint.Color;
+import io.jadefx.scene.Scene;
 import io.jadefx.scene.control.Label;
 import io.jadefx.scene.layout.BorderPane;
 import io.jadefx.scene.layout.Pane;
+import io.jadefx.scene.layout.StackPane;
 import io.jadefx.stage.Stage;
 
 public class BorderPaneTest extends Application {
@@ -12,6 +15,16 @@ public class BorderPaneTest extends Application {
 	@Override
 	public void start(Stage stage, String[] args) {
 		BorderPane layout = new BorderPane();
+		layout.getClassList().add("box");
+
+		layout.setTop(new Label("Top"));
+		layout.setLeft(new Label("Left"));
+		layout.setRight(new Label("Right"));
+		layout.setBottom(new Label("Bottom"));
+		layout.setCenter(new Label("Center"));
+		
+		stage.setScene(new Scene(layout, 320, 240));
+		
 		stage.getScene().setStylesheet(""
 				+ ".box {"
 				+ "		box-shadow: 8px 16px 32px 0px rgba(0, 0, 0, 0.3),"
@@ -23,14 +36,7 @@ public class BorderPaneTest extends Application {
 				+ "		border-width: 1px;"
 				+ "		border-color: rgb(160, 160, 160);"
 				+ "}");
-		layout.getClassList().add("box");
-
-		layout.setTop(new Label("Top"));
-		layout.setLeft(new Label("Left"));
-		layout.setRight(new Label("Right"));
-		layout.setBottom(new Label("Bottom"));
-		layout.setCenter(new Label("Center"));
 		
-		((Pane)stage.getScene().getRoot()).getChildren().add(layout);
+		stage.show();
 	}
 }

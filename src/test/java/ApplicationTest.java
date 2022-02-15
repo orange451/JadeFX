@@ -37,5 +37,7 @@ public class ApplicationTest extends Application {
 		pane.getClassList().add("box");
 		
 		((Pane)stage.getScene().getRoot()).getChildren().add(pane);
+		stage.getScene().setPrefSize(400, 400);
+		stage.show();
 	}
 }
