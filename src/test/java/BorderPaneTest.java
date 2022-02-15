@@ -10,7 +10,7 @@ public class BorderPaneTest extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) {
+	public void start(Stage stage, String[] args) {
 		BorderPane layout = new BorderPane();
 		stage.getScene().setStylesheet(""
 				+ ".box {"

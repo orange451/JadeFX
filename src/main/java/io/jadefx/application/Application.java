@@ -16,7 +16,6 @@ import io.jadefx.util.JadeFXUtil;
 public abstract class Application {
 	
 	public static void launch(String[] args) {
-		
 		// Get the class name that called launch method.
 		String callingClassName = getCallingClass(Application.class.getName(), "launch");
 		if (callingClassName == null) {
@@ -34,10 +33,10 @@ public abstract class Application {
 		
 		// Initialize application
 		Application application = (Application)object;
-		launch(application);
+		launch(application, args);
 	}
 	
-	protected static void launch(Application application) {
+	protected static void launch(Application application, String... args) {
 		// Check if we're running on MiniJVM implementation
 		GCallBack callback = null;
 		boolean isGLFM = false;
@@ -55,7 +54,6 @@ public abstract class Application {
 		long handle;
 		
 		// Initialize GLFM
-		Stage stage;
 		if ( isGLFM ) {
 			handle = callback.getDisplay();
 			if ( handle == MemoryUtil.NULL )
@@ -76,33 +74,36 @@ public abstract class Application {
 		}
 		
 		long vg = JadeFXUtil.makeNanoVGContext(true);
-        stage = application.newStage(handle, vg);
 		
 		// Create scene
-		Stage window  = JadeFX.create(stage);
-		application.preStart(window);
-		application.start(window);
+        final Stage stage = JadeFX.create(application.newStage(handle, vg));
+		application.preStart(stage, args);
+		application.start(stage, args);
 		
 		// Loop
-		window.setVisible(true);
 		if ( isGLFM ) {
-	        GLFM.glfmSetRenderFuncCallback(handle, (display, frameTime) -> JadeFX.render(window));
+			stage.setVisible(true);
+			launchLoopGLFM(stage, handle);
 		} else {
-			while ( !GLFW.glfwWindowShouldClose(window.getHandle()) ) {
-				JadeFX.render();
-			}
-	        cleanup(window);
+			launchLoopGLFW(stage, handle);
 		}
+	}
+	
+	private static void launchLoopGLFW(Stage stage, long handle) {
+		while ( !GLFW.glfwWindowShouldClose(stage.getHandle()) ) {
+			JadeFX.render();
+		}
+        cleanup(stage);
+	}
+	
+	private static void launchLoopGLFM(Stage stage, long handle) {
+        GLFM.glfmSetRenderFuncCallback(handle, (display, frameTime) -> JadeFX.render(stage));
 	}
 	
 	protected Stage newStage(long handle, long vg) {
 		return new Stage(handle, vg);
 	}
 	
-	protected void preStart(Stage window) {
-		// Override this if you want.
-	}
-
 	protected Vector2i getDefaultWindowSize() {
 		return new Vector2i(800, 600);
 	}
@@ -113,7 +114,7 @@ public abstract class Application {
         glfwTerminate();
 	}
 
-	protected static String getCallingClass(String className, String methodName) {
+	private static String getCallingClass(String className, String methodName) {
 		// Figure out the right class to call
 		boolean foundThisMethod = false;
 		String callingClassName = null;
@@ -132,5 +133,9 @@ public abstract class Application {
 		return callingClassName;
 	}
 	
-	public abstract void start(Stage scene);
+	protected void preStart(Stage window, String[] args) {
+		// Override this if you want.
+	}
+	
+	public abstract void start(Stage scene, String[] args);
 }
