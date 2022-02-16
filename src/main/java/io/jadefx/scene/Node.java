@@ -1085,6 +1085,7 @@ public abstract class Node {
 	/**
 	 * Apply our style to the current stack
 	 */
+	List<Transition> tranniesToRemove = new ArrayList<>();
 	protected void stylePush() {
 		if ( this.scene == null )
 			return;
@@ -1094,20 +1095,27 @@ public abstract class Node {
 			
 			for (Entry<String, StyleTransition> entry : styleTransitions.entrySet()) {
 				StyleTransition transition = entry.getValue();
-				for (int i = 0; i < transition.getTransitions().size(); i++) {
-					if ( i >= transition.getTransitions().size() )
+				List<Transition> innerTrannies = transition.getTransitions();
+				tranniesToRemove.clear();
+				
+				for (int i = 0; i < innerTrannies.size(); i++) {
+					if ( i >= innerTrannies.size() )
 						continue;
 					
-					Transition innerTrans = transition.getTransitions().get(i);
+					Transition innerTrans = innerTrannies.get(i);
 					if ( innerTrans == null )
 						continue;
 					
 					if ( innerTrans.isFinished() ) {
-						transition.getTransitions().remove(i--);
+						tranniesToRemove.add(innerTrans);
 						continue;
 					}
 					
 					this.dirty();
+				}
+				
+				for (Transition tranny : tranniesToRemove) {
+					innerTrannies.remove(tranny);
 				}
 			}
 			
