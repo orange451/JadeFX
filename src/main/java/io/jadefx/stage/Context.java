@@ -34,6 +34,7 @@ public class Context {
 	private long nvgContext;
 
 	private boolean modernOpenGL;
+	
 	private boolean isCore = true;
 	
 	private boolean flush;
