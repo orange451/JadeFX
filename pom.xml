@@ -19,22 +19,6 @@
 	</repositories>
 
     <dependencies>
-		<!--<dependency>
-			<groupId>org.minijvm</groupId>
-			<artifactId>minijvm_rt</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../../../binary/lib/minijvm_rt.jar</systemPath>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.minijvm</groupId>
-			<artifactId>glfw_gui</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../../../binary/libex/glfw_gui.jar</systemPath>
-		</dependency>-->
-		
 		<dependency>
 		    <groupId>com.github.orange451</groupId>
 		    <artifactId>minijvm_rt</artifactId>
@@ -44,7 +28,7 @@
 		<dependency>
 		    <groupId>com.github.orange451</groupId>
 		    <artifactId>glfw_gui</artifactId>
-		    <version>1.1</version>
+		    <version>1.8</version>
 		</dependency>
         
 		<dependency>
