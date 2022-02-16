@@ -1,10 +1,7 @@
 import io.jadefx.application.Application;
-import io.jadefx.paint.Color;
 import io.jadefx.scene.Scene;
 import io.jadefx.scene.control.Label;
 import io.jadefx.scene.layout.BorderPane;
-import io.jadefx.scene.layout.Pane;
-import io.jadefx.scene.layout.StackPane;
 import io.jadefx.stage.Stage;
 
 public class BorderPaneTest extends Application {

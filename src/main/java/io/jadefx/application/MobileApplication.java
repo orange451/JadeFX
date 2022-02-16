@@ -20,7 +20,9 @@ public abstract class MobileApplication extends Application {
 	
 	@Override
 	protected Stage newStage(long handle, long vg) {
-		return new MobileStage(handle, vg);
+		Stage stage = new MobileStage(handle, vg);
+		stage.getScene().setPrefSize(this.getDefaultWindowSize().x, this.getDefaultWindowSize().y);
+		return stage;
 	}
 	
 	public static void setOrientation(ScreenOrientation orientation) {

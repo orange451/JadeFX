@@ -77,12 +77,14 @@ public abstract class Application {
 		
 		// Create scene
         final Stage stage = JadeFX.create(application.newStage(handle, vg));
+		if ( application instanceof MobileApplication ) {
+			stage.setVisible(true);
+		}
 		application.preStart(stage, args);
 		application.start(stage, args);
 		
 		// Loop
 		if ( isGLFM ) {
-			stage.setVisible(true);
 			launchLoopGLFM(stage, handle);
 		} else {
 			launchLoopGLFW(stage, handle);

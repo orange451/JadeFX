@@ -10,7 +10,7 @@ public class HelloWorld extends Application {
 
 	@Override
 	public void start(Stage stage, String[] args) {
-		stage.setScene(new Scene(new Label("Hello Wold"), 320, 240));
+		stage.setScene(new Scene(new Label("Hello World"), 320, 240));
 		stage.show();
 	}
 }

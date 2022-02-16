@@ -6,6 +6,8 @@ import java.util.Map;
 import io.jadefx.JadeFX;
 import io.jadefx.gl.Renderer;
 import io.jadefx.scene.Scene;
+import io.jadefx.scene.layout.Pane;
+import io.jadefx.scene.layout.StackPane;
 import io.jadefx.util.JadeFXUtil;
 
 public class Stage extends Window {
@@ -28,6 +30,10 @@ public class Stage extends Window {
 	public Stage(long handle, long nvgContext) {
 		super(handle, nvgContext);
 		this.context = new Context(this, nvgContext);
+		
+		Pane root = new StackPane();
+		root.setBackgroundLegacy(null);
+		this.setScene(new Scene(root));
 
 		flushMap.put(handle, 10);
 		
@@ -89,6 +95,7 @@ public class Stage extends Window {
 
 		double width = this.getScene().getPrefWidth() > 0 ? this.getScene().getPrefWidth() : this.getScene().getRoot().getWidth();
 		double height = this.getScene().getPrefHeight() > 0 ? this.getScene().getPrefHeight() : this.getScene().getRoot().getHeight();
+		System.out.println(this.getScene().getPrefWidth() + " / " + this.getScene().getPrefHeight());
 		
 		if ( width < 4 || height < 4 ) {
 			width = (int)oldWidth;
