@@ -22,6 +22,7 @@ public abstract class MobileApplication extends Application {
 	protected Stage newStage(long handle, long vg) {
 		Stage stage = new MobileStage(handle, vg);
 		stage.getScene().setPrefSize(this.getDefaultWindowSize().x, this.getDefaultWindowSize().y);
+		stage.getScene().setMaxSize(this.getDefaultWindowSize().x, this.getDefaultWindowSize().y);
 		return stage;
 	}
 	

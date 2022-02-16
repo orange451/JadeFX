@@ -3,6 +3,8 @@ package io.jadefx.stage;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lwjgl.glfw.GLFW;
+
 import io.jadefx.JadeFX;
 import io.jadefx.gl.Renderer;
 import io.jadefx.scene.Scene;
@@ -53,6 +55,14 @@ public class Stage extends Window {
 	
 	public void setScene(Scene scene) {
 		this.scene = scene;
+	}
+	
+	@Override
+	public void setSize(double width, double height) {
+		super.setSize(width, height);
+		scene.setPrefSize(width, height);
+		scene.setMaxSize(width, height);
+		scene.setMinSize(width, height);
 	}
 	
 	public boolean isFlushed() {
