@@ -322,14 +322,6 @@ public abstract class Window {
 		GLFW.glfwGetWindowSize(getHandle(), pWidth, pHeight);
 		if ( this.getWindowSizeCallback() != null )
 			this.getWindowSizeCallback().invoke(this.getHandle(), pWidth[0], pHeight[0]);
-		
-		/*WindowManager.runLater(() -> {
-			if (flag)
-				glfwShowWindow(this.windowID);
-			else
-				glfwHideWindow(this.windowID);
-		});
-		visible = flag;*/
 	}
 
 	public void setResizible(boolean resizable) {
