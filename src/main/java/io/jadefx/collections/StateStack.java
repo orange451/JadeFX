@@ -1,10 +1,11 @@
 package io.jadefx.collections;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StateStack<E> {
 	private final int maxStates;
-	private ArrayList<E> states = new ArrayList<E>();
+	private List<E> states = new ArrayList<E>();
 	private int current;
 	
 	public StateStack(int maxStates) {
