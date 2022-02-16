@@ -28,7 +28,7 @@
 		<dependency>
 		    <groupId>com.github.orange451</groupId>
 		    <artifactId>glfw_gui</artifactId>
-		    <version>1.8</version>
+		    <version>master-SNAPSHOT</version>
 		</dependency>
         
 		<dependency>
