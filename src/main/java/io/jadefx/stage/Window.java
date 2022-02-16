@@ -292,8 +292,6 @@ public abstract class Window {
 			recomputeWindowSize();
 		}
 		setVisible(true);
-		//focus();
-		//focusHack();
 	}
 	
 	protected abstract void recomputeWindowSize();
