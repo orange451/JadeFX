@@ -3,6 +3,7 @@ package io.jadefx.gl;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -205,8 +206,21 @@ public class GenericShader {
 		if (source.startsWith("#ifdef GL_ES\n")) 
 			source = modernizeShader(source, isVertex);
 		
-		// If ES
-        String glVersion = new String(GL11.glGetString(GL11.GL_VERSION));
+		// Yuck
+		String glVersion = null;
+		try {
+			Method method = GL11.class.getMethod("glGetString", Integer.class);
+			Object result = method.invoke(null, GL11.GL_VERSION);
+			if ( result instanceof String ) {
+				glVersion = result.toString();
+			} else {
+				glVersion = new String((byte[])result);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// Demodernize
         boolean isOpenGLES = glVersion.contains("OpenGL ES");
         if ( isOpenGLES )
         	source = source.replace("#version 330", "#version 300 es\nprecision highp float;\nprecision highp sampler2DShadow;\n");
