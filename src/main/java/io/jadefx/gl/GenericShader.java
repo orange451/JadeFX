@@ -209,7 +209,7 @@ public class GenericShader {
 		// Yuck
 		String glVersion = null;
 		try {
-			Method method = GL11.class.getMethod("glGetString", Integer.class);
+			Method method = GL11.class.getMethod("glGetString", int.class);
 			Object result = method.invoke(null, GL11.GL_VERSION);
 			if ( result instanceof String ) {
 				glVersion = result.toString();
