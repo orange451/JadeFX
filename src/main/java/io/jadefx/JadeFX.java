@@ -90,7 +90,7 @@ public class JadeFX {
 		GL11.glClearColor(0.9741f, 0.9741f, 0.9741f, 1.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 		
-		NanoVG.nvgBeginFrame(window.getContext().getNVG(), window.getWidth(), window.getHeight(), window.getPixelRatio());
+		NanoVG.nvgBeginFrame(window.getContext().getNVG(), (float)window.getWidth(), (float)window.getHeight(), window.getPixelRatio());
 		{
 			NanoVG.nvgReset(window.getContext().getNVG());
 			NanoVG.nvgResetScissor(window.getContext().getNVG());
