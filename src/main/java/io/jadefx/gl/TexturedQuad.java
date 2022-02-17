@@ -99,8 +99,10 @@ public class TexturedQuad {
 	public void render() {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		
-		// bind stuff
+		// Bind quad
 		GL30.glBindVertexArray(vaoId);
+		
+		// Bind texture
 		if ( texId > -1 ) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
