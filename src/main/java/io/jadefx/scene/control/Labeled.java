@@ -44,7 +44,7 @@ public abstract class Labeled extends Control implements StyleBackground {
 	public Labeled(String text) {
 		this.setText(text);
 		this.setElipsisString("\u2026");
-		this.setFont(new Font("Google Sans", 18));
+		this.setFont(new Font("Google Sans", 16));
 		
         backgrounds.setAddCallback((e)->this.setFlag(FLAG_CSS_DIRTY));
         backgrounds.setRemoveCallback((e)->this.setFlag(FLAG_CSS_DIRTY));
