@@ -27,7 +27,10 @@ public abstract class MobileApplication extends Application {
 	}
 	
 	public static void setOrientation(ScreenOrientation orientation) {
-		if ( orientation == null || appDisplay == null )
+		if ( GCallBack.getInstance() == null ||  appDisplay == null )
+			return;
+		
+		if ( orientation == null )
 			orientation = ScreenOrientation.ANY;
 		
 		appDisplay.setUserInterfaceOrientation(GCallBack.getInstance().getDisplay(), orientation.getValue());
