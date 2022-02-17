@@ -39,24 +39,28 @@ public class StackPane extends Pane {
 			Node node = this.children.get(i);
 			Pos useAlignment = node.usingAlignment();
 
+			// Get x alignment multiplier
 			double xMult = 0;
 			if ( useAlignment.getHpos() == HPos.CENTER)
 				xMult = 0.5f;
 			if ( useAlignment.getHpos() == HPos.RIGHT)
 				xMult = 1;
 
+			// Get y alignment multiplier
 			double yMult = 0;
 			if ( useAlignment.getVpos() == VPos.CENTER)
 				yMult = 0.5f;
 			if ( useAlignment.getVpos() == VPos.BOTTOM)
 				yMult = 1f;
 
+			// Compute layout offsets
 			LayoutBounds bounds = this.getInnerBounds();
 			double layoutX = (bounds.getWidth()-node.getWidth())*xMult;
 			double layoutY = (bounds.getHeight()-node.getHeight())*yMult;
 			double offsetX = layoutX + this.getTranslateX();
 			double offsetY = layoutY + this.getTranslateY();
 			
+			// Update layout
 			node.setLocalPosition(offsetX, offsetY);
 		}
     }
