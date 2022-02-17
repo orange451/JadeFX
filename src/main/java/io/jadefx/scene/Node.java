@@ -689,20 +689,10 @@ public abstract class Node {
 	}
 	
 	private boolean isRatioSimilar(Percentage p1, Percentage p2) {
-		if ( p1 == null && p2 != null )
+		if ( p1 == null || p2 == null )
 			return false;
 		
-		if ( p1 != null && p2 == null )
-			return false;
-		
-		if ( p1.getValue() == p2.getValue() )
-			return true;
-		
-		if ( p1.equals(p2) )
-			return true;
-		
-		double x = Math.abs(p1.getValue()-p2.getValue());
-		return x < 0.01;
+		return p1.similar(p2);
 	}
 	
 	/**

@@ -60,4 +60,18 @@ public class Percentage {
 	public Percentage divide(Percentage percent) {
 		return Percentage.fromRatio(this.value*percent.getValue());
 	}
+	
+	public boolean similar(Percentage percentage) {
+		if ( percentage == null )
+			return false;
+		
+		if ( this.getValue() == percentage.getValue() )
+			return true;
+		
+		if ( this.equals(percentage) )
+			return true;
+		
+		double x = Math.abs(this.getValue()-percentage.getValue());
+		return x < 0.01;
+	}
 }
