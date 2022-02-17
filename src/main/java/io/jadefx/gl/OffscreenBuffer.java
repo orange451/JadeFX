@@ -171,7 +171,6 @@ public class OffscreenBuffer {
 				quad.render();
 			}
 		} else {
-
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
 			
