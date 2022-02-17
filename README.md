@@ -82,6 +82,5 @@ https://github.com/orange451/JadeFXExampleApplications-LWJGL
 
 
 ## Pictures
-<img width="400" alt="" src="https://user-images.githubusercontent.com/5247778/154409402-234d045a-f796-4436-8a7e-1eda732f035b.png">
-<img width="350" alt="" src="https://user-images.githubusercontent.com/5247778/154409408-5386fb55-fe6e-4e81-969b-7cd0055689b5.png">
+<img width="380" alt="" src="https://user-images.githubusercontent.com/5247778/154409402-234d045a-f796-4436-8a7e-1eda732f035b.png"><img width="340" alt="" src="https://user-images.githubusercontent.com/5247778/154409408-5386fb55-fe6e-4e81-969b-7cd0055689b5.png">
 
