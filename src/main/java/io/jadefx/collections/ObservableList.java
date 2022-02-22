@@ -65,8 +65,7 @@ public class ObservableList<E> implements List<E>, Iterable<E> {
 	public void add(int index, E element) {
 		if (element == null) {
 			System.err.println("WARNING: Attempted to add null element to ObservableList.");
-			Thread.dumpStack();
-			return;
+			throw new RuntimeException();
 		}
 		
 		internal.add(index, element);
@@ -130,14 +129,6 @@ public class ObservableList<E> implements List<E>, Iterable<E> {
 		return internal.contains(element);
 	}
 
-	public Stream<E> stream() {
-		return this.internal.stream();
-	}
-
-	public Stream<E> parallelStream() {
-		return this.internal.parallelStream();
-	}
-
 	@Override
 	public Iterator<E> iterator() {
 		return internal.iterator();
@@ -145,7 +136,7 @@ public class ObservableList<E> implements List<E>, Iterable<E> {
 
 	@Override
 	public boolean isEmpty() {
-		return internal.size() == 0;
+		return internal.isEmpty();
 	}
 
 	@Override

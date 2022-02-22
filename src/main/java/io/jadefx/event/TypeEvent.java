@@ -8,6 +8,6 @@ public class TypeEvent extends Event {
 	}
 	
 	public String getCharacterString() {
-		return Character.toString(character);
+		return "" + character;
 	}
 }
