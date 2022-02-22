@@ -346,6 +346,54 @@ public class StyleOperationDefinitions {
 		}
 	};
 	
+	public static StyleOperation BORDER = new StyleOperation("border") {
+		@Override
+		public void process(Node node, StyleVarArgs value) {
+			if ( !(node instanceof StyleBorder) )
+				return;
+			
+			StyleParams firstArg = value.get(0);
+			Object lastParam = firstArg.get(firstArg.size()-1);
+			boolean hasStyle = firstArg.size() == 1;
+			int amtParams = firstArg.size();
+
+			StyleVarArgs sizeArgs = null;
+			StyleVarArgs styleArgs = null;
+			StyleVarArgs colorArgs = null;
+			
+			if ( amtParams == 3 ) {
+				sizeArgs = new StyleVarArgs(new StyleParams(firstArg.get(0)));
+				styleArgs = new StyleVarArgs(new StyleParams(firstArg.get(1)));
+				colorArgs = new StyleVarArgs(new StyleParams(firstArg.get(2)));
+			} else if ( amtParams == 2) {
+				if ( isColor(lastParam) ) {
+					styleArgs = new StyleVarArgs(new StyleParams(firstArg.get(0)));
+					colorArgs = new StyleVarArgs(new StyleParams(firstArg.get(1)));
+				} else {
+					sizeArgs = new StyleVarArgs(new StyleParams(firstArg.get(0)));
+					styleArgs = new StyleVarArgs(new StyleParams(firstArg.get(1)));
+				}
+			} else {
+				styleArgs = new StyleVarArgs(new StyleParams(firstArg.get(0)));
+			}
+			
+			if ( sizeArgs != null ) {
+				BORDER_LEFT.process(node, sizeArgs);
+				BORDER_RIGHT.process(node, sizeArgs);
+				BORDER_TOP.process(node, sizeArgs);
+				BORDER_BOTTOM.process(node, sizeArgs);
+			}
+			
+			if ( styleArgs != null ) {
+				BORDER_STYLE.process(node, styleArgs);
+			}
+			
+			if ( colorArgs != null ) {
+				BORDER_COLOR.process(node, colorArgs);
+			}
+		}
+	};
+	
 	public static StyleOperation BORDER_LEFT = new StyleOperation("border-left") {
 		@Override
 		public void process(Node node, StyleVarArgs value) {
@@ -1414,6 +1462,32 @@ public class StyleOperationDefinitions {
 		String percentStr = split[1].toString().replace("/%", " ").replace("%", " ").trim();
 		double percent = ParseUtil.toNumber(percentStr) / 100d;
 		return new ColorStop(getColor(split[0]), (float)percent);
+	}
+	
+	protected static boolean isColor(Object arg) {
+		if ( arg == null )
+			return false;
+		
+		// Function can resolve directly to color
+		if ( arg instanceof Color )
+			return true;
+
+		// Color by name
+		String string = arg.toString();
+		Color color = Color.match(string);
+		if ( color != null )
+			return true;
+		
+		// Color by hex string
+		if ( string.startsWith("#") ) {
+			try {
+				return new Color(string) != null;
+			} catch(Exception e) {
+				//
+			}
+		}
+		
+		return false;
 	}
 
 	protected static Color getColor(Object arg) {
