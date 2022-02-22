@@ -7,7 +7,7 @@ import io.jadefx.style.CalcOperation;
 import io.jadefx.style.Percentage;
 import io.jadefx.style.PercentageCalc;
 
-public class BorderPane extends Pane {
+public class BorderPane extends StackPane {
 	private VBox vbox;
 	private HBox hbox;
 	
