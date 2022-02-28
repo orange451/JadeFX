@@ -79,6 +79,7 @@ Client Application Platform for Desktop and Mobile. Develop Desktop applications
 ## Example Projects (Maven POM included)
 MiniJVM Examples (Maven)
 https://github.com/orange451/JadeFXExampleApplications-MiniJVM
+
 ios xcode project: https://github.com/orange451/jadefx_minijvm_ios
 
 LWJGL Examples (Maven)
