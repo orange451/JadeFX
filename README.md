@@ -9,15 +9,18 @@ Client Application Platform for Desktop and Mobile. Develop Desktop applications
 - Deployment on both Desktop and Mobile
 
 
-
+## Supported Operating Systems
+* Windows
+* Mac
+* Linux
+* iOS
+* Android
 
 (This library is heavily under development)
 
 - For mobile deployment use MiniJVM: https://github.com/digitalgust/miniJVM
 
 - For desktop deployment use LWJGL: https://www.lwjgl.org/
-
-- MiniJVM ios xcode project: https://github.com/orange451/jadefx_minijvm_ios
 
 ## Libraries required:
 <details><summary>LWJGL3</summary>
@@ -76,6 +79,7 @@ Client Application Platform for Desktop and Mobile. Develop Desktop applications
 ## Example Projects (Maven POM included)
 MiniJVM Examples (Maven)
 https://github.com/orange451/JadeFXExampleApplications-MiniJVM
+ios xcode project: https://github.com/orange451/jadefx_minijvm_ios
 
 LWJGL Examples (Maven)
 https://github.com/orange451/JadeFXExampleApplications-LWJGL
