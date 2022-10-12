@@ -531,13 +531,15 @@ public abstract class Node {
 	public void setLocalPosition(double x, double y) {
 		LayoutBounds bounds = parent.getInnerBounds();
 		
-		float topLeftX = (float) (parent.getAbsolutePosition().x + bounds.minX);
-		float topLeftY = (float) (parent.getAbsolutePosition().y + bounds.minY);
+		double topLeftX = parent.getAbsolutePosition().x + bounds.minX;
+		double topLeftY = parent.getAbsolutePosition().y + bounds.minY;
+		double absoluteX = topLeftX + x;
+		double absoluteY = topLeftY + y;
+		setAbsolutePosition( absoluteX, absoluteY);
 		
-		double changex = (topLeftX + x)-getX();
-		double changey = (topLeftY + y)-getY();
-		
-		setAbsolutePosition( this.getX()+changex, this.getY()+changey);
+		//double changex = absoluteX-getX();
+		//double changey = absoluteY-getY();
+		//setAbsolutePosition( this.getX()+changex, this.getY()+changey);
 	}
 
 	protected Vector2d getAbsolutePosition() {

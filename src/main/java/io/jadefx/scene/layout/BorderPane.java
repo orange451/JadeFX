@@ -158,11 +158,6 @@ public class BorderPane extends StackPane {
 	}
 	
 	@Override
-	protected void layoutChildren() {
-		super.layoutChildren();
-	}
-	
-	@Override
 	public ObservableList<Node> getChildren() {
 		return new ObservableList<>(this.children);
 	}
