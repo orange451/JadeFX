@@ -36,7 +36,7 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 			BoxShadow shadow = node.getBoxShadowList().get(i);
 			if ( shadow.isInset() )
 				continue;
-			JadeFXUtil.boxShadow(context, shadow, node.getX(), node.getY(), node.getWidth(), node.getHeight(), node.getBorderRadii(), node.getBorderWidth(), boxClip);
+			JadeFXUtil.boxShadow(context, shadow, node.getX(), node.getY(), node.getWidth(), node.getHeight(), border, node.getBorderRadii(), node.getBorderWidth(), boxClip);
 		}
 		
 		// Draw border
@@ -55,7 +55,7 @@ public interface BlockPaneRenderer extends StyleBorder,StyleBackground,StyleBoxS
 			BoxShadow shadow = node.getBoxShadowList().get(i);
 			if ( !shadow.isInset() )
 				continue;
-			JadeFXUtil.boxShadow(context, shadow, node.getX()+border.getLeft(), node.getY()+border.getTop(), node.getWidth()-border.getWidth(), node.getHeight()-border.getHeight(), node.getBorderRadii(), node.getBorderWidth(), boxClip);
+			JadeFXUtil.boxShadow(context, shadow, node.getX()+border.getLeft(), node.getY()+border.getTop(), node.getWidth()-border.getWidth(), node.getHeight()-border.getHeight(), border, node.getBorderRadii(), node.getBorderWidth(), boxClip);
 		}
 	}
 }

@@ -105,7 +105,8 @@ public class JadeFXUtil {
 		}
 	}
 
-	public static void boxShadow(Context context, BoxShadow boxShadow, double x, double y, double width, double height, float[] cornerRadii, float borderWidth, float[] boxClip) {
+	private static float[] tempCorners = new float[4];
+	public static void boxShadow(Context context, BoxShadow boxShadow, double x, double y, double width, double height, Insets border, float[] cornerRadii, float borderWidth, float[] boxClip) {
 		if ( context == null )
 			return;
 		
@@ -121,12 +122,35 @@ public class JadeFXUtil {
 			hh -= boxShadow.getSpread() * 4;
 		}
 		
+		// Border width stuff
+		if ( !boxShadow.isInset() ) {
+			float boundsTopLeft = (float) (border.getTop()+border.getLeft())/4f;
+			float boundsTopRight = (float) (border.getTop()+border.getRight())/4f;
+			float boundsBottomRight = (float) (border.getBottom()+border.getRight())/4f;
+			float boundsBottomLeft = (float) (border.getBottom()+border.getLeft())/4f;
+			if ( cornerRadii[0] <= 0 )
+				boundsTopLeft = 0;
+			if ( cornerRadii[1] <= 0 )
+				boundsTopRight = 0;
+			if ( cornerRadii[2] <= 0 )
+				boundsBottomRight = 0;
+			if ( cornerRadii[3] <= 0 )
+				boundsBottomLeft = 0;
+
+			tempCorners[0] = cornerRadii[0] + boundsTopLeft;
+			tempCorners[1] = cornerRadii[1] + boundsTopRight;
+			tempCorners[2] = cornerRadii[2] + boundsBottomRight;
+			tempCorners[3] = cornerRadii[3] + boundsBottomLeft;
+		} else {
+			tempCorners = cornerRadii;
+		}
+		
 		// Compute the average corner radius
 		float averageCorner = 0;
 		if ( cornerRadii != null ) {
-			for (int i = 0; i < cornerRadii.length; i++)
-				averageCorner += cornerRadii[i];
-			averageCorner /= (float)cornerRadii.length;
+			for (int i = 0; i < tempCorners.length; i++)
+				averageCorner += tempCorners[i];
+			averageCorner /= (float)tempCorners.length;
 		}
 		
 		// Compute feather (f) and radius (r)
@@ -145,7 +169,7 @@ public class JadeFXUtil {
 			NanoVG.nvgSave(context.getNVG());
 			NanoVG.nvgEndFrame(context.getNVG());
 
-			BoxShadowRenderer.boxShadow(context, xx, yy, ww, hh, f, r, boxShadow.getFromColor(), cornerRadii, boxShadow.isInset(), boxClip);
+			BoxShadowRenderer.boxShadow(context, xx, yy, ww, hh, f, r, boxShadow.getFromColor(), tempCorners, boxShadow.isInset(), boxClip);
 			
 			// Restore NANOVG
 			NanoVG.nvgRestore(context.getNVG());
