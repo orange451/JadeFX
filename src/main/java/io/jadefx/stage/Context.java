@@ -59,7 +59,7 @@ public class Context {
 		this.window = window;
 		this.nvgContext = nvgContext;
 		try {
-			this.fonts = new DefaultFonts(nvgContext);
+			this.fonts = new DefaultFonts(this, nvgContext);
 			NanoVG.nvgFontFace(nvgContext, fonts.ROBOTO.getName());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -333,20 +333,30 @@ public class Context {
 }
 
 class DefaultFonts {
-	public final FontData ROBOTO;
-	public final FontData GOOGLE_SANS;
+	public FontData ROBOTO;
+	public FontData GOOGLE_SANS;
 	
 	private Map<String, FontData> loadedFonts = new HashMap<>();
 	
 	protected static Map<String, ByteBuffer> fontData = new HashMap<>();
 	
-	public DefaultFonts(long vg) throws IOException {
+	private Context context;
+	
+	public DefaultFonts(Context context, long vg) throws IOException {
+		this.context = context;
+
 		add(ROBOTO = new FontData(vg, "Roboto", "jadefx/font/Roboto-Regular.ttf"));
 		add(GOOGLE_SANS = new FontData(vg, "Google Sans", "jadefx/font/OpenSans-Regular.ttf"));
-
-		//fallback(vg, new FontData(vg, "NotoColorEmoji", "jadefx/font/NotoColorEmoji.ttf"));
-		//fallback(vg, new FontData(vg, "NotoSans", "jadefx/font/NotoSansCJKsc-Medium.otf"));
-		fallback(vg, new FontData(vg, "Entypo", "jadefx/font/entypo.ttf"));
+		
+		new Thread(() -> {
+			try {
+				fallback(vg, new FontData(vg, "NotoColorEmoji", "jadefx/font/NotoColorEmoji.ttf"));
+				fallback(vg, new FontData(vg, "NotoSans", "jadefx/font/NotoSansCJKsc-Medium.otf"));
+				fallback(vg, new FontData(vg, "Entypo", "jadefx/font/entypo.ttf"));
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 
 	private void add(FontData fontData) {
@@ -357,6 +367,8 @@ class DefaultFonts {
 		for (Entry<String, FontData> entry : loadedFonts.entrySet()) {
 			NanoVG.nvgAddFallbackFontId(vg, entry.getValue().getHandle(), fallback.getHandle());
 		}
+		
+		this.context.flush();
 	}
 }
 
