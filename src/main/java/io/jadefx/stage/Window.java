@@ -135,8 +135,7 @@ public abstract class Window {
 			if (width == 0 || height == 0)
 				return;
 			
-			this.width = width;
-			this.height = height;
+			this.setSize(width, height);
 			
 			if ( this.framebufferWidth > 0 ) {
 				pixelRatio = (this.framebufferWidth <= this.width) ? 1 : this.framebufferWidth / this.width;

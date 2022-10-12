@@ -3,8 +3,6 @@ package io.jadefx.stage;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.glfw.GLFW;
-
 import io.jadefx.JadeFX;
 import io.jadefx.gl.Renderer;
 import io.jadefx.scene.Scene;
