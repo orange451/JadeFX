@@ -48,7 +48,9 @@ public class IOUtil {
 			throw new FileNotFoundException(resource);
 		}
 		byte[] bytes = toByteArray(stream, stream.available());
-		data = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder()).put(bytes);
+		data = ByteBuffer.allocateDirect(bytes.length);
+		data = data.order(ByteOrder.nativeOrder());
+		data.put(bytes);
 		data.flip();
 		return data;
 	}

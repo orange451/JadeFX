@@ -41,6 +41,7 @@ public abstract class Application {
 		GCallBack callback = null;
 		boolean isGLFM = false;
 		try {
+			// Quit out if we're using LWJGL/Other non MiniJVM library
 			Class<?> miniGlfw = Class.forName("org.mini.glfw.Glfw");
 			if ( miniGlfw == null )
 				return;
@@ -48,7 +49,7 @@ public abstract class Application {
 			callback = GCallBack.getInstance();
 			isGLFM = "org.mini.glfm.GlfmCallBackImpl".equals(System.getProperty("gui.driver"));
 		} catch (ClassNotFoundException e) {
-			//
+			// No need to handle, we can expect it to error depending on the libraries used.
 		}
 		
 		long handle;

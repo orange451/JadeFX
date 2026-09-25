@@ -1,3 +1,4 @@
+package test2;
 import io.jadefx.application.Application;
 import io.jadefx.scene.Scene;
 import io.jadefx.scene.control.Label;

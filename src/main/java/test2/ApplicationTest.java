@@ -1,3 +1,4 @@
+package test2;
 import io.jadefx.application.Application;
 import io.jadefx.scene.layout.Pane;
 import io.jadefx.stage.Stage;
@@ -23,7 +24,7 @@ public class ApplicationTest extends Application {
 				+ "		width: 128px;"
 				+ "		height: 128px;"
 				+ "		background-color: yellow;"
-				+ "		border-radius: 8px;"
+				+ "		border-radius: 2px;"
 				+ "		transition: background-color 0.1s;"
 				+ "}"
 				+ ""

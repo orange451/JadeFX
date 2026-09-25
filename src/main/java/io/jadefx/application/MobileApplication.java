@@ -12,7 +12,12 @@ import mobile.jadefx.stage.MobileStage;
 
 public abstract class MobileApplication extends Application {
 	
-	private static final GApplicationDisplay appDisplay = new GLFMApplicationDisplay();
+	private static final GApplicationDisplay appDisplay;
+	
+	static {
+		System.out.println("Entering Mobile Application");
+		appDisplay = new GLFMApplicationDisplay();
+	}
 	
 	protected Vector2i getDefaultWindowSize() {
 		return new Vector2i(375, 667); // This is not used by mobile devices, only when ran on desktop machines.
@@ -20,6 +25,7 @@ public abstract class MobileApplication extends Application {
 	
 	@Override
 	protected Stage newStage(long handle, long vg) {
+		System.out.println("Creating Stage " + handle + " / " + vg );
 		Stage stage = new MobileStage(handle, vg);
 		stage.getScene().setPrefSize(this.getDefaultWindowSize().x, this.getDefaultWindowSize().y);
 		stage.getScene().setMaxSize(this.getDefaultWindowSize().x, this.getDefaultWindowSize().y);

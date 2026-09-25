@@ -348,15 +348,15 @@ class DefaultFonts {
 		add(ROBOTO = new FontData(vg, "Roboto", "jadefx/font/Roboto-Regular.ttf"));
 		add(GOOGLE_SANS = new FontData(vg, "Google Sans", "jadefx/font/OpenSans-Regular.ttf"));
 		
-		new Thread(() -> {
+		//new Thread(() -> {
 			try {
-				fallback(vg, new FontData(vg, "NotoColorEmoji", "jadefx/font/NotoColorEmoji.ttf"));
-				fallback(vg, new FontData(vg, "NotoSans", "jadefx/font/NotoSansCJKsc-Medium.otf"));
-				fallback(vg, new FontData(vg, "Entypo", "jadefx/font/entypo.ttf"));
+				//fallback(vg, new FontData(vg, "NotoColorEmoji", "jadefx/font/NotoColorEmoji.ttf"));
+				//fallback(vg, new FontData(vg, "NotoSans", "jadefx/font/NotoSansCJKsc-Medium.otf"));
+				//fallback(vg, new FontData(vg, "Entypo", "jadefx/font/entypo.ttf"));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-		}).start();
+		//}).start();
 	}
 
 	private void add(FontData fontData) {
@@ -382,6 +382,7 @@ class FontData {
 		ByteBuffer data = DefaultFonts.fontData.get(name);
 		if ( data == null ) {
 			data = IOUtil.ioResourceToByteBuffer(resourcePath);
+			System.out.println("Loading font " + name + " / " + resourcePath);
 			DefaultFonts.fontData.put(name, data);
 		}
 		
